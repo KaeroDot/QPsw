@@ -1,4 +1,4 @@
-% Makes demultiplexing of the waveforms measured in QuPoS - Quantum Power
+% Makes demultiplexing of the waveforms measured in QPS - Quantum Power
 % System. Returns data reordered so every row represents one signal.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
@@ -57,23 +57,23 @@
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
-function y2 = qupos_demultiplex(y, S, M) %<<<1
+function y2 = qpsw_demultiplex(y, S, M) %<<<1
     % check variables: %<<<1
     % check if S is monotonic and numbers are not repeated:
     if not(all(diff(S)>0))
-        error('qupos_demultiplex: S is not monotonic or numbers are repeated!')
+        error('qpsw_demultiplex: S is not monotonic or numbers are repeated!')
     end
     % check if S values are valid
     if any(S < 1)
-        error('qupos_demultiplex: S contains values smaller than 1')
+        error('qpsw_demultiplex: S contains values smaller than 1')
     end
     if any(S > columns(y) + 1)
-        error('qupos_demultiplex: S contains values larger than number of samples in y (columns(y))!')
+        error('qpsw_demultiplex: S contains values larger than number of samples in y (columns(y))!')
     end
 
     % check sizes:
     if size(S, 2) != columns(M) - 1
-        error('qupos_demultiplex: S columns must be equal to M columns minus 1!')
+        error('qpsw_demultiplex: S columns must be equal to M columns minus 1!')
     end
 
     % prepare variables %<<<1
@@ -133,14 +133,14 @@ end % function
 %! S = [4 7];
 %! M = [1 2 -1; -1 1 2; 2 -1 1];
 %! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
-%! y2 = qupos_demultiplex(y, S, M);
+%! y2 = qpsw_demultiplex(y, S, M);
 %!assert(y2ref == y2);
 %! % Example 2: %<<<2
 %! y  =    [-1 -2 -3  4  5  6 -7 -8 -9  10  11  12;  10  20  30 -4 -5 -6  70  80  90 -10 -11 -12];
 %! S = [4 7 10];
 %! M = [-1 1 -1 1; 2 -1 2 -1];
 %! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
-%! y2 = qupos_demultiplex(y, S, M);
+%! y2 = qpsw_demultiplex(y, S, M);
 %! % the change of NaN into -100 is only to get ability of comparision, because NaN == NaN is always false!
 %! y2(isnan(y2)) = -100;
 %! y2ref(isnan(y2ref)) = -100;

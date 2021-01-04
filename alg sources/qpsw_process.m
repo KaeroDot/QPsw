@@ -1,4 +1,4 @@
-% main qupos script:
+% main QPsw script:
 % - calls demultplex
 % - calls calibration calculation
 % - calls calibration interpolation

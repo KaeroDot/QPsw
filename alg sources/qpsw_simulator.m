@@ -1,4 +1,4 @@
-% Single use script to generate example signal for testing qupos.
+% Single use script to generate example signal for testing qpsw.
 % - 1 PJVS
 % - 3 digitizers
 % - U & I & PJVS signal
