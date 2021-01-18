@@ -2,7 +2,7 @@
 % Inputs:
 % y - Sampled data
 % Sid - sample indexes of PJVS switches - switch happen before the sample
-% Uref - reference values (V)
+% Uref - reference values (V), for every segment one value
 % Rs - how many samples will be removed at start of segment (samples)
 % Re - how many samples will be removed at end of segment (samples)
 %
@@ -37,6 +37,10 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, Rs, Re)
             % calculate mean value:
             C(end+1) = mean(segment);
             uC(end+1) = std(segment)./sqrt(length(segment));
+            % XXX This should be improved - just take all values in segment and make
+            % XXX CCC needs to save intermediate results as binary data, because
+            % correlation matrices are too large in case of 1000 numbers
+            % fitting directly, without mean and std!
     end % for i
 
     % sort data based on x axis? is it needed? CCC does it or not? XXX
@@ -45,7 +49,7 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, Rs, Re)
     DI.x.v = Uref;
     DI.y.v = C;
     DI.y.u = uC;
-    DI.exponents.v = [1 1];
+    DI.exponents.v = [0 1];
     cal = qwtb('CCC', DI);
 
 end % function
@@ -58,3 +62,10 @@ end % function
 %XXX not finished %assert
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
+
+
+% DI.x.v = [ 1.5270   4.4934   7.0199   8.8592   9.8315   9.8412   8.8876   7.0641   4.5492   1.5889  -1.5270  -4.4934  -7.0199  -8.8592  -9.8315  -9.8412  -8.8876  -7.0641 -4.5492  -1.5889]
+% DI.y.v = [ 1.5270   4.4934   7.0199   8.8592   9.8315   9.8412   8.8876   7.0641   4.5492   1.5889  -1.5270  -4.4934  -7.0199  -8.8592  -9.8315  -9.8412  -8.8876  -7.0641 -4.5492  -1.5889]
+% DI.y.u = [ 1.3545e-16   2.7089e-16   6.7723e-16   8.1268e-16   1.3545e-15   8.1268e-16   2.7089e-16   2.7089e-16   5.4178e-16   3.3861e-17   1.3545e-16   2.7089e-16 6.7723e-16   8.1268e-16   1.3545e-15   8.1268e-16   2.7089e-16   2.7089e-16 5.4178e-16   6.8524e-17]
+% DI.exponents.v = [0   1]
+% 

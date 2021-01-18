@@ -4,7 +4,7 @@
 % MIT license
 %
 % Inputs:
-% y - Sampled data (V)
+% yc - Sampled data (V) as cell XXX
 %   Matrix, every row represents data sampled by one digitizer. Number of rows
 %   is equal to number of digitizers.
 % S - Switching samples
@@ -49,7 +49,7 @@
 %                              |       |        __ switch happened here
 %                              v       v       v
 % Sample number:         1 2 3 | 4 5 6 | 7 8 9 | 10 11 12
- M:
+% M:
 % digitizer 1 (y row 1):  -1   |   1   |  -1   |     1
 % digitizer 2 (y row 1):   2   |  -1   |   2   |    -1
 % Returned data:
@@ -57,44 +57,7 @@
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
-function y2 = qpsw_demultiplex(y, S, M) %<<<1
-    % check variables: %<<<1
-    % check if S is monotonic and numbers are not repeated:
-    if not(all(diff(S)>0))
-        error('qpsw_demultiplex: S is not monotonic or numbers are repeated!')
-    end
-    % check if S values are valid
-    if any(S < 1)
-        error('qpsw_demultiplex: S contains values smaller than 1')
-    end
-    if any(S > columns(y) + 1)
-        error('qpsw_demultiplex: S contains values larger than number of samples in y (columns(y))!')
-    end
-
-    % check sizes:
-    if size(S, 2) != columns(M) - 1
-        error('qpsw_demultiplex: S columns must be equal to M columns minus 1!')
-    end
-
-    % prepare variables %<<<1
-    % if switch is first sample, remove it, because switch before first sample
-    % is implict.
-    if S(1) != 1
-        S = [1 S];
-    end
-    % add switch after (!) last sample if missing:
-    if S(end) != columns(y) + 1
-        S = [S columns(y) + 1];
-    end
-    % length of the records:
-    samples = columns(y);
-    % number of digitizers:
-    digitizers = rows(y);
-    % number of signals sampled by the digitizers:
-    signals = length(unique(M));
-    % initialize output matrix:
-    y2 = NaN.*zeros(signals, samples);
-
+function y = qpsw_demultiplex_sew(yc, M) %<<<1
     % bijection M->M2 %<<<1
     % renumber values in M to be just increasing from 1 to rows(y), simple
     % bijection (e.g. -1, 1, 2 into 1, 2, 3)
@@ -112,18 +75,21 @@ function y2 = qpsw_demultiplex(y, S, M) %<<<1
     M2 = M2 - offset;
 
     % do signal reordering %<<<1
-    % reorder y into y2:
-    for s = 1:(columns(S) - 1)
-        % for every section between multiplexer switches
+    y2 = yc;
+    % reorder yc into y2:
+    for s = 1:columns(M)
+        % for every section (column) do:
         for r = 1:rows(M)
-            % for every row (digtizers)
+            % for every row (digtizers) do:
             % row index is:
             % M2(r, s) <- r
-            % collumn indexes are:
-            % S(s) : S(s+1) - 1
-            y2( M2(r, s), S(s):S(s+1) -1 ) = y( r, S(s):S(s+1) -1 );
+            y2(M2(r, s), s) = yc(r, s);
         end % r
     end % s
+
+    % convert to signals
+    y = [y2'{:}];
+    y = reshape(y, length([y2{1,:}]), [])';
 end % function
 
 % tests  %<<<1

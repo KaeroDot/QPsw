@@ -1,5 +1,5 @@
 % Makes demultiplexing of the waveforms measured in QPS - Quantum Power
-% System. Returns data reordered so every row represents one signal.
+% System. Does first part - splitting data into pieces.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
 %
@@ -17,9 +17,8 @@
 %   -1, -2, -3 ... denotes reference signals (Josephson Voltage Systems).
 %
 % Outputs:
-% y2 - reordered sampled data (V)
-%   First rows are quantum signals, next rows are signals to be measured,
-%   according numbers in M matrix, -1; 1; 2; 3
+% ys - cell, data split into pieces according M
+% S - Switching samples, normalized
 %
 % Example 1:
 % Example shows measurement by 3 digitizers of 2 signals and 1 JVS.
@@ -49,7 +48,7 @@
 %                              |       |        __ switch happened here
 %                              v       v       v
 % Sample number:         1 2 3 | 4 5 6 | 7 8 9 | 10 11 12
- M:
+% M:
 % digitizer 1 (y row 1):  -1   |   1   |  -1   |     1
 % digitizer 2 (y row 1):   2   |  -1   |   2   |    -1
 % Returned data:
@@ -57,7 +56,7 @@
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
-function y2 = qpsw_demultiplex(y, S, M) %<<<1
+function [yc, S] = qpsw_demultiplex_split(y, S, M) %<<<1
     % check variables: %<<<1
     % check if S is monotonic and numbers are not repeated:
     if not(all(diff(S)>0))
@@ -111,7 +110,7 @@ function y2 = qpsw_demultiplex(y, S, M) %<<<1
     % subtract offset to get values from 1 to max(M)
     M2 = M2 - offset;
 
-    % do signal reordering %<<<1
+    % do signal splitting %<<<1
     % reorder y into y2:
     for s = 1:(columns(S) - 1)
         % for every section between multiplexer switches
@@ -121,29 +120,9 @@ function y2 = qpsw_demultiplex(y, S, M) %<<<1
             % M2(r, s) <- r
             % collumn indexes are:
             % S(s) : S(s+1) - 1
-            y2( M2(r, s), S(s):S(s+1) -1 ) = y( r, S(s):S(s+1) -1 );
+            yc{r,s}= y( r, S(s):S(s+1) -1 );
         end % r
     end % s
 end % function
-
-% tests  %<<<1
-%!shared y, S, M, y2, y2ref
-%! % Example 1: %<<<2
-%! y  =    [ 1  2  3 40 50 60 -7 -8 -9; -1 -2 -3 4 5 6 70 80 90; 10 20 30 -4 -5 -6  7  8  9];
-%! S = [4 7];
-%! M = [1 2 -1; -1 1 2; 2 -1 1];
-%! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
-%! y2 = qpsw_demultiplex(y, S, M);
-%!assert(y2ref == y2);
-%! % Example 2: %<<<2
-%! y  =    [-1 -2 -3  4  5  6 -7 -8 -9  10  11  12;  10  20  30 -4 -5 -6  70  80  90 -10 -11 -12];
-%! S = [4 7 10];
-%! M = [-1 1 -1 1; 2 -1 2 -1];
-%! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
-%! y2 = qpsw_demultiplex(y, S, M);
-%! % the change of NaN into -100 is only to get ability of comparision, because NaN == NaN is always false!
-%! y2(isnan(y2)) = -100;
-%! y2ref(isnan(y2ref)) = -100;
-%!assert(y2ref == y2);
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4

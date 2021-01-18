@@ -16,7 +16,7 @@
 % Outputs:
 % y - waveform (V)
 % n - quantum numbers in every segment (int)
-% U - reference voltages of segments (V)
+% Uref - reference voltages of segments (V)
 % Sid - sample indexes of PJVS switches - switch happen before the sample
 
 function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, fm, apply_filter)
