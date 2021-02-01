@@ -9,9 +9,9 @@
 % fs - sampling frequency (Hz)
 % noise - signal noise sigma (V)
 % fseg - frequency of PJVS segments (Hz)
+% phseg - phase of PJVS segments (rad)
 % fm - microwave frequency (Hz)
-% apply_filter - if nonzero, applies digital filter simulating sigma delta 
-% digitizer (bool)
+% apply_filter - apply filter simulating sigma-delta digitizer (bool)
 % 
 % Outputs:
 % y - waveform (V)
@@ -19,24 +19,28 @@
 % Uref - reference voltages of segments (V)
 % Sid - sample indexes of PJVS switches - switch happen before the sample
 
-function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, fm, apply_filter)
-    % set values of optional inputs %<<<1
-    % check inputs %<<<1
+function [y, n, Uref, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, apply_filter)
+    % only for debugging:
+    DEBUG = 0;
+
+    % treat user inputs %<<<1
     if fseg >= fs
         error('pjvs_wvfrm_generator: frequency of segments is equal or greater than sampling frequency')
     end
     if f >= fs
         error('pjvs_wvfrm_generator: signal frequency is equal or greater than sampling frequency')
     end
+    if fm <= 0
+        error('pjvs_wvfrm_generator: microwave frequency must be grater than zero!')
+    end
+
+    % remove additional 2*pi multiples from user input phase:
+    phseg = rem(phseg, 2*pi);
+    if phseg < 0
+        phseg = phseg + 2*pi;
+    end
 
     % initialize values %<<<1
-    % number of samples in one period of the signal:
-    Ssig = fs/f;
-    % number of samples in one PJVS segment:
-    Sseg = fs/fseg;
-    % minimal signal length needed in the script - must be divisible by 1/fseg
-    % (the signal will be shortened to L if needed)
-    SL = ceil(L/Sseg).*Sseg;
     % Josephson constant, 2e/h:
     h = 6.62607015e-34;
     e = 1.602176634e-19;
@@ -44,31 +48,130 @@ function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, 
     % voltage step for actual microwave frequency:
     VS = fm/KJ;
 
+    % determine signal lengths needed in the script %<<<1
+    % simple description of variables on time axis: %<<<2
+    %
+    % t<0                             t>te
+    % |                                |
+    % |  SL(samples used in script     |
+    % |<------------------------------>|
+    % |  t=0                       te  |
+    % |   |   L(required samples)  |   |
+    % |   |<---------------------->|   |
+    % |   |           n            |   |
+    % |---+--|------|....|------|--+---|
+    %  SBC|SB   SS          SS   SE|SEC
+    %     |   (one                 |
+    %     |   segment)             |<-end of required signal
+    %     |
+    %     |<-start of reqired signal
+    %
+    % L - required samples in signal, from t=0 to t
+    % SL - samples used in script to get integer number of segments
+    % SS - samples in one PJVS segment
+    % SBC - needed samples before t=0 to work with whole segment at beginning
+    % SEC - needed samples after t to work with whole segment at end
+    % Sn - number of full SS inside of L
+    %
+    % segment at beginning is divided into SBC and SB:
+    % SBC + SB = SS
+    % segment at end is divided into SEC and SE:
+    % SE + SEC = SS
+    %
+    % (the signal will be shortened to L if needed at the end of script)
+
+    % samples before t0 %<<<2
+    % number of samples in one period of the signal:
+    Ssig = fs/f;        % can be float!
+    % number of samples in one PJVS segment:
+    SS = fs/fseg;     % can be float!
+    % find out how many samples before t=0 are needed to cover whole segment
+    % it is done by splitting segment samples before and after t0
+    SB = SS*phseg./(2*pi);
+    if SB == 0
+        % simple case - no splitting
+        SBC = 0;
+        SBCr = 0;
+        % time axis before t0:
+        tbt0 = [];
+        % index of t0 (for cutting the signal at end of script):
+        idt0 = 1;
+    else
+        % part before t0: SBC
+        % (SBC and SS can be noninteger)
+        SBC = SS - SB;
+        % here comes inherent precision to a single sample:
+        SBCr = round(SBC);
+        % add time axis before t0:
+        tbt0 = [-1*SBCr : 1 : -1]./fs;
+        % index of t0 (for cutting the signal at end of script):
+        idt0 = SBCr + 1;
+    end
+
+    % samples after te %<<<2
+    Sn = fix((L-SB)./SS);
+    SE = L - (Sn.*SS + SB);
+    if SE == 0
+        SEC = 0;
+    else
+        SEC = SS - SE;
+    end
+
+    % signal length %<<<2
+    % one SS at the end is added as safety margin, so round(SL) can be used
+    SL = SBC + SB + Sn*SS + SE + SEC + SS;
+    % fix numeric rounding issue that sometimes happen
+    % even for coherent signals caused by rounding and epsilon value:
+    if mod(SL, SS) ~= 0
+        if mod(SL-1,SS) == 0
+            SL = SL - 1;
+        end
+    end
+    tmp = round(SL) - numel(tbt0);
+    t = [0:tmp - 1]./fs;
+    t = [tbt0 t];
+    % index of te (for cutting the signal at end of script):
+    idte = idt0 + L - 1;
+
+    % debug info %<<<2
+    if DEBUG
+        printf('L   -Required signal length in samples:       %g (fractional part: %g)\n', L, L - fix(L))
+        printf('SL  -Signal length used in script in samples: %g (fractional part: %g)\n', SL, SL - fix(SL))
+        printf('SS  -Number of samples in one PJVS segment:   %g (fractional part: %g)\n', SS, SS - fix(SS))
+        printf('Sn  -Number of full segments inside of L:     %g (fractional part: %g)\n', Sn, Sn - fix(Sn))
+        printf('SBC -Samples before t0:                       %g (fractional part: %g)\n', SBC, SBC - fix(SBC))
+        printf('SB  -SS minus samples before t0:              %g (fractional part: %g)\n', SB, SB - fix(SB))
+        printf('SE  -SS minus samples after te:               %g (fractional part: %g)\n', SE, SE - fix(SE))
+        printf('SEC -Samples after te:                        %g (fractional part: %g)\n', SEC, SEC - fix(SEC))
+        printf('idt0-index of output data start               %g (fractional part: %g)\n', idt0, idt0 - fix(idt0))
+        printf('idte-index of output data start               %g (fractional part: %g)\n', idte, idte - fix(idte))
+        printf('t   -number of elements in t                  %g\n', numel(t))
+    end % if DEBUG
+
     % generate sine waveform %<<<1
-    % time axis:
-    t = [0:SL-1]./fs;
-    % sine:
     ysine = A.*sin(2*pi*f.*t + ph);
 
     % quantize: %<<<1
-    if Sseg == fix(Sseg) % fast method %<<<2
+    % fast method %<<<2
+    % only if integer signal length and divisible by samples in segment:
+    if (mod(SL, 2) == 0) && (mod(SL, SS) == 0)
         % fast method for coherent settings:
         % reformat by segments
-        % (the y matrix has many rows and columns equal to Sseg)
-        ysine = reshape(ysine, Sseg, [])';
+        % (the y matrix has many rows and columns equal to SS)
+        ysine = reshape(ysine, SS, [])';
         % calculate average value in every segment:
         avg = mean(ysine, 2);
         % find quantum numbers for every segment:
         n = round(avg./VS);
         % construct output matrix by quantum numbers:
-        y = repmat(n, 1, Sseg);
+        y = repmat(n, 1, SS);
         % mutliply quantum numbers to get quantized voltages:
         y = y.*VS;
         % reformat back to single row vectors:
         ysine = reshape(ysine', 1, []);
         y = reshape(y', 1, []);
         n = n';
-        Sid = [1:Sseg:SL-1];
+        Sid = [1:SS:SL-1];
     else % slow method %<<<2
         warning('non coherent settings (fs/fseg), using slow method!')
         % slow method for non coherent settings:
@@ -77,10 +180,10 @@ function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, 
         n = [];
         Sid = 1;
         % for cycle is usually terminated by condition at end
-        % SL is multiple of Sseg, so SL./Sseg is integer:
-        for i = 1:ceil(SL./Sseg)
+        % SL is multiple of SS, so SL./SS is integer:
+        for i = 1:ceil(SL./SS)
             % calculate index of new segment end:
-            ide = round(Sseg.*i);
+            ide = round(SS*i);
             if ide > SL
                 ide = SL
             end
@@ -101,12 +204,28 @@ function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, 
     % make reference voltages:
     Uref = n.*VS;
 
-    % signal treating %<<<1
-    % cut to required length:
-    t = t(1:L);
-    ysine = ysine(1:L);
-    y = y(1:L);
-    % add noise with normal distribution:
+    % final signal treating %<<<1
+    % debug plot %<<<2
+    if DEBUG
+        figure()
+        hold on
+        plot(ysine, '-xb')
+        plot(y, '+-r')
+        plot([1 1].*idt0, ylim, '-k')
+        plot([1 1].*idte, ylim, '-k')
+        legend('sine waveform', 'digitized PJVS signal', 'required signal-start', 'required signal-end')
+        hold off
+        xlabel('samples')
+        ylabel('u (V)')
+        title('full plot')
+    end
+
+    % cut to required length: %<<<2
+    t = t(idt0:idte);
+    ysine = ysine(idt0:idte);
+    y = y(idt0:idte);
+
+    % add noise with normal distribution: %<<<2
     y = y + normrnd(0, noise, size(y));
 
     % filter signal %<<<1
@@ -122,21 +241,68 @@ function [y, n, Uref, Sid] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, 
         y = filtfilt(b,a,y);
     end % if apply_filter
 
-    % % plotting - only for debug %<<<1
-    % figure()
-    % hold on
-    % plot(t, ysine, '-b')
-    % plot(t, y, '+-r')
-    % legend('sine waveform', 'digitized PJVS signal', 'filtered')
-    % hold off
-    % xlabel('t (s)')
-    % ylabel('u (V)')
+    % debug plot %<<<2
+    if DEBUG
+        figure()
+        hold on
+        plot(t, ysine, '-xb')
+        plot(t, y, '+-r')
+        legend('sine waveform', 'digitized PJVS signal')
+        hold off
+        xlabel('t (s)')
+        ylabel('u (V)')
+        title('cut plot')
+    end
 
 end % function
 
 % tests  %<<<1
-% just test working function for terrible inputs:
+% just test working function for simple and terrible inputs:
 %!shared f, A, ph, L, fs, noise, fseg, fm, y, n
+%! f = 1;
+%! A = 1;
+%! ph = 0*pi;
+%! L = 1000;
+%! fs = 1000;
+%! noise = 0;
+%! fseg = 10;
+%! phseg = 0*pi;
+%! fm = 75e9;
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, 1);
+%!assert(size(y, 2) == L);
+%! f = 1;
+%! A = 1;
+%! ph = 0*pi;
+%! L = 1000;
+%! fs = 1000;
+%! noise = 0;
+%! fseg = 10;
+%! phseg = 1*pi;
+%! fm = 75e9;
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, 1);
+%!assert(size(y, 2) == L);
+%! f = 1;
+%! A = 1;
+%! ph = 0*pi;
+%! L = 1000;
+%! fs = 1000;
+%! noise = 0;
+%! fseg = 10;
+%! phseg = 0.97*pi;
+%! fm = 75e9;
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, 1);
+%!assert(size(y, 2) == L);
+%! f = 1;
+%! A = 1;
+%! ph = 0.2567*pi;
+%! L = 1000;
+%! fs = 1000;
+%! noise = 0;
+%! fseg = 10;
+%! phseg = 1.01*pi;
+%! fm = 75e9;
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, 1);
+%!assert(size(y, 2) == L);
 %! f = 2;
 %! A = 10;
 %! ph = -0.2*pi;
@@ -144,8 +310,27 @@ end % function
 %! fs = 233;
 %! noise = 1e-1;
 %! fseg = 17;
+%! phseg = 0*pi;
 %! fm = 75e9;
-%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, fm, 1);
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, phseg, noise, fseg, fm, 1);
 %!assert(size(y, 2) == L);
+
+% demo %<<<1
+% terrible inputs and nice figure:
+%!demo
+%! f = 1;
+%! A = 1;
+%! ph = 0;
+%! L = 1e3;
+%! fs = 1e3;
+%! noise = 1e-2;
+%! fseg = 10;
+%! fm = 75e9;
+%! t = [0:L-1]./fs;
+%! [y, n] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, 0, fm, 1);
+%! plot(t, y)
+%! xlabel('t (s)')
+%! ylabel('sampled voltage (V)')
+%! title('PJVS segments as sampled by noisy delta-sigma digitizer') 
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
