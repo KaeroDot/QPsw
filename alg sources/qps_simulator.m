@@ -26,7 +26,7 @@
 % S - samples of switch events
 % M - system setup matrix
 
-function [D, S, M] = qps_simulator(sysconfig, sigconfig) 
+function [D, S, M, Uref, Sid] = qps_simulator(sysconfig, sigconfig) 
     % check user inputs %<<<1
     % system configuration %<<<2
     if numel(sysconfig) ~= 3
@@ -111,10 +111,7 @@ function [D, S, M] = qps_simulator(sysconfig, sigconfig)
 
     % generate signals %<<<1
     % PJVS signal %<<<2
-    for i = 1:length(A)
-            % [y, n, Uref, Sid, t] = pjvs_wvfrm_generator(f,      A,ph,  L, fs, noise, fseg, phseg, fm, apply_filter)
-            [y_PJVS, n, Uref, Sid] = pjvs_wvfrm_generator(f, max(A), 0, SL, fs, noise, fseg,     0, fm, apply_filter);
-    end % for i
+    [y_PJVS, n, Uref, Sid] = pjvs_wvfrm_generator(f, max(A), 0, SL, fs, noise, fseg,     0, fm, apply_filter);
 
     % DUT signal %<<<2
     t_DUT = [0:L-1]./fs;

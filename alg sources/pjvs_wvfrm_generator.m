@@ -224,6 +224,9 @@ function [y, n, Uref, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fse
     t = t(idt0:idte);
     ysine = ysine(idt0:idte);
     y = y(idt0:idte);
+    Sid(Sid > numel(y)) = [];
+    % because one segment was added as safety margin:
+    Uref = Uref(1:end-1);
 
     % add noise with normal distribution: %<<<2
     y = y + normrnd(0, noise, size(y));
@@ -258,6 +261,7 @@ end % function
 
 % tests  %<<<1
 % just test working function for simple and terrible inputs:
+%!test
 %!shared f, A, ph, L, fs, noise, fseg, fm, y, n
 %! f = 1;
 %! A = 1;

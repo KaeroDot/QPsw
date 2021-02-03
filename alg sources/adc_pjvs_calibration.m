@@ -14,8 +14,8 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, Rs, Re)
     if Sid(1) != 1
             Sid = [1 Sid];
     end
-    if Sid(end) != length(y)
-            Sid = [Sid length(y)];
+    if all(Sid != numel(y))
+            Sid = [Sid numel(y)];
     end
 
     % check inputs %<<<1
