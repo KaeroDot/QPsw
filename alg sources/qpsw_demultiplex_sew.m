@@ -7,8 +7,6 @@
 % yc - Sampled data (V) as cell XXX
 %   Matrix, every row represents data sampled by one digitizer. Number of rows
 %   is equal to number of digitizers.
-% S - Switching samples
-%   Switch happens just before this sample number
 % M - Multiplexer setup
 %   Matrix of multiplexer setups in sections (in between switches).
 %   Every row describes what was sampled by the digitizer.
@@ -58,6 +56,8 @@
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
 function y = qpsw_demultiplex_sew(yc, M) %<<<1
+    % XXXXX!!!! bijection only if available by system configuration!
+
     % bijection M->M2 %<<<1
     % renumber values in M to be just increasing from 1 to rows(y), simple
     % bijection (e.g. -1, 1, 2 into 1, 2, 3)
@@ -75,8 +75,13 @@ function y = qpsw_demultiplex_sew(yc, M) %<<<1
     M2 = M2 - offset;
 
     % do signal reordering %<<<1
-    y2 = yc;
+    % prepare segment full of nans for the case the signal was not sampled:
+    nanseg = NaN.*ones(size(yc{1,1}));
+    % create cell, where every cell contains segment of nans:
+    [y2{1:numel(nums),1:size(yc,2)}] = deal(nanseg);
     % reorder yc into y2:
+    % (i.e. fill in cells with available data. some cells are not filled because
+    % signal was not sampled.)
     for s = 1:columns(M)
         % for every section (column) do:
         for r = 1:rows(M)
@@ -87,7 +92,7 @@ function y = qpsw_demultiplex_sew(yc, M) %<<<1
         end % r
     end % s
 
-    % convert to signals
+    % convert to matrix
     y = [y2'{:}];
     y = reshape(y, length([y2{1,:}]), [])';
 end % function
