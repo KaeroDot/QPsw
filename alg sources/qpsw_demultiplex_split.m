@@ -1,5 +1,5 @@
 % Makes demultiplexing of the waveforms measured in QPS - Quantum Power
-% System. Does first part - splitting data into pieces.
+% System. Does the first part - splitting data into data pieces.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
 %
@@ -7,8 +7,8 @@
 % y - Sampled data (V)
 %   Matrix, every row represents data sampled by one digitizer. Number of rows
 %   is equal to number of digitizers.
-% S - Switching samples
-%   Switch happens just before this sample number
+% S - Indexes of switches
+%   Vector, switch happens just before this sample indexes
 % M - Multiplexer setup
 %   Matrix of multiplexer setups in sections (in between switches).
 %   Every row describes what was sampled by the digitizer.
@@ -17,8 +17,12 @@
 %   -1, -2, -3 ... denotes reference signals (Josephson Voltage Systems).
 %
 % Outputs:
-% ys - cell, data split into pieces according M
-% S - Switching samples, normalized
+% ys - cell, data split into data pieces according M
+% S - Indexes of switching samples, normalized. S contains also indexes of first
+%   and last sample of input data y.
+%
+% Examples are shown for use of qpsw_demultiplex_split and 
+% qpsw_demultiplex_sew right after:
 %
 % Example 1:
 % Example shows measurement by 3 digitizers of 2 signals and 1 JVS.
@@ -33,7 +37,7 @@
 % digitizer 1 (y row 1):   1   |   2   |  -1
 % digitizer 2 (y row 1):  -1   |   1   |   2
 % digitizer 3 (y row 1):   2   |  -1   |   1
-% Returned data:
+% Returned data after _sew:
 % signal 1 (y2 row 1)  :  -1   |  -1   |  -1
 % signal 2 (y2 row 2)  :   1   |   1   |   1
 % signal 3 (y2 row 3)  :   2   |   2   |   2
@@ -51,7 +55,7 @@
 % M:
 % digitizer 1 (y row 1):  -1   |   1   |  -1   |     1
 % digitizer 2 (y row 1):   2   |  -1   |   2   |    -1
-% Returned data:
+% Returned data after _sew:
 % signal 1 (y2 row 1)  :  -1   |  -1   |  -1   |    -1
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
@@ -124,5 +128,8 @@ function [yc, S] = qpsw_demultiplex_split(y, S, M) %<<<1
         end % r
     end % s
 end % function
+
+% tests %<<<1
+% tests of demultiplex_sew also tests this script
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
