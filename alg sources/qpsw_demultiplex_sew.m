@@ -18,6 +18,8 @@
 % y - reordered sampled data (V)
 %   First rows are quantum signals, next rows are signals to be measured,
 %   according numbers in M matrix, -1; 1; 2; 3
+% ycout - reordered sampled data (V), kept as cell of data pieces.
+% My - setup of rows of y. M values reordered into rows as y.
 %
 % Examples are shown for use of qpsw_demultiplex_split and 
 % qpsw_demultiplex_sew right after:
@@ -36,9 +38,10 @@
 % digitizer 2 (y row 1):  -1   |   1   |   2
 % digitizer 3 (y row 1):   2   |  -1   |   1
 % Returned data after _sew:
-% signal 1 (y2 row 1)  :  -1   |  -1   |  -1
-% signal 2 (y2 row 2)  :   1   |   1   |   1
-% signal 3 (y2 row 3)  :   2   |   2   |   2
+% My:
+% signal 1 (y  row 1)  :  -1   |  -1   |  -1
+% signal 2 (y  row 2)  :   1   |   1   |   1
+% signal 3 (y  row 3)  :   2   |   2   |   2
 %
 % Example 2:
 % Example shows measurement by 2 digitizers of 2 signals and 1 JVS.
@@ -54,16 +57,17 @@
 % digitizer 1 (y row 1):  -1   |   1   |  -1   |     1
 % digitizer 2 (y row 1):   2   |  -1   |   2   |    -1
 % Returned data after _sew:
-% signal 1 (y2 row 1)  :  -1   |  -1   |  -1   |    -1
-% signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
-% signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
+% signal 1 (y  row 1)  :  -1   |  -1   |  -1   |    -1
+% signal 2 (y  row 2)  :  NaN  |   1   |  NaN  |     1
+% signal 3 (y  row 3)  :   2   |  NaN  |   2   |    NaN
 
-function y = qpsw_demultiplex_sew(yc, M) %<<<1
+function [y, ycout, My] = qpsw_demultiplex_sew(yc, M) %<<<1
     % bijection M->M2 %<<<1
     % renumber values in M to be just increasing from 1 to rows(y), simple
     % bijection (e.g. -1, 1, 2 into 1, 2, 3)
     % (this is crude method, how to make bijection simpler in matlab/octave?)
     nums = unique(M); % get all unique values
+    My = sort(nums)(:)';
     offset = max(max(M)) + 10; % prepare offset so values are not overwritten
     % initiliaze memory:
     M2 = M;
@@ -79,8 +83,8 @@ function y = qpsw_demultiplex_sew(yc, M) %<<<1
     % prepare data piece full of nans for the case the signal was not sampled:
     nanseg = NaN.*ones(size(yc{1,1}));
     % create cell, where every cell contains data piece of nans:
-    [y2{1:numel(nums),1:size(yc,2)}] = deal(nanseg);
-    % reorder yc into y2:
+    [ycout{1:numel(nums),1:size(yc,2)}] = deal(nanseg);
+    % reorder yc into ycout:
     % (i.e. fill in cells with available data. some cells are not filled because
     % signal was not sampled.)
     for s = 1:columns(M)
@@ -89,36 +93,36 @@ function y = qpsw_demultiplex_sew(yc, M) %<<<1
             % for every row (digtizers) do:
             % row index is:
             % M2(r, s) <- r
-            y2(M2(r, s), s) = yc(r, s);
+            ycout(M2(r, s), s) = yc(r, s);
         end % r
     end % s
 
     % convert to matrix
-    y = [y2'{:}];
-    y = reshape(y, length([y2{1,:}]), [])';
+    y = [ycout'{:}];
+    y = reshape(y, length([ycout{1,:}]), [])';
 end % function
 
 % tests  %<<<1
 %!test
-%!shared y, S, M, y2, yc, y2ref
+%!shared y, S, M, ycout, yc, ycoutref
 %! % Example 1: %<<<2
 %! y  = [ 1  2  3 40 50 60 -7 -8 -9; -1 -2 -3 4 5 6 70 80 90; 10 20 30 -4 -5 -6  7  8  9];
 %! S = [4 7];
 %! M = [1 2 -1; -1 1 2; 2 -1 1];
-%! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
+%! ycoutref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
 %! yc = qpsw_demultiplex_split(y, S, M);
-%! y2 = qpsw_demultiplex_sew(yc, M);
-%!assert(y2ref == y2);
+%! ycout = qpsw_demultiplex_sew(yc, M);
+%!assert(ycoutref == ycout);
 %! % Example 2: %<<<2
 %! y  =    [-1 -2 -3  4  5  6 -7 -8 -9  10  11  12;  10  20  30 -4 -5 -6  70  80  90 -10 -11 -12];
 %! S = [4 7 10];
 %! M = [-1 1 -1 1; 2 -1 2 -1];
-%! y2ref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
+%! ycoutref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
 %! yc = qpsw_demultiplex_split(y, S, M);
-%! y2 = qpsw_demultiplex_sew(yc, M);
+%! ycout = qpsw_demultiplex_sew(yc, M);
 %! % the change of NaN into -100 is only to get ability of comparison, because NaN == NaN is always false!
-%! y2(isnan(y2)) = -100;
-%! y2ref(isnan(y2ref)) = -100;
-%!assert(y2ref == y2);
+%! ycout(isnan(ycout)) = -100;
+%! ycoutref(isnan(ycoutref)) = -100;
+%!assert(ycoutref == ycout);
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
