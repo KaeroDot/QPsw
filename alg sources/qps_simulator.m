@@ -87,11 +87,14 @@ function [D, S, M, Uref, Sid] = qps_simulator(sysconfig, sigconfig)
     % apply_filter = 1;
 
     % Generate M matrix %<<<1
-    if sysconfig == [2 1 1]
-        M = [ 1  2 -1];
+    % DUT singals, digitizers, PJVS
+    if sysconfig == [1 1 1]
+        M = [-1  1];
+    elseif sysconfig == [2 1 1]
+        M = [-1  1  2];
     elseif sysconfig == [2 2 1]
-        M = [ 1 -1;
-             -1  2];
+        M = [-1  1;
+              2  1];
     elseif sysconfig == [2 3 1]
         M = [-1  1  1 -1  2  2;
               1 -1  2  2 -1  1;

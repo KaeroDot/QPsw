@@ -4,7 +4,7 @@ clear all, close all
 % sysconfig == [2 2 1];
 % sysconfig == [2 3 1];
 
-sysconfig = [6 3 1];
+sysconfig = [1 1 1];
 sigconfig.f = 50;
 sigconfig.A = [10 7 5 3 1 0.5];
 sigconfig.ph = [0 0 0 0 0 0];
