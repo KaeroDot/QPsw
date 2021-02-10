@@ -156,6 +156,7 @@ function [D, S, M, Uref, Sid] = qps_simulator(sysconfig, sigconfig, S)
                 plot([S(i) S(i)], minmax)
         end % for i
         legend(legc)
+        title('Simulated signals, offseted')
         hold off
     end % if DEBUG
 

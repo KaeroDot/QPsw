@@ -8,7 +8,7 @@
 
 function res = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
     % initialize %<<<1
-    DEBUG = 1;
+    DEBUG = 0;
 
     % split multiplexed data %<<<1
     yc = qpsw_demultiplex_split(D, S, M);
@@ -119,6 +119,7 @@ function res = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
             end
         end % for i
         legend(legc)
+        title('Demultiplexed signals, offseted')
         hold off
     end % if DEBUG
 
