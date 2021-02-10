@@ -6,7 +6,7 @@
 % Result are waveforms without digitizer errors.
 
 
-function res = qpsw_process(sysconfig, sigconfig, D, S, M, Uref, Spjvs, alg);
+function res = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
     % initialize %<<<1
     DEBUG = 0;
 
@@ -25,7 +25,22 @@ function res = qpsw_process(sysconfig, sigconfig, D, S, M, Uref, Spjvs, alg);
                     % check if quantum measurement:
                     if M(i, j) < 0
                             % do calibration
-                            ycal(i,j) = adc_pjvs_calibration(yc{i,j}, Spjvs, Uref, sigconfig.Rs, sigconfig.Re);
+                            % cut Spjvs and subtract to get indexes of the
+                            % cutted yc{i,j}
+                            idx = find(Spjvs >= S(j) & Spjvs < S(j+1));
+                            tmpSpjvs = Spjvs(idx) - S(j) + 1;
+                            tmpUref = Uref(idx);
+                            if tmpSpjvs(1) ~= 1
+                                tmpSpjvs = [1 tmpSpjvs];
+                                % add one Uref before, because first switch was
+                                % not at position 1
+                                tmpUref = [Uref(idx(1)-1) tmpUref];
+                            end
+                            if tmpSpjvs(end) ~= size(yc{i,j},2) + 1
+                                tmpSpjvs = [tmpSpjvs size(yc{i,j},2) + 1];
+                                % no need to add Uref, it is already there
+                            end
+                            ycal(i,j) = adc_pjvs_calibration(yc{i,j}, tmpSpjvs, tmpUref, sigconfig.Rs, sigconfig.Re);
                     else
                             ycal(i,j) = empty_ycal;
                     end % if M(i, j) < 0
@@ -99,7 +114,9 @@ function res = qpsw_process(sysconfig, sigconfig, D, S, M, Uref, Spjvs, alg);
         minmax(1) = minmax(1) - abs(minmax(2) - minmax(1)).*0.1;
         minmax(2) = minmax(2) + abs(minmax(2) - minmax(1)).*0.1;
         for i = 1:length(S)
+            if S(i) <= size(t,2)
                 plot([t(S(i)) t(S(i))], minmax)
+            end
         end % for i
         legend(legc)
         hold off

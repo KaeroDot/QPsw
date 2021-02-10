@@ -62,45 +62,44 @@
 % signal 3 (y  row 3)  :   2   |  NaN  |   2   |    NaN
 
 function [y, ycout, My] = qpsw_demultiplex_sew(yc, M) %<<<1
+    % get all unique values in configuration matrix M:
+    nums = unique(M);
+    % get ordering of the output signals:
+    My = sort(nums)(:)';
+    % get record length:
+    RL = sum(cellfun('size', yc, 2));
+    % number of DUT signals:
+    Sig = numel(nums);
+
     % bijection M->M2 %<<<1
     % renumber values in M to be just increasing from 1 to rows(y), simple
     % bijection (e.g. -1, 1, 2 into 1, 2, 3)
     % (this is crude method, how to make bijection simpler in matlab/octave?)
-    nums = unique(M); % get all unique values
-    My = sort(nums)(:)';
     offset = max(max(M)) + 10; % prepare offset so values are not overwritten
-    % initiliaze memory:
+    % initiliaze new configuration matrix:
     M2 = M;
     % first replace by values far away from maximum values so values are not
     % overwritten:
-    for i = 1:length(nums)
+    for i = 1:Sig
         M2(M2 == nums(i)) = i + offset;
     end
-    % subtract offset to get values from 1 to max(M)
+    % subtract offset to get values from 1 to Sig
     M2 = M2 - offset;
 
-    % do signal reordering %<<<1
-    % prepare data piece full of nans for the case the signal was not sampled:
-    nanseg = NaN.*ones(size(yc{1,1}));
-    % create cell, where every cell contains data piece of nans:
-    [ycout{1:numel(nums),1:size(yc,2)}] = deal(nanseg);
-    % reorder yc into ycout:
-    % (i.e. fill in cells with available data. some cells are not filled because
-    % signal was not sampled.)
-    for s = 1:columns(M)
-        % for every section (column) do:
-        for r = 1:rows(M)
-            % for every row (digtizers) do:
-            % row index is:
-            % M2(r, s) <- r
-            ycout(M2(r, s), s) = yc(r, s);
-        end % r
-    end % s
-
-    % convert to matrix
-    y = [ycout'{:}];
-    y = reshape(y, length([ycout{1,:}]), [])';
+    % initialize sampled data y:
+    y = NaN.*ones(Sig, RL);
+    % set content of y
+    for i = 1:size(M2,1)
+        position = 1;
+        for j = 1:size(M2,2)
+            ids = position;
+            ide = ids + size(yc{i,j}, 2) - 1;
+            y(M2(i,j),ids:ide) = yc{i,j};
+            position = ide + 1;
+        end % for j = 1:size(M,2)
+    end % for i = 1:size(M,1)
 end % function
+% XXX missing ycout in results!
 
 % tests  %<<<1
 %!test

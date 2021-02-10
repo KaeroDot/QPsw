@@ -60,7 +60,7 @@
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
-function [yc, S] = qpsw_demultiplex_split(y, S, M) %<<<1
+function [yc] = qpsw_demultiplex_split(y, S, M) %<<<1
     % check variables: %<<<1
     % check if S is monotonic and numbers are not repeated:
     if not(all(diff(S)>0))
@@ -75,20 +75,16 @@ function [yc, S] = qpsw_demultiplex_split(y, S, M) %<<<1
     end
 
     % check sizes:
-    if size(S, 2) != columns(M) - 1
-        error('qpsw_demultiplex: S columns must be equal to M columns minus 1!')
+    if size(S, 2) != columns(M) + 1
+        error('qpsw_demultiplex: S columns must be equal to M columns plus 1!')
+    end
+    if S(1) != 1
+        error('qpsw_demultiplex: S(1) must be equal to 1!')
+    end
+    if S(end) != size(y,2) + 1
+        error('qpsw_demultiplex: S(end) must be equal to data length + 1!')
     end
 
-    % prepare variables %<<<1
-    % if switch is first sample, remove it, because switch before first sample
-    % is implict.
-    if S(1) != 1
-        S = [1 S];
-    end
-    % add switch after (!) last sample if missing:
-    if S(end) != columns(y) + 1
-        S = [S columns(y) + 1];
-    end
     % length of the records:
     samples = columns(y);
     % number of digitizers:

@@ -10,12 +10,15 @@
 % cal - calibration output
 
 function [cal] = adc_pjvs_calibration(y, Sid, Uref, Rs, Re)
-    % prepare input variabels %<<<1 
+    % check inputs %<<<1
     if Sid(1) != 1
-            Sid = [1 Sid];
+        error('qpsw_demultiplex: S(1) must be equal to 1!')
     end
-    if all(Sid != numel(y))
-            Sid = [Sid numel(y)];
+    if Sid(end) != size(y,2) + 1
+        error('qpsw_demultiplex: S(end) must be equal to data length + 1!')
+    end
+    if numel(Uref) != numel(Sid) - 1
+        error('qpsw_demultiplex: number of Uref must be equal to number of switches S minus 1')
     end
 
     % check inputs %<<<1
@@ -25,28 +28,31 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, Rs, Re)
     if Re < 0
         error('pjvs_wvfrm_generator: negative number of samples to be removed at end of segment!')
     end
-    if Sid(2) - Sid(1) < Rs + Re + 1
-        error('pjvs_wvfrm_generator: not enough samples in single segment after start and end removal!')
+    if all(diff(Sid) < Rs + Re + 1)
+        error('pjvs_wvfrm_generator: not enough samples in segments after start and end removal!')
     end
 
     % get calibration data %<<<1
     for i = 1:length(Sid) - 1
             segment = y(Sid(i):Sid(i+1) - 1);
-            % remove samples at start and at end
-            segment = segment(Rs+1:end-Re);
-            % calculate mean value:
-            C(end+1) = mean(segment);
-            uC(end+1) = std(segment)./sqrt(length(segment));
-            % XXX This should be improved - just take all values in segment and make
-            % XXX CCC needs to save intermediate results as binary data, because
-            % correlation matrices are too large in case of 1000 numbers
-            % fitting directly, without mean and std!
+            % remove samples at start and at end, if possible:
+            if numel(segment) > Rs + Re + 1
+                segment = segment(Rs+1:end-Re);
+                % calculate mean value:
+                Ref(end+1) = Uref(i);
+                C(end+1) = mean(segment);
+                uC(end+1) = std(segment)./sqrt(length(segment));
+                % XXX This should be improved - just take all values in segment and make
+                % XXX CCC needs to save intermediate results as binary data, because
+                % correlation matrices are too large in case of 1000 numbers
+                % fitting directly, without mean and std!
+            end % if numel(segment) > Rs + Re + 1
     end % for i
 
     % sort data based on x axis? is it needed? CCC does it or not? XXX
 
     % calculate calibration curve %<<<1
-    DI.x.v = Uref;
+    DI.x.v = Ref;
     DI.y.v = C;
     DI.y.u = uC;
     DI.exponents.v = [0 1];
