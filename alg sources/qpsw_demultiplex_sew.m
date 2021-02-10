@@ -65,9 +65,10 @@ function [y, ycout, My] = qpsw_demultiplex_sew(yc, M) %<<<1
     % get all unique values in configuration matrix M:
     nums = unique(M);
     % get ordering of the output signals:
-    My = sort(nums)(:)';
+    My = sort(nums)(:);
     % get record length:
-    RL = sum(cellfun('size', yc, 2));
+    % sum of columns in one row of cell
+    RL = sum(cellfun('size', yc(1,:), 2));
     % number of DUT signals:
     Sig = numel(nums);
 
@@ -88,6 +89,13 @@ function [y, ycout, My] = qpsw_demultiplex_sew(yc, M) %<<<1
 
     % initialize sampled data y:
     y = NaN.*ones(Sig, RL);
+    % initialize output cell matrix:
+    for i = 1:size(M2,1)
+        for j = 1:size(M2,2)
+            ycout{i,j} = NaN.*ones(size(yc{i,j}));
+        end % for j = 1:size(M,2)
+    end % for i = 1:size(M,1)
+
     % set content of y
     for i = 1:size(M2,1)
         position = 1;
@@ -96,32 +104,33 @@ function [y, ycout, My] = qpsw_demultiplex_sew(yc, M) %<<<1
             ide = ids + size(yc{i,j}, 2) - 1;
             y(M2(i,j),ids:ide) = yc{i,j};
             position = ide + 1;
+            ycout{M2(i,j),j} = yc{i,j};
         end % for j = 1:size(M,2)
     end % for i = 1:size(M,1)
 end % function
-% XXX missing ycout in results!
 
 % tests  %<<<1
 %!test
-%!shared y, S, M, ycout, yc, ycoutref
+%!shared y, S, M, yc, yout, ycout, My, youtref, Myref
 %! % Example 1: %<<<2
 %! y  = [ 1  2  3 40 50 60 -7 -8 -9; -1 -2 -3 4 5 6 70 80 90; 10 20 30 -4 -5 -6  7  8  9];
-%! S = [4 7];
+%! S = [1 4 7 10];
 %! M = [1 2 -1; -1 1 2; 2 -1 1];
-%! ycoutref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
+%! youtref = [-1 -2 -3 -4 -5 -6 -7 -8 -9;  1  2  3 4 5 6  7  8  9; 10 20 30 40 50 60 70 80 90];
+%! Myref = [-1 1 2];
 %! yc = qpsw_demultiplex_split(y, S, M);
-%! ycout = qpsw_demultiplex_sew(yc, M);
-%!assert(ycoutref == ycout);
+%! [yout, ycout, My] = qpsw_demultiplex_sew(yc, M);
+%!assert(youtref == yout);
 %! % Example 2: %<<<2
 %! y  =    [-1 -2 -3  4  5  6 -7 -8 -9  10  11  12;  10  20  30 -4 -5 -6  70  80  90 -10 -11 -12];
-%! S = [4 7 10];
+%! S = [1 4 7 10 13];
 %! M = [-1 1 -1 1; 2 -1 2 -1];
-%! ycoutref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
+%! youtref = [-1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12; NaN NaN NaN  4  5  6 NaN NaN NaN  10  11  12; 10 20 30 NaN NaN NaN 70 80 90 NaN NaN NaN];
 %! yc = qpsw_demultiplex_split(y, S, M);
-%! ycout = qpsw_demultiplex_sew(yc, M);
+%! [yout, ycout, My] = qpsw_demultiplex_sew(yc, M);
 %! % the change of NaN into -100 is only to get ability of comparison, because NaN == NaN is always false!
-%! ycout(isnan(ycout)) = -100;
-%! ycoutref(isnan(ycoutref)) = -100;
-%!assert(ycoutref == ycout);
+%! yout(isnan(yout)) = -100;
+%! youtref(isnan(youtref)) = -100;
+%!assert(youtref == yout);
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
