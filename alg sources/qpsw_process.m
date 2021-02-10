@@ -8,7 +8,7 @@
 
 function res = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
     % initialize %<<<1
-    DEBUG = 0;
+    DEBUG = 1;
 
     % split multiplexed data %<<<1
     yc = qpsw_demultiplex_split(D, S, M);
@@ -127,10 +127,12 @@ function res = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
     for i = 1:rows(yc)
             if My(i) > 0 % only non-quantum data
                 for j = 1:columns(yc)
-                    % calculate data
-                        DI.y.v = yc{i, j};
-                        DI.fs.v = sigconfig.fs;
-                        res(i,j) = qwtb(alg, DI);
+                        if ~all(isnan(yc{i,j}))
+                            % calculate data
+                            DI.y.v = yc{i, j};
+                            DI.fs.v = sigconfig.fs;
+                            res(i,j) = qwtb(alg, DI);
+                        endif
                 end % for j = 1:columns(yc)
             end % if My > 0 % only non-quantum data
     end % for i = 1:rows(yc)
