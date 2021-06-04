@@ -63,4 +63,5 @@
 		<Item Name="VI Tree.vi" Type="VI" URL="../Public/VI Tree.vi"/>
 	</Item>
 	<Item Name="test.vi" Type="VI" URL="../test.vi"/>
+	<Item Name="test2.vi" Type="VI" URL="../test2.vi"/>
 </Library>
