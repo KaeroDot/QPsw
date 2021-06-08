@@ -1,7 +1,6 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
 <Library LVVersion="20008000">
 	<Property Name="Instrument Driver" Type="Str">True</Property>
-	<Property Name="NI.Lib.DefaultMenu" Type="Str">dir.mnu</Property>
 	<Property Name="NI.Lib.Description" Type="Str">LabVIEW Plug and Play instrument driver for Quantum Power Multiplexer, developed in the scope of the Quantum Power EMPIR project.</Property>
 	<Property Name="NI.Lib.Icon" Type="Bin">)!#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!*-!!!*Q(C=\&gt;1R=O*!%)8B:^='4H(MQ-56_A251?Z!:)Y\WZD5GX'!$&lt;&lt;TX="=A3NUY!NQ";YA`RKV8'S6&amp;Z*VF1.,$)AXIZ[0E:$5NBPJG`J,7X&gt;W'`KH-?0AM@6&gt;0`8XX81]PPIR`,O`\@X*O7]VOZ-2X8PV;]#`_]`\,WU[OXXV@`6`\P\,N`@4Z4`"RW\36:03EB9UJVH\&gt;8W3*XG3*XG3*XG1"XG1"XG1"\G4/\G4/\G4/\G2'\G2'\G2'XH&lt;S55O=J'T+MHES52*U;2!-BC+EL@%EXA34_,BKR*0YEE]C3@R-%3**`%EHM34?$B.C3@R**\%EXAIV34:&gt;H)]C9@S#DS"*`!%HM$$F!I]!3#9,#A=&amp;)'BI$-Y#$S"*`"QK-!4?!*0Y!E]&gt;#PQ"*\!%XA#$[?U69GG'8:S0*32YX%]DM@R/"Z+S`%Y(M@D?"Q0U]HR/"Y(Y5TI&amp;)=AZS2HA00&amp;]4A?0O2Y()`D=4S/B[ZWB&lt;SNT+!:&gt;H)]BM@Q'"\$9XAI)=.D?!S0Y4%]F*8B-4S'R`!9(K;3Y4%]BM?!'*-SP9RCRIH')#-Q0,T;X7,N+E747.PLLTH?K+I&lt;5(6DK7Y9V9WAOM#K#[?[)+K&amp;6CWA;G&amp;50VDV1V2!V=3KAKK"/P*_I/VJ/^K7NK'N;5P;H$9&lt;4PX0!Y`(IQ[(A`&lt;\P8;\H&lt;&lt;&lt;L4;&lt;D&gt;&lt;LN:&lt;,J?&lt;TO7;TW&gt;P4[JZ^X+[GZ^)4R\`O6IP@N^]8@R[\(]]0K]80F^6CS+@_DWDD=_ET0"NVL@\E-=];P1);8I-A!!!!!!</Property>
 	<Property Name="NI.Lib.SourceVersion" Type="Int">536903680</Property>
@@ -54,7 +53,6 @@
 		<Item Name="Example" Type="Folder">
 			<Item Name="Auxiliary" Type="Folder">
 				<Item Name="SubVI Set Front panel elements.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set Front panel elements.vi"/>
-				<Item Name="Globals.vi" Type="VI" URL="../Public/Example/Auxiliary/Globals.vi"/>
 				<Item Name="Sequence Editor.vi" Type="VI" URL="../Public/Example/Auxiliary/Sequence Editor.vi"/>
 				<Item Name="SubVI Set FP Channel-Guard value.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set FP Channel-Guard value.vi"/>
 			</Item>
@@ -66,7 +64,6 @@
 			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequence/Get Number of Sequences.vi"/>
 			<Item Name="Load Sequence.vi" Type="VI" URL="../Public/Sequence/Load Sequence.vi"/>
 		</Item>
-		<Item Name="dir.mnu" Type="Document" URL="../Public/dir.mnu"/>
 		<Item Name="Close.vi" Type="VI" URL="../Public/Close.vi"/>
 		<Item Name="Initialize.vi" Type="VI" URL="../Public/Initialize.vi"/>
 		<Item Name="VI Tree.vi" Type="VI" URL="../Public/VI Tree.vi"/>
