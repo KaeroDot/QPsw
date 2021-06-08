@@ -37,6 +37,7 @@
 			<Item Name="Get Delay.vi" Type="VI" URL="../Public/Configure/Get Delay.vi"/>
 			<Item Name="Configure Delay.vi" Type="VI" URL="../Public/Configure/Configure Delay.vi"/>
 			<Item Name="Configure Timer.vi" Type="VI" URL="../Public/Configure/Configure Timer.vi"/>
+			<Item Name="Get Slaves Number &amp; Positions.vi" Type="VI" URL="../Public/Configure/Get Slaves Number &amp; Positions.vi"/>
 		</Item>
 		<Item Name="Channels" Type="Folder">
 			<Item Name="Set Channel.vi" Type="VI" URL="../Public/Channels/Set Channel.vi"/>
@@ -52,16 +53,22 @@
 		</Item>
 		<Item Name="Example" Type="Folder">
 			<Item Name="Auxiliary" Type="Folder">
-				<Item Name="SubVI Find Slave and Channel.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Find Slave and Channel.vi"/>
 				<Item Name="SubVI Set Front panel elements.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set Front panel elements.vi"/>
+				<Item Name="Globals.vi" Type="VI" URL="../Public/Example/Auxiliary/Globals.vi"/>
+				<Item Name="Sequence Editor.vi" Type="VI" URL="../Public/Example/Auxiliary/Sequence Editor.vi"/>
+				<Item Name="SubVI Set FP Channel-Guard value.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set FP Channel-Guard value.vi"/>
 			</Item>
 			<Item Name="QuP Multiplexer Control.vi" Type="VI" URL="../Public/Example/QuP Multiplexer Control.vi"/>
+		</Item>
+		<Item Name="Sequence" Type="Folder">
+			<Item Name="Calculate bytes.vi" Type="VI" URL="../Public/Sequence/Calculate bytes.vi"/>
+			<Item Name="Calculate switching matrix.vi" Type="VI" URL="../Public/Sequence/Calculate switching matrix.vi"/>
+			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequence/Get Number of Sequences.vi"/>
+			<Item Name="Load Sequence.vi" Type="VI" URL="../Public/Sequence/Load Sequence.vi"/>
 		</Item>
 		<Item Name="dir.mnu" Type="Document" URL="../Public/dir.mnu"/>
 		<Item Name="Close.vi" Type="VI" URL="../Public/Close.vi"/>
 		<Item Name="Initialize.vi" Type="VI" URL="../Public/Initialize.vi"/>
 		<Item Name="VI Tree.vi" Type="VI" URL="../Public/VI Tree.vi"/>
 	</Item>
-	<Item Name="test.vi" Type="VI" URL="../test.vi"/>
-	<Item Name="test2.vi" Type="VI" URL="../test2.vi"/>
 </Library>
