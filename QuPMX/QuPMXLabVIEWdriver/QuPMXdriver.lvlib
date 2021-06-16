@@ -58,11 +58,12 @@
 			</Item>
 			<Item Name="QuP Multiplexer Control.vi" Type="VI" URL="../Public/Example/QuP Multiplexer Control.vi"/>
 		</Item>
-		<Item Name="Sequence" Type="Folder">
-			<Item Name="Calculate bytes.vi" Type="VI" URL="../Public/Sequence/Calculate bytes.vi"/>
+		<Item Name="Sequences" Type="Folder">
+			<Item Name="Calculate Bytes.vi" Type="VI" URL="../Public/Sequence/Calculate Bytes.vi"/>
 			<Item Name="Calculate switching matrix.vi" Type="VI" URL="../Public/Sequence/Calculate switching matrix.vi"/>
 			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequence/Get Number of Sequences.vi"/>
 			<Item Name="Load Sequence.vi" Type="VI" URL="../Public/Sequence/Load Sequence.vi"/>
+			<Item Name="Get Sequence.vi" Type="VI" URL="../Public/Sequence/Get Sequence.vi"/>
 		</Item>
 		<Item Name="Close.vi" Type="VI" URL="../Public/Close.vi"/>
 		<Item Name="Initialize.vi" Type="VI" URL="../Public/Initialize.vi"/>
