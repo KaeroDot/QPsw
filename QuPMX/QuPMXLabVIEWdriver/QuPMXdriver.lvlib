@@ -59,11 +59,11 @@
 			<Item Name="QuP Multiplexer Control.vi" Type="VI" URL="../Public/Example/QuP Multiplexer Control.vi"/>
 		</Item>
 		<Item Name="Sequences" Type="Folder">
-			<Item Name="Calculate Bytes.vi" Type="VI" URL="../Public/Sequence/Calculate Bytes.vi"/>
-			<Item Name="Calculate switching matrix.vi" Type="VI" URL="../Public/Sequence/Calculate switching matrix.vi"/>
-			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequence/Get Number of Sequences.vi"/>
-			<Item Name="Load Sequence.vi" Type="VI" URL="../Public/Sequence/Load Sequence.vi"/>
-			<Item Name="Get Sequence.vi" Type="VI" URL="../Public/Sequence/Get Sequence.vi"/>
+			<Item Name="Sequences to Bytes.vi" Type="VI" URL="../Public/Sequences/Sequences to Bytes.vi"/>
+			<Item Name="Bytes to Sequences.vi" Type="VI" URL="../Public/Sequences/Bytes to Sequences.vi"/>
+			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequences/Get Number of Sequences.vi"/>
+			<Item Name="Load Sequences.vi" Type="VI" URL="../Public/Sequences/Load Sequences.vi"/>
+			<Item Name="Get Sequences.vi" Type="VI" URL="../Public/Sequences/Get Sequences.vi"/>
 		</Item>
 		<Item Name="Close.vi" Type="VI" URL="../Public/Close.vi"/>
 		<Item Name="Initialize.vi" Type="VI" URL="../Public/Initialize.vi"/>
