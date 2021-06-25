@@ -28,8 +28,8 @@ sw | check multiplexer in TWM | ❌
 sw | update QWTB | ✔
 sw | update GOLPI to new Matlab and Octave versions | ✔
 sw | update GOLPI to LabVIEW 2020 | ✔
-sw | update infostrings | working on…
-sw | update TWM to LabVIEW 2020 | ❌
+sw | update infostrings | ✔
+sw | update TWM to LabVIEW 2020 | working on…
 sw | improve TWM to handle QPsw | almost finished, postponed for TWM to LV2020 conversion
 sw | design control QPsw | ❌
 sw | make control QPsw | ❌

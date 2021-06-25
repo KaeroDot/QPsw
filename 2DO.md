@@ -6,12 +6,11 @@
 - fit into TWM
 
 # libraries
-- fix issues in infostrings
 - fix issues in qwbt (mostly details)
 - convert all TWM depending libraries from compiled to source distribution:
-        - golpi
-        - infostrings
-        - vilib
+        - golpi - done
+        - infostrings - done
+        - vilib - 2DO
 
 # drivers
 - PJVS drivers abstraction layer
