@@ -48,7 +48,6 @@
 			<Item Name="Reset.vi" Type="VI" URL="../Public/Utility/Reset.vi"/>
 			<Item Name="Clear.vi" Type="VI" URL="../Public/Utility/Clear.vi"/>
 			<Item Name="Revision Query.vi" Type="VI" URL="../Public/Utility/Revision Query.vi"/>
-			<Item Name="Self-Test.vi" Type="VI" URL="../Public/Utility/Self-Test.vi"/>
 		</Item>
 		<Item Name="Example" Type="Folder">
 			<Item Name="Auxiliary" Type="Folder">
