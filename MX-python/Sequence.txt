@@ -1,0 +1,3 @@
+CH Byte 1	CH Byte 2	Delay Byte 3
+127	0	1
+0	0	1
