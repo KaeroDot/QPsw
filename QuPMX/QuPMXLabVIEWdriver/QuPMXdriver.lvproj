@@ -52,7 +52,7 @@
 				<Property Name="Bld_localDestDirType" Type="Str">relativeToCommon</Property>
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{08575C21-334C-4B08-80AB-EAE6B9105576}</Property>
-				<Property Name="Bld_version.minor" Type="Int">3</Property>
+				<Property Name="Bld_version.minor" Type="Int">4</Property>
 				<Property Name="Destination[0].destName" Type="Str">QuPMXControl.exe</Property>
 				<Property Name="Destination[0].path" Type="Path">../QuPMXControl/QuPMXControl-[VersionNumber]/QuPMXControl.exe</Property>
 				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
@@ -60,7 +60,7 @@
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
 				<Property Name="Destination[1].path" Type="Path">../QuPMXControl/QuPMXControl-[VersionNumber]/data</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{0D39A24C-487A-462A-8C0E-BA8B790A58F1}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{27340A4A-3493-42E3-8431-09B0AB1337B3}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/QuPMXdriver.lvlib/Public/Example/QuP Multiplexer Control.vi</Property>
