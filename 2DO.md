@@ -14,7 +14,20 @@
 
 # drivers
 - PJVS drivers abstraction layer
-- add multiplexer to TWM
+- add multiplexer to TWM - done
+
+# multiplexer hardware
+- fix issue: new bootloader to avoid reseting after opening communictaion. Ricardo's
+  reply: "adding a 4.7 uF Capacitor between RST and GND works for me, now when
+  open/close/open the SERIAL port to communicate with the multiplexer does not
+  reset the microcontroller. But, when you need to download a firmware, you
+  have to reset the microcontroller by your own."
+
+# QuPMXLabVIEWdriver
+- Fix this issue: `*CLS` does not stops a running sequence. `*CLS` opens all
+  relays and clear the status byte.  To stop running the sequence you have to
+  use STOP command. To set the multiplexer to a know condition excute the
+  following commands in order `STOP/*CLS`
 
 # gui
 - think out GUI design
