@@ -5,17 +5,20 @@ Developed in the scope of EMPIR project *19RPT01 QuantumPower - Quantum traceabi
 
 [http://quantumpower.cmi.cz](http://quantumpower.cmi.cz)
 
-## Scheme of the software
-![](doc/img/QPsw-scheme.png)
-
 ## Links
+
+[Developement document for QPsw](https://docs.google.com/document/d/e/2PACX-1vSt-puA1Wf-ZNfy9iknutrQ3dnUIzEJduiX1uOwK5efcjXYyhUTaYF88qtkRb6krcThQzF1a10YIxMh/pub)
+
+[Deliverable 2](https://www.overleaf.com/read/mbrpmmtgjznh)
+
 [QWTB](https://qwtb.github.io/qwtb/)
 
 [TWM](https://github.com/smaslan/TWM)
 
 [TWM builds](https://github.com/smaslan/TWM-builds)
 
-[Document for QPsw](https://docs.google.com/document/d/e/2PACX-1vSt-puA1Wf-ZNfy9iknutrQ3dnUIzEJduiX1uOwK5efcjXYyhUTaYF88qtkRb6krcThQzF1a10YIxMh/pub)
+## Scheme of the software
+![](doc/img/QPsw-scheme.png)
 
 ## Status of the project
 Yet to do:
