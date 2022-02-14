@@ -1,6 +1,6 @@
 % debug: generate input data %<<<1
 clear all, close all
-sysconfig = 1;
+sysconfig = 3;
 sigconfig.f = 50;
 sigconfig.A = [10 7 5 3 1 0.5];
 sigconfig.ph = [0 0 0 0 0 0];
