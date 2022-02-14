@@ -12,62 +12,62 @@
 	<Item Name="Private" Type="Folder">
 		<Property Name="NI.LibItem.Scope" Type="Int">2</Property>
 		<Property Name="NI.SortType" Type="Int">3</Property>
-		<Item Name="Status Byte.vi" Type="VI" URL="../Private/Status Byte.vi"/>
-		<Item Name="After Reset Delay.vi" Type="VI" URL="../Private/After Reset Delay.vi"/>
-		<Item Name="Default Instrument Setup.vi" Type="VI" URL="../Private/Default Instrument Setup.vi"/>
+		<Item Name="Status Byte.vi" Type="VI" URL="../Status Byte.vi"/>
+		<Item Name="After Reset Delay.vi" Type="VI" URL="../After Reset Delay.vi"/>
+		<Item Name="Default Instrument Setup.vi" Type="VI" URL="../Default Instrument Setup.vi"/>
 	</Item>
 	<Item Name="Public" Type="Folder">
 		<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
 		<Property Name="NI.SortType" Type="Int">3</Property>
 		<Item Name="Action-Status" Type="Folder">
-			<Item Name="Go To Remote.vi" Type="VI" URL="../Public/Action-Status/Go To Remote.vi"/>
-			<Item Name="Go To Local.vi" Type="VI" URL="../Public/Action-Status/Go To Local.vi"/>
-			<Item Name="Pause.vi" Type="VI" URL="../Public/Action-Status/Pause.vi"/>
-			<Item Name="Resume.vi" Type="VI" URL="../Public/Action-Status/Resume.vi"/>
-			<Item Name="Start.vi" Type="VI" URL="../Public/Action-Status/Start.vi"/>
-			<Item Name="Stop.vi" Type="VI" URL="../Public/Action-Status/Stop.vi"/>
+			<Item Name="Go To Remote.vi" Type="VI" URL="../Go To Remote.vi"/>
+			<Item Name="Go To Local.vi" Type="VI" URL="../Go To Local.vi"/>
+			<Item Name="Pause.vi" Type="VI" URL="../Pause.vi"/>
+			<Item Name="Resume.vi" Type="VI" URL="../Resume.vi"/>
+			<Item Name="Start.vi" Type="VI" URL="../Start.vi"/>
+			<Item Name="Stop.vi" Type="VI" URL="../Stop.vi"/>
 		</Item>
 		<Item Name="Configure" Type="Folder">
-			<Item Name="Get MX Status.vi" Type="VI" URL="../Public/Configure/Get MX Status.vi"/>
-			<Item Name="Configure Trigger Polarity.vi" Type="VI" URL="../Public/Configure/Configure Trigger Polarity.vi"/>
-			<Item Name="Configure Trigger Source.vi" Type="VI" URL="../Public/Configure/Configure Trigger Source.vi"/>
-			<Item Name="Get Timer.vi" Type="VI" URL="../Public/Configure/Get Timer.vi"/>
-			<Item Name="Get Delay.vi" Type="VI" URL="../Public/Configure/Get Delay.vi"/>
-			<Item Name="Configure Delay.vi" Type="VI" URL="../Public/Configure/Configure Delay.vi"/>
-			<Item Name="Configure Timer.vi" Type="VI" URL="../Public/Configure/Configure Timer.vi"/>
-			<Item Name="Get Slaves Number &amp; Positions.vi" Type="VI" URL="../Public/Configure/Get Slaves Number &amp; Positions.vi"/>
+			<Item Name="Get MX Status.vi" Type="VI" URL="../Get MX Status.vi"/>
+			<Item Name="Configure Trigger Polarity.vi" Type="VI" URL="../Configure Trigger Polarity.vi"/>
+			<Item Name="Configure Trigger Source.vi" Type="VI" URL="../Configure Trigger Source.vi"/>
+			<Item Name="Get Timer.vi" Type="VI" URL="../Get Timer.vi"/>
+			<Item Name="Get Delay.vi" Type="VI" URL="../Get Delay.vi"/>
+			<Item Name="Configure Delay.vi" Type="VI" URL="../Configure Delay.vi"/>
+			<Item Name="Configure Timer.vi" Type="VI" URL="../Configure Timer.vi"/>
+			<Item Name="Get Slaves Number &amp; Positions.vi" Type="VI" URL="../Get Slaves Number &amp; Positions.vi"/>
 		</Item>
 		<Item Name="Channels" Type="Folder">
-			<Item Name="Set Channel.vi" Type="VI" URL="../Public/Channels/Set Channel.vi"/>
-			<Item Name="Set Guard.vi" Type="VI" URL="../Public/Channels/Set Guard.vi"/>
-			<Item Name="Get Channel Status.vi" Type="VI" URL="../Public/Channels/Get Channel Status.vi"/>
-			<Item Name="Set Sequence Line.vi" Type="VI" URL="../Public/Channels/Set Sequence Line.vi"/>
+			<Item Name="Set Channel.vi" Type="VI" URL="../Set Channel.vi"/>
+			<Item Name="Set Guard.vi" Type="VI" URL="../Set Guard.vi"/>
+			<Item Name="Get Channel Status.vi" Type="VI" URL="../Get Channel Status.vi"/>
+			<Item Name="Set Sequence Line.vi" Type="VI" URL="../Set Sequence Line.vi"/>
 		</Item>
 		<Item Name="Utility" Type="Folder">
-			<Item Name="Error Query.vi" Type="VI" URL="../Public/Utility/Error Query.vi"/>
-			<Item Name="Reset.vi" Type="VI" URL="../Public/Utility/Reset.vi"/>
-			<Item Name="Clear.vi" Type="VI" URL="../Public/Utility/Clear.vi"/>
-			<Item Name="Revision Query.vi" Type="VI" URL="../Public/Utility/Revision Query.vi"/>
+			<Item Name="Error Query.vi" Type="VI" URL="../Error Query.vi"/>
+			<Item Name="Reset.vi" Type="VI" URL="../Reset.vi"/>
+			<Item Name="Clear.vi" Type="VI" URL="../Clear.vi"/>
+			<Item Name="Revision Query.vi" Type="VI" URL="../Revision Query.vi"/>
 		</Item>
 		<Item Name="Example" Type="Folder">
 			<Item Name="Auxiliary" Type="Folder">
-				<Item Name="SubVI Set Front panel elements.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set Front panel elements.vi"/>
-				<Item Name="Sequence Editor.vi" Type="VI" URL="../Public/Example/Auxiliary/Sequence Editor.vi"/>
-				<Item Name="SubVI Set FP Channel-Guard value.vi" Type="VI" URL="../Public/Example/Auxiliary/SubVI Set FP Channel-Guard value.vi"/>
+				<Item Name="SubVI Set Front panel elements.vi" Type="VI" URL="../SubVI Set Front panel elements.vi"/>
+				<Item Name="Sequence Editor.vi" Type="VI" URL="../Sequence Editor.vi"/>
+				<Item Name="SubVI Set FP Channel-Guard value.vi" Type="VI" URL="../SubVI Set FP Channel-Guard value.vi"/>
 			</Item>
-			<Item Name="QuP Multiplexer Control.vi" Type="VI" URL="../Public/Example/QuP Multiplexer Control.vi"/>
+			<Item Name="QuP Multiplexer Control.vi" Type="VI" URL="../QuP Multiplexer Control.vi"/>
 		</Item>
 		<Item Name="Sequences" Type="Folder">
-			<Item Name="Sequences to Bytes.vi" Type="VI" URL="../Public/Sequences/Sequences to Bytes.vi"/>
-			<Item Name="Bytes to Sequences.vi" Type="VI" URL="../Public/Sequences/Bytes to Sequences.vi"/>
-			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Public/Sequences/Get Number of Sequences.vi"/>
-			<Item Name="Load Sequences.vi" Type="VI" URL="../Public/Sequences/Load Sequences.vi"/>
-			<Item Name="Get Sequences.vi" Type="VI" URL="../Public/Sequences/Get Sequences.vi"/>
-			<Item Name="Save Sequence to file.vi" Type="VI" URL="../Public/Sequences/Save Sequence to file.vi"/>
-			<Item Name="Load Sequence from file.vi" Type="VI" URL="../Public/Sequences/Load Sequence from file.vi"/>
+			<Item Name="Sequences to Bytes.vi" Type="VI" URL="../Sequences to Bytes.vi"/>
+			<Item Name="Bytes to Sequences.vi" Type="VI" URL="../Bytes to Sequences.vi"/>
+			<Item Name="Get Number of Sequences.vi" Type="VI" URL="../Get Number of Sequences.vi"/>
+			<Item Name="Load Sequences.vi" Type="VI" URL="../Load Sequences.vi"/>
+			<Item Name="Get Sequences.vi" Type="VI" URL="../Get Sequences.vi"/>
+			<Item Name="Save Sequence to file.vi" Type="VI" URL="../Save Sequence to file.vi"/>
+			<Item Name="Load Sequence from file.vi" Type="VI" URL="../Load Sequence from file.vi"/>
 		</Item>
-		<Item Name="Close.vi" Type="VI" URL="../Public/Close.vi"/>
-		<Item Name="Initialize.vi" Type="VI" URL="../Public/Initialize.vi"/>
-		<Item Name="VI Tree.vi" Type="VI" URL="../Public/VI Tree.vi"/>
+		<Item Name="Close.vi" Type="VI" URL="../Close.vi"/>
+		<Item Name="Initialize.vi" Type="VI" URL="../Initialize.vi"/>
+		<Item Name="VI Tree.vi" Type="VI" URL="../VI Tree.vi"/>
 	</Item>
 </Library>
