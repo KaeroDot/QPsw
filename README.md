@@ -11,6 +11,8 @@ Developed in the scope of EMPIR project *19RPT01 QuantumPower - Quantum traceabi
 
 [Deliverable 2](https://www.overleaf.com/read/mbrpmmtgjznh)
 
+[QuP multiplexer design](https://github.com/rjiuzzol/QuP)
+
 [QWTB](https://qwtb.github.io/qwtb/)
 
 [TWM](https://github.com/smaslan/TWM)
