@@ -1,16 +1,16 @@
 % Makes demultiplexing of the waveforms measured in QPS - Quantum Power
-% System. Does the first part - splitting data into data pieces.
+% System. Does the first part - splitting waveforms into sections.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
 %
 % Inputs:
-% y - Sampled data (V)
+% y - Sampled waveforms (V)
 %   Matrix, every row represents data sampled by one digitizer. Number of rows
 %   is equal to number of digitizers.
 % S - Indexes of switches
-%   Vector, switch happens just before this sample indexes
+%   Vector, switch happens just before or at this sample indexes
 % M - Multiplexer setup
-%   Matrix of multiplexer setups in sections (in between switches).
+%   Matrix of multiplexer setups in sections (in between multiplexer switches).
 %   Every row describes what was sampled by the digitizer.
 %   1, 2, 3, ... denotes signals to be measured (e.g. phase 1, phase 2, phase 3
 %   in three phase power system).
@@ -20,6 +20,7 @@
 % ys - cell, data split into data pieces according M
 % S - Indexes of switching samples, normalized. S contains also indexes of first
 %   and last sample of input data y.
+% I - indexes after reordering
 %
 % Examples are shown for use of qpsw_demultiplex_split and 
 % qpsw_demultiplex_sew right after:
@@ -60,7 +61,7 @@
 % signal 2 (y2 row 2)  :  NaN  |   1   |  NaN  |     1
 % signal 3 (y2 row 3)  :   2   |  NaN  |   2   |    NaN
 
-function [yc] = qpsw_demultiplex_split(y, S, M) %<<<1
+function [yc, S, I] = qpsw_demultiplex_split(y, S, M) %<<<1
     % check variables: %<<<1
     % check if S is monotonic and numbers are not repeated:
     if not(all(diff(S)>0))
@@ -94,21 +95,21 @@ function [yc] = qpsw_demultiplex_split(y, S, M) %<<<1
     % initialize output matrix:
     y2 = NaN.*zeros(signals, samples);
 
-    % bijection M->M2 %<<<1
+    % bijection M->I %<<<1
     % renumber values in M to be just increasing from 1 to rows(y), simple
     % bijection (e.g. -1, 1, 2 into 1, 2, 3)
     % (this is crude method, how to make bijection simpler in matlab/octave?)
     nums = unique(M); % get all unique values
     offset = max(max(M)) + 10; % prepare offset so values are not overwritten
     % initiliaze memory:
-    M2 = M;
+    I = M;
     % first replace by values far away from maximum values so values are not
     % overwritten:
     for i = 1:length(nums)
-        M2(M2 == nums(i)) = i + offset;
+        I(I == nums(i)) = i + offset;
     end
     % subtract offset to get values from 1 to max(M)
-    M2 = M2 - offset;
+    I = I - offset;
 
     % do signal splitting %<<<1
     % reorder y into y2:

@@ -1,16 +1,16 @@
 % Makes demultiplexing of the waveforms measured in QPS - Quantum Power
-% System. Does the first part - splitting data into data pieces.
+% System. Does the first part - splitting waveforms into sections.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
 %
 % Inputs:
-% y - Sampled data (V)
+% y - Sampled waveforms (V)
 %   Matrix, every row represents data sampled by one digitizer. Number of rows
 %   is equal to number of digitizers.
 % S - Indexes of switches
-%   Vector, switch happens just before this sample indexes
+%   Vector, switch happens just before or at this sample indexes
 % M - Multiplexer setup
-%   Matrix of multiplexer setups in sections (in between switches).
+%   Matrix of multiplexer setups in sections (in between multiplexer switches).
 %   Every row describes what was sampled by the digitizer.
 %   1, 2, 3, ... denotes signals to be measured (e.g. phase 1, phase 2, phase 3
 %   in three phase power system).

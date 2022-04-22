@@ -1,5 +1,6 @@
 % Makes demultiplexing of the waveforms measured in QPS - Quantum Power
-% System. Does the second part - connect data back to rows of signals.
+% System. Does the second part - connect sections back to rows of particular
+% signals.
 % Developed in the scope of the EMPIR QPower.
 % MIT license
 %
@@ -18,7 +19,7 @@
 % y - reordered sampled data (V)
 %   First rows are quantum signals, next rows are signals to be measured,
 %   according numbers in M matrix, -1; 1; 2; 3
-% ycout - reordered sampled data (V), kept as cell of data pieces.
+% ycout - reordered sampled data (V), kept as cell of waveform sections.
 % My - setup of rows of y. M values reordered into rows as y.
 %
 % Examples are shown for use of qpsw_demultiplex_split and 

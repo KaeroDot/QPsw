@@ -6,27 +6,69 @@
 % Result are waveforms without digitizer errors.
 
 
-function [y, yc, res] = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
-    % initialize %<<<1
-    DEBUG = 0;
+function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
+    % XXX 2DO check input data!!!
 
-    % split multiplexed data and calibrate %<<<1
-    yc = qpsw_demultiplex_split(D, S, M);
-    ycal = calibrate_data_pieces(yc, M, S, Uref, Spjvs, sigconfig.Rs, sigconfig.Re);
+    if dbg.v
+        % ensure the directory for plots exists
+        if dbg.saveplotsplt || dbg.saveplotspng
+            if ~exist(dbg.plotpath, 'dir')
+                mkdir(dbg.plotpath);
+            end
+        end
+    end
 
-    % debug plot gains through time %<<<1
-    if DEBUG
-        for i = 1:rows(ycal)
-                for j = 1:columns(ycal)
-                        % for cycle because matlab has issues with indexing concatenation ([x].y)
-                        offsets(i,j) = ycal(i,j).coefs.v(1);
-                        gains(i,j) = ycal(i,j).coefs.v(2);
-                end % for j = 1:columns(yc)
-        end % for i = 1:rows(yc)
-        figure
-        plot(gains' - 1)
-        title('Calculated gains (minus 1)')
+    % split multiplexed data into sections %<<<1
+    yc = qpsw_demultiplex_split(y, S, M);
+    % DEBUG plot sections %<<<2
+    if dbg.v
+        figure('visible',dbg.showplots)
+        title('selected waveform sections')
+        hold on
+        % does not work for multichannel records!
+        cells = [1:4];
+        legc = {};
+        for c = cells
+            if size(yc, 2) >= c
+                plot(yc{c});
+                legc(end+1) = {num2str(c)};
+            end
+        end
+        plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
+        legc(end+1) = 'MRs for section 1';
+        plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
+        legc(end+1) = 'MRe for section 1';
+        legend(legc);
+        hold off
+        fn = fullfile(dbg.plotpath, 'sections1');
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+
+        figure('visible',dbg.showplots)
+        title('selected waveform sections')
+        hold on
+        % does not work for multichannel records!
+        cells = [10:10:40];
+        legc = {};
+        for c = cells
+            if size(yc, 2) >= c
+                plot(yc{c});
+                legc(end+1) = {num2str(c)};
+            end
+        end
+        plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
+        legc(end+1) = 'MRs for section 1';
+        plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
+        legc(end+1) = 'MRe for section 1';
+        legend(legc);
+        hold off
+        fn = fullfile(dbg.plotpath, 'sections2');
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
     end % if DEBUG
+
+    % get calibration data from particular sections %<<<1
+    ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg);
 
     % recalibrate measurements %<<<1
     for i = 1:rows(yc)
@@ -34,22 +76,23 @@ function [y, yc, res] = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
                     % recalculate values according the gain
                     if M(i, j) > 0
                             % only non-quantum data
+                            % XXX 2DO should be general polynomial, in case someone would like to calculate polynomials of higher order
                             yc{i, j} = ycal(i, j).coefs.v(1) + yc{i, j}.*ycal(i, j).coefs.v(2);
                     end % if M(i, j) > 0
             end % for j = 1:columns(yc)
     end % for i = 1:rows(yc)
 
-    % finish demultiplexing %<<<1
+    % finish demultiplexing - sew %<<<1
     % yc is rewritten
     [y, yc, My] = qpsw_demultiplex_sew(yc, M);
 
-    % debug plot demultiplexed signal %<<<1
-    if DEBUG
+    % debug plot demultiplexed signal %<<<2
+    if dbg.v
         colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
         legc = [];
         % make time axis:
         t = [0:size(y,2) - 1]./sigconfig.fs;
-        figure
+        figure('visible',dbg.showplots)
         hold on
         % plot signal
         for i = 1:rows(y)
@@ -68,9 +111,13 @@ function [y, yc, res] = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
         legend(legc)
         title('Demultiplexed signals, offseted')
         hold off
-    end % if DEBUG
+        fn = fullfile(dbg.plotpath, 'demultiplexed');
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+    end % if dbg.v
 
-    % calculate amplitude and phase of data pieces %<<<1
+    % calculate amplitude and phase of sections %<<<1
+    % calls QWTB algorithm for every nonquantum section
     res = struct();
     for i = 1:rows(yc)
             if My(i) > 0 % only non-quantum data
@@ -85,7 +132,56 @@ function [y, yc, res] = qpsw_process(sigconfig, D, S, M, Uref, Spjvs, alg);
             end % if My > 0 % only non-quantum data
     end % for i = 1:rows(yc)
 
+    % DEBUG plot amplitudes and offsets vs time %<<<2
+    % if dbg.v XXX bring back!
+    if 1
+        for i = 1:rows(res)
+                for j = 1:columns(res)
+                        % for cycle because matlab has issues with indexing concatenation ([x].y)
+                        if isempty(res(i,j).A)
+                            offsets(i,j) = nan;
+                            amps(i,j) = nan;
+                        else
+                            if isfield(res(i,j), 'O')
+                                offsets(i,j) = res(i,j).O.v;
+                            else
+                                offsets(i,j) = nan;
+                            end
+                            if isfield(res(i,j), 'A')
+                                amps(i,j) = res(i,j).A.v;
+                            else
+                                offsets(i,j) = nan;
+                            end
+                        end
+                end % for j = 1:columns(res)
+        end % for i = 1:rows(res)
+        figure('visible',dbg.showplots)
+        hold on
+            plot(amps', '-x')
+            title('calculated amplitudes, digitizer gain corrected')
+            xlabel('sampled waveform section (index)')
+            ylabel('amplitude (V)')
+            % legend('amplitude');
+        hold off
+        fn = fullfile(dbg.plotpath, 'amplitudes');
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+
+        figure('visible',dbg.showplots)
+        hold on
+            plot(1e6.*offsets', '-x')
+            title('calculated amplitude offsets, digitizer offset corrected')
+            xlabel('sampled waveform section')
+            ylabel('offset (uV)')
+            % legend('offset');
+        hold off
+        fn = fullfile(dbg.plotpath, 'offsets');
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+    end % if DEBUG
+end
+
 % tests %<<<1
-% this function is tested in qpsw_test.m
+% this function is tested by using qpsw_test.m
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4

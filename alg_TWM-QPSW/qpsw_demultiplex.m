@@ -49,7 +49,7 @@
 %                              |       |        __ switch happened here
 %                              v       v       v
 % Sample number:         1 2 3 | 4 5 6 | 7 8 9 | 10 11 12
- M:
+% M:
 % digitizer 1 (y row 1):  -1   |   1   |  -1   |     1
 % digitizer 2 (y row 1):   2   |  -1   |   2   |    -1
 % Returned data:

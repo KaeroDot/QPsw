@@ -17,9 +17,10 @@
 % y - waveform (V)
 % n - quantum numbers in every segment (int)
 % Uref - reference voltages of segments (V)
-% Sid - sample indexes of PJVS switches - switch happen before the sample
+% Uref1period - reference voltages of segments for one period of PJVS signal(V)
+% Sid - sample indexes of PJVS switches - switch happen before or at the sample
 
-function [y, n, Uref, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, apply_filter)
+function [y, n, Uref, Uref1period, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, apply_filter)
     % only for debugging:
     DEBUG = 0;
 
@@ -227,6 +228,8 @@ function [y, n, Uref, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fse
     Sid(Sid > numel(y)) = [];
     % because one segment was added as safety margin:
     Uref = Uref(1:end-1);
+    % create reference voltages for only one period of PJVS:
+    Uref1period = Uref(1:ceil(fseg./f));
 
     % add noise with normal distribution: %<<<2
     y = y + normrnd(0, noise, size(y));
