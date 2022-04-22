@@ -1,0 +1,36 @@
+% === QWTB processing setup ===
+
+#startsection:: QWTB processing setup
+        algorithm id:: TWM-WFFT
+
+        calculate whole average at once:: 0
+        uncertainty mode:: none
+        level of confidence [-]:: 0.9500
+        #startmatrix:: list of parameter names
+                
+        #endmatrix:: list of parameter names
+        
+        
+        #startsection:: algorithm configuration
+                        %       name;     fmt;abs;rel
+        #startmatrix:: number formats
+                f;        si; 1e-9; 1e-8
+                A;        si; 1e-9; 1e-7
+                ph;       f;  1e-9; 1e-7
+                rms;      si; 1e-9; 1e-7
+                dc;       si; 1e-9; 1e-7
+                spec_f;   si; 1e-9; 1e-7
+                spec_A;   si; 1e-9; 1e-7
+        #endmatrix:: number formats
+        #startmatrix:: is phase
+                ph
+        #endmatrix:: is phase
+        #startmatrix:: is amplitude
+                A;spec_A
+        #endmatrix:: is amplitude
+        #startmatrix:: graphs
+		spec_f; spec_A
+        #endmatrix:: graphs
+        spectrum:: spec_A
+        #endsection:: algorithm configuration
+#endsection:: QWTB processing setup
