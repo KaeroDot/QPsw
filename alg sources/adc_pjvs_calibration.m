@@ -1,7 +1,11 @@
-% Function calculates calibration matrix for ADC sampling PJVS signal.
+% Function calculates calibration values (offset, gain) from PJVS waveform sampled by a digitizer.
+% For every PJVS segment an average value of samples is calculated. Data set of values versus
+% reference values is fitted by line. The slope of the linear fit is used as gain for digitizer, the
+% intercept of the fit is used as an offset of the digitizer.
+%
 % Inputs:
 % y - one waveform section with PJVS signal
-% Sid - sample indexes of PJVS segments (step changes - step change happens just before the indexed sample)
+% Spjvs - sample indexes of PJVS segments (step changes - step change happens just before the indexed sample)
 % Uref - reference values (V), for every segment one value
 % MRs - how many samples will be removed at start of section (samples) (because of multplexer induces errors)
 % MRe - how many samples will be removed at end of section (samples) (because of multplexer induces errors)
@@ -11,15 +15,15 @@
 % Outputs:
 % cal - calibration data for this section of waveform
 
-function [cal] = adc_pjvs_calibration(y, Sid, Uref, PRs, PRe, MRs, MRe, dbg)
+function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
     % check inputs %<<<1
-    if Sid(1) != 1
+    if Spjvs(1) != 1
         error('adc_pjvs_calibration: S(1) must be equal to 1!')
     end
-    if Sid(end) != size(y,2) + 1
+    if Spjvs(end) != size(y,2) + 1
         error('adc_pjvs_calibration: S(end) must be equal to data length + 1!')
     end
-    if numel(Uref) != numel(Sid) - 1
+    if numel(Uref) != numel(Spjvs) - 1
         error('adc_pjvs_calibration: number of Uref must be equal to number of switches S minus 1')
     end
     if PRs < 0
@@ -28,7 +32,7 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, PRs, PRe, MRs, MRe, dbg)
     if PRe < 0
         error('adc_pjvs_calibration: negative number of samples to be removed at end of segment!')
     end
-    if all(diff(Sid) < PRs + PRe + 1)
+    if all(diff(Spjvs) < PRs + PRe + 1)
         error('adc_pjvs_calibration: not enough samples in segments after start and end removal!')
     end
 
@@ -39,11 +43,11 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, PRs, PRe, MRs, MRe, dbg)
 
     % get calibration data %<<<1
     % Masking of MRs a MRe is missing!!! XXX
-    for i = 1:length(Sid) - 1
+    for i = 1:length(Spjvs) - 1
         % do only if not in MRs, MRe regions (outside part affected by multiplexer switching)
-        if (Sid(i) >= MRs) && (Sid(i+1) <= numel(y) - MRe)
+        if (Spjvs(i) >= MRs) && (Spjvs(i+1) <= numel(y) - MRe)
             % get one segment
-            segment = y(Sid(i) : Sid(i+1) - 1);
+            segment = y(Spjvs(i) : Spjvs(i+1) - 1);
             % remove samples at start and at end of the segment, if possible:
             if numel(segment) > PRs + PRe + 1
                 segment = segment(1 + PRs : end - PRe);
@@ -56,7 +60,7 @@ function [cal] = adc_pjvs_calibration(y, Sid, Uref, PRs, PRe, MRs, MRe, dbg)
                 % correlation matrices are too large in case of 1000 numbers
                 % fitting directly, without mean and std!
             end % if numel(segment) > PRs + PRe + 1
-        end % if (Sid(i) > MRs) & (Sid(i+1) < numel(y) - MRe)
+        end % if (Spjvs(i) > MRs) & (Spjvs(i+1) < numel(y) - MRe)
     end % for i
 
     % sort data based on x axis? is it needed? CCC does it or not? XXX
@@ -138,9 +142,9 @@ end % function
 
 % tests  %<<<1
 % just test function is working:
-%!shared y, n, Uref, Sid
-% [y, n, Uref, Sid] = pjvs_wvfrm_generator(50, 10, 0, 1e3, 50e3, 0, 20*50, 75e9, 0);
-% [CM] = adc_pjvs_calibration(y, Sid, Uref, 3, 3);
+%!shared y, n, Uref, Spjvs
+% [y, n, Uref, Spjvs] = pjvs_wvfrm_generator(50, 10, 0, 1e3, 50e3, 0, 20*50, 75e9, 0);
+% [CM] = adc_pjvs_calibration(y, Spjvs, Uref, 3, 3);
 %XXX not finished %assert
 
 % DI.x.v = [ 1.5270   4.4934   7.0199   8.8592   9.8315   9.8412   8.8876   7.0641   4.5492   1.5889  -1.5270  -4.4934  -7.0199  -8.8592  -9.8315  -9.8412  -8.8876  -7.0641 -4.5492  -1.5889]

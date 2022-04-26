@@ -8,7 +8,7 @@
 % yc - waveform sections in cell
 % M - multiplexer matrix
 % S - indexes of samples of new waveform sections start
-% Uref1period - reference avlues of PJVS voltages for one PJVS period
+% Uref1period - reference values of PJVS voltages for one PJVS period
 % sigconfig - configuration data
 %
 % Outputs:

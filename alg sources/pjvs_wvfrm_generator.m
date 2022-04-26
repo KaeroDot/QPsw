@@ -18,9 +18,9 @@
 % n - quantum numbers in every segment (int)
 % Uref - reference voltages of segments (V)
 % Uref1period - reference voltages of segments for one period of PJVS signal(V)
-% Sid - sample indexes of PJVS switches - switch happen before or at the sample
+% Spjvs - sample indexes of PJVS switches - switch happen before or at the sample
 
-function [y, n, Uref, Uref1period, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, apply_filter)
+function [y, n, Uref, Uref1period, Spjvs, t] = pjvs_wvfrm_generator(f, A, ph, L, fs, noise, fseg, phseg, fm, apply_filter)
     % only for debugging:
     DEBUG = 0;
 
@@ -172,14 +172,14 @@ function [y, n, Uref, Uref1period, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, f
         ysine = reshape(ysine', 1, []);
         y = reshape(y', 1, []);
         n = n';
-        Sid = [1:SS:SL-1];
+        Spjvs = [1:SS:SL-1];
     else % slow method %<<<2
         warning('non coherent settings (fs/fseg), using slow method!')
         % slow method for non coherent settings:
         ids = 1;
         y = [];
         n = [];
-        Sid = 1;
+        Spjvs = 1;
         % for cycle is usually terminated by condition at end
         % SL is multiple of SS, so SL./SS is integer:
         for i = 1:ceil(SL./SS)
@@ -199,7 +199,7 @@ function [y, n, Uref, Uref1period, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, f
             if ids > SL
                 break
             end
-            Sid = [Sid ids];
+            Spjvs = [Spjvs ids];
         end % for i
     end
     % make reference voltages:
@@ -225,7 +225,7 @@ function [y, n, Uref, Uref1period, Sid, t] = pjvs_wvfrm_generator(f, A, ph, L, f
     t = t(idt0:idte);
     ysine = ysine(idt0:idte);
     y = y(idt0:idte);
-    Sid(Sid > numel(y)) = [];
+    Spjvs(Spjvs > numel(y)) = [];
     % because one segment was added as safety margin:
     Uref = Uref(1:end-1);
     % create reference voltages for only one period of PJVS:

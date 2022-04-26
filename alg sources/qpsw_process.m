@@ -23,7 +23,7 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
     % DEBUG plot sections %<<<2
     if dbg.v
         figure('visible',dbg.showplots)
-        title('selected waveform sections')
+        title('raw waveform sections after splitting')
         hold on
         % does not work for multichannel records!
         cells = [1:4];
@@ -35,9 +35,9 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
             end
         end
         plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
-        legc(end+1) = 'MRs for section 1';
+        legc(end+1) = 'MRs-points removed before this line';
         plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
-        legc(end+1) = 'MRe for section 1';
+        legc(end+1) = 'MRe-points removed after this line';
         legend(legc);
         hold off
         fn = fullfile(dbg.plotpath, 'sections1');
@@ -45,7 +45,7 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
         if dbg.saveplotspng print([fn '.png'], '-dpng') end
 
         figure('visible',dbg.showplots)
-        title('selected waveform sections')
+        title('raw waveform sections after splitting')
         hold on
         % does not work for multichannel records!
         cells = [10:10:40];
@@ -57,9 +57,9 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
             end
         end
         plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
-        legc(end+1) = 'MRs for section 1';
+        legc(end+1) = 'MRs-points removed before this line';
         plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
-        legc(end+1) = 'MRe for section 1';
+        legc(end+1) = 'MRe-points removed after this line';
         legend(legc);
         hold off
         fn = fullfile(dbg.plotpath, 'sections2');
@@ -87,7 +87,8 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
     [y, yc, My] = qpsw_demultiplex_sew(yc, M);
 
     % debug plot demultiplexed signal %<<<2
-    if dbg.v
+    % if dbg.v
+    if 1
         colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
         legc = [];
         % make time axis:
@@ -133,8 +134,7 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
     end % for i = 1:rows(yc)
 
     % DEBUG plot amplitudes and offsets vs time %<<<2
-    % if dbg.v XXX bring back!
-    if 1
+    if dbg.v
         for i = 1:rows(res)
                 for j = 1:columns(res)
                         % for cycle because matlab has issues with indexing concatenation ([x].y)

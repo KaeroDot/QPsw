@@ -3,7 +3,7 @@
 
 clear all, close all
 % system setup:
-sysconfig = 3;
+sysconfig = 1;
 
 % signal setup:
 sigconfig.f = 50;
@@ -22,13 +22,13 @@ sigconfig.PRs = 1;
 sigconfig.PRe = 1;
 
 % debug setup:
-dbg.v = 1;
+dbg.v = 0;
 dbg.section = 0;
 dbg.segment = 0;
 dbg.showplots = 'off'; % 'on' or 'off'
 dbg.saveplotsplt = 1;
 dbg.saveplotspng = 1;
-dbg.plotpath = 'qpsw_test_figs';
+dbg.plotpath = '.';
 
 alg = 'PSFE';
 

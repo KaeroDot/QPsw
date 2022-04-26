@@ -131,6 +131,7 @@ function Spjvs = identify_pjvs_segments(y, MRs, MRe, max_adc_noise, segmentlen, 
         plot(tmpid, max(count), 'ok')
         xlabel('segmentlen phase')
         ylabel(['number of matched indexes +- ' num2str(segment_precision_uncertainty)])
+        title('PJVS section with PJVS phase identification')
         hold off
         fn = fullfile(dbg.plotpath, [ssec 'segment_identify_phase']);
         if dbg.saveplotsplt printplt(fn) end
@@ -151,6 +152,7 @@ function Spjvs = identify_pjvs_segments(y, MRs, MRe, max_adc_noise, segmentlen, 
         ploty = repmat(ylims', 1, numel(Spjvs));
         plot(plotx, ploty, '--c');
         legend('samples', 'samples with masked start/end', 'abs(diff(y))', 'max_adc_noise', 'ids - first identified segment starts', 'final segment starts')
+        title('PJVS section with PJVS phase identification')
         hold off
         fn = fullfile(dbg.plotpath, [ssec '_pjvs_identify_segments_all']);
         if dbg.saveplotsplt printplt(fn) end
