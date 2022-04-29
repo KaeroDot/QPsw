@@ -21,14 +21,14 @@
 %   .fseg - frequency of PJVS segments (Hz), scalar
 %   .fm - PJVS microwave frequency (Hz), scalar
 %   .apply_filter - if nonzero, digital filter simulating sigma delta digitizer is applied (0/1), scalar
+% dbg: debug structure
 %
 % Outputs:
 % D - samples
 % S - samples of switch events (just before the sample switch happened)
 % M - system setup matrix
 
-function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig, S) 
-    DEBUG = 0;
+function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig, dbg) 
     % check user inputs %<<<1
     if sysconfig < 0 || sysconfig > 7 || sysconfig ~= fix(sysconfig)
         error('qps_simulator: bad value of sysconfig, unknown configuration')
@@ -138,7 +138,7 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig,
     end % for i = 1:size(M,1)
 
     % % debug - plotting %<<<1
-    if DEBUG
+    if dbg.v
         colors = 'rgbk';
         legc = [];
         figure
@@ -146,7 +146,7 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig,
         % plot signal
         for i = 1:rows(D)
                 plot(D(i, :) - max(A)*2.1.*(i-1), [colors(i) '-'])
-                legc{end+1} = (['Digitzer ' num2str(i)]);
+                legc{end+1} = (['digitizer ' num2str(i)]);
         end % for i
         % plot switch events
         minmax = ylim;
@@ -158,7 +158,10 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig,
         legend(legc)
         title('Simulated signals, offseted')
         hold off
-    end % if DEBUG
+        fn = fullfile(dbg.plotpath, sprintf('simulator-signals-sysconfig_%03d', sysconfig));
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+    end % if dbg.v
 
 end % function
 

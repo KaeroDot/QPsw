@@ -87,8 +87,7 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
     [y, yc, My] = qpsw_demultiplex_sew(yc, M);
 
     % debug plot demultiplexed signal %<<<2
-    % if dbg.v
-    if 1
+    if dbg.v
         colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
         legc = [];
         % make time axis:

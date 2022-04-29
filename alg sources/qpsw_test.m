@@ -32,7 +32,7 @@ dbg.plotpath = '.';
 
 alg = 'PSFE';
 
-[D, S, M, Uref, Uref1period, Spjvs] = qps_simulator(sysconfig, sigconfig);
+[D, S, M, Uref, Uref1period, Spjvs] = qps_simulator(sysconfig, sigconfig, dbg);
 
 res = qpsw_process(sigconfig, D, S, M, Uref1period, [], alg, dbg);
 
