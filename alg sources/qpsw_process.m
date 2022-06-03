@@ -5,12 +5,15 @@
 % - calls data recalculation
 % Result are waveforms without digitizer errors.
 
-
 function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
-    % XXX 2DO check input data!!!
-
+    % check input data %<<<1
+    if nargin ~= 8
+        error('qpsw_process: bad number of input arguments!')
+    end
+    check_gen_dbg(dbg);
+    check_sigconfig(sigconfig);
+    % ensure the directory for plots exists
     if dbg.v
-        % ensure the directory for plots exists
         if dbg.saveplotsplt || dbg.saveplotspng
             if ~exist(dbg.plotpath, 'dir')
                 mkdir(dbg.plotpath);
@@ -94,9 +97,11 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
         t = [0:size(y,2) - 1]./sigconfig.fs;
         figure('visible',dbg.showplots)
         hold on
+        % estimate amplitudes, so waveforms can be offseted:
+        plotoffset = max(max(y))*2.1;
         % plot signal
         for i = 1:rows(y)
-                plot(t, y(i, :) - max(sigconfig.A)*2.1.*(i-1), [colors(i) '-'])
+                plot(t, y(i, :) - plotoffset.*(i-1), [colors(i) '-'])
                 legc{end+1} = (['Signal ' num2str(i)]);
         end % for i
         % plot switch events

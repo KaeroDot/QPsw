@@ -1,16 +1,15 @@
 % Script to simulate signal digitized in QP system. For testing of qpsw.
 % Inputs:
-% sysconfig: number determining a configuration of M and lengths of data pieces
-% inside:
-%    [Signo DACno PJVSno], timing
-%   1: [1 1 1], 1/2 1/2
-%   2: [2 1 1], 1/3, 1/3, 1/3
-%   3: [2 2 1], 1/3, 1/3, 1/3
-%   4: [2 2 1], 1/10, 1/10, 9/10
-%   5: [2 3 1], 1/6, 1/6, 1/6, 1/6, 1/6, 1/6
-%   6: [6 3 1], 1/3, 1/3, 1/3
-%   
-% sigconfig: structure with signal properties, where
+% simconfig: structure with simulation parameters, where
+%   .sysconfig: number determining a configuration of M and lengths of data
+%   pieces inside:
+%        [Signo DACno PJVSno], timing
+%       1: [1 1 1], 1/2 1/2
+%       2: [2 1 1], 1/3, 1/3, 1/3
+%       3: [2 2 1], 1/3, 1/3, 1/3
+%       4: [2 2 1], 1/10, 1/10, 9/10
+%       5: [2 3 1], 1/6, 1/6, 1/6, 1/6, 1/6, 1/6
+%       6: [6 3 1], 1/3, 1/3, 1/3
 %   .f - main signal frequency (Hz), scalar
 %   .A - 'sine' wave amplitude (V), vector of n numbers, where n is equal to number of DUT signals in the QPS
 %   .ph - 'sine' wave amplitude (rad), vector of n numbers, where n is equal to number of DUT signals in the QPS
@@ -21,33 +20,38 @@
 %   .fseg - frequency of PJVS segments (Hz), scalar
 %   .fm - PJVS microwave frequency (Hz), scalar
 %   .apply_filter - if nonzero, digital filter simulating sigma delta digitizer is applied (0/1), scalar
-% dbg: debug structure
+% dbg: debug structure, see check_gen_dbg.m
 %
 % Outputs:
 % D - samples
 % S - samples of switch events (just before the sample switch happened)
 % M - system setup matrix
+% Uref - reference voltages of PJVS for whole signal
+% Uref1period - reference voltages of PJVS for only one period
 
-function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig, dbg) 
+function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(simconfig, dbg) 
+    % whole system setup:
+    scenario = simconfig.scenario;
+
     % check user inputs %<<<1
-    if sysconfig < 0 || sysconfig > 7 || sysconfig ~= fix(sysconfig)
-        error('qps_simulator: bad value of sysconfig, unknown configuration')
+    if scenario < 0 || scenario > 7 || scenario ~= fix(scenario)
+        error('qps_simulator: bad value of scenario, unknown configuration')
     end
 
     % signal configuration: %<<<2
-    f = sigconfig.f;
-    A = sigconfig.A;
-    ph = sigconfig.ph;
-    fs = sigconfig.fs;
-    Lm = sigconfig.Lm;
-    BL = sigconfig.BL;
-    noise = sigconfig.noise;
-    fseg = sigconfig.fseg;
-    fm = sigconfig.fm;
-    apply_filter = sigconfig.apply_filter;
+    f = simconfig.f;
+    A = simconfig.A;
+    ph = simconfig.ph;
+    fs = simconfig.fs;
+    Lm = simconfig.Lm;
+    BL = simconfig.BL;
+    noise = simconfig.noise;
+    fseg = simconfig.fseg;
+    fm = simconfig.fm;
+    apply_filter = simconfig.apply_filter;
 
     % system configuration %<<<1
-    switch sysconfig
+    switch scenario
         case 1 %   1: [1 1 1], 1/2 1/2 %<<<2
             Signo = 1;
             DACno = 1;
@@ -158,7 +162,7 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(sysconfig, sigconfig,
         legend(legc)
         title('Simulated signals, offseted')
         hold off
-        fn = fullfile(dbg.plotpath, sprintf('simulator-signals-sysconfig_%03d', sysconfig));
+        fn = fullfile(dbg.plotpath, sprintf('simulator-signals-scenario_%03d', scenario));
         if dbg.saveplotsplt printplt(fn) end
         if dbg.saveplotspng print([fn '.png'], '-dpng') end
     end % if dbg.v
