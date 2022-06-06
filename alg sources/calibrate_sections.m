@@ -112,31 +112,36 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                         end
                 end % for j = 1:columns(yc)
         end % for i = 1:rows(yc)
+        
+        lfmt = {'-xr','-xg','-xb','-xk','-xc','-xy'};
+        ofmt = {'or','og','ob','ok','oc','oy'};
         figure('visible',dbg.showplots)
         hold on
-            plot(1e6.*(gains' - 1), '-x')
-            plot(1e6.*(PJVS_gains' - 1), 'o', 'linewidth',2)
-            title('calculated digitizer gains (minus 1)')
+            plot(1e6.*(gains' - 1),      lfmt(1:size(gains,1))                    );
+            plot(1e6.*(PJVS_gains' - 1), ofmt(1:size(PJVS_gains,1)), 'linewidth',2);
+            title(sprintf('calculated digitizer gains (minus 1)\nx - applied gain, o - gain calculated from PJVS'));
             xlabel('sampled waveform section')
             ylabel('gain - 1 (uV/V)')
-            legend('all gains', 'gains calculated from PJVS');
+            % legend('all gains', 'gains calculated from PJVS');
         hold off
-        fn = fullfile(dbg.plotpath, 'gains');
+        fn = fullfile(dbg.plotpath, 'calibration-gains');
         if dbg.saveplotsplt printplt(fn) end
         if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        close
 
         figure('visible',dbg.showplots)
         hold on
-            plot(1e6.*offsets', '-x')
-            plot(1e6.*PJVS_offsets', 'o', 'linewidth',2)
-            title('calculated digitizer offsets')
+            plot(1e6.*offsets',         lfmt(1:size(offsets,1))                    );
+            plot(1e6.*PJVS_offsets',    ofmt(1:size(PJVS_offsets,1)), 'linewidth',2)
+            title(sprintf('calculated digitizer offsets\nx - applied gain, o - gain calculated from PJVS'));
             xlabel('sampled waveform section')
             ylabel('offset (uV)')
-            legend('all offsets', 'offsets calculated from PJVS');
+            % legend('all offsets', 'offsets calculated from PJVS');
         hold off
-        fn = fullfile(dbg.plotpath, 'offsets');
+        fn = fullfile(dbg.plotpath, 'calibration-offsets');
         if dbg.saveplotsplt printplt(fn) end
         if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        close
     end % if DEBUG
 end
 

@@ -145,7 +145,7 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(simconfig, dbg)
     if dbg.v
         colors = 'rgbk';
         legc = [];
-        figure
+        figure('visible',dbg.showplots)
         hold on
         % plot signal
         for i = 1:rows(D)
