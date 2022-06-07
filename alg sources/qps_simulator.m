@@ -143,28 +143,31 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(simconfig, dbg)
 
     % % debug - plotting %<<<1
     if dbg.v
-        colors = 'rgbk';
-        legc = [];
-        figure('visible',dbg.showplots)
-        hold on
-        % plot signal
-        for i = 1:rows(D)
-                plot(D(i, :) - max(A)*2.1.*(i-1), [colors(i) '-'])
-                legc{end+1} = (['digitizer ' num2str(i)]);
-        end % for i
-        % plot switch events
-        minmax = ylim;
-        minmax(1) = minmax(1) - abs(minmax(2) - minmax(1)).*0.1;
-        minmax(2) = minmax(2) + abs(minmax(2) - minmax(1)).*0.1;
-        for i = 1:length(S)
-                plot([S(i) S(i)], minmax)
-        end % for i
-        legend(legc)
-        title('Simulated signals, offseted')
-        hold off
-        fn = fullfile(dbg.plotpath, sprintf('simulator-scenario_%03d-signals', scenario));
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.simulator_signals
+            colors = 'rgbk';
+            legc = [];
+            figure('visible',dbg.showplots)
+            hold on
+            % plot signal
+            for i = 1:rows(D)
+                    plot(D(i, :) - max(A)*2.1.*(i-1), [colors(i) '-'])
+                    legc{end+1} = (['digitizer ' num2str(i)]);
+            end % for i
+            % plot switch events
+            minmax = ylim;
+            minmax(1) = minmax(1) - abs(minmax(2) - minmax(1)).*0.1;
+            minmax(2) = minmax(2) + abs(minmax(2) - minmax(1)).*0.1;
+            for i = 1:length(S)
+                    plot([S(i) S(i)], minmax)
+            end % for i
+            legend(legc)
+            title('Simulated signals, offseted')
+            hold off
+            fn = fullfile(dbg.plotpath, sprintf('simulator_signals_scenario_%03d', scenario));
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.simulator_signals
     end % if dbg.v
 
 end % function

@@ -1,6 +1,7 @@
 addpath('..')
 % SET QWTB path to your own directory!
 addpath('~/metrologie/Q-Wave/qwtb/qwtb')
+dbg = check_gen_dbg([], 1);
 
 % ---SETUP-----------------------------------------------------------------
 % values obtained from measurement setup:
@@ -22,12 +23,6 @@ sigconfig.MRe = 100;
 sigconfig.PRs = 10;
 sigconfig.PRe = 5;
 sigconfig.fs = 10e3;
-dbg.v = 0;
-dbg.section = 1;
-dbg.segment = 1;
-dbg.showplots = 'off'; % 'on' or 'off'
-dbg.saveplotsplt = 1;
-dbg.saveplotspng = 1;
 dbg.plotpath = '190422_PJVS_0147_results';
 
 % -------------------------------------------------------------------
@@ -49,6 +44,10 @@ M = repmat(Mcore, 1, length(S));
 M = M(1,1:length(S)-1);
 
 alg = 'PSFE';
+profile on
 [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, [], alg, dbg);
+profile off
+T = profile('info');
+profshow(T)
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=matlab textwidth=80 tabstop=4 shiftwidth=4

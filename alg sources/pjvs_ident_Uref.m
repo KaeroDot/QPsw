@@ -20,7 +20,7 @@
 % Uref - reference voltages matched to the sample signal, for the number of
 %   periods as in the signal.
 
-function Uref = identify_pjvs_Uref(y, MRs, MRe, Spjvs, Uref1period, dbg)
+function Uref = pjvs_ident_Uref(y, MRs, MRe, Spjvs, Uref1period, dbg)
     % % check inputs %<<<1
     % XXX FINISH
     % if isempty(max_adc_noise)
@@ -91,37 +91,43 @@ function Uref = identify_pjvs_Uref(y, MRs, MRe, Spjvs, Uref1period, dbg)
     % DEBUG plots and messages %<<<1
     if dbg.v
         ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
-        plottitle = sprintf('identify_pjvs_Uref: minimum distance is %.6f V\n', mindistance);
-        disp(plottitle)
 
-        % plot matches of ids for various 'phase' of steplen
-        figure('visible',dbg.showplots)
-        hold on
-        plot(1:numel(distance), distance, 'x-')
-        plot(id, distance(id), 'ok')
-        xlabel('Uref phase')
-        ylabel('distance of Uref1period and UrefM')
-        legend('calculated distances', 'selected phase')
-        title(plottitle)
-        hold off
-        fn = fullfile(dbg.plotpath, [ssec 'identify_Uref_phase']);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.pjvs_ident_Uref_phase
+            % plot matches of ids for various 'phase' of steplen
+            figure('visible',dbg.showplots)
+            hold on
+            plot(1:numel(distance), distance, 'x-')
+            plot(id, distance(id), 'ok')
+            xlabel('Uref phase')
+            ylabel('distance of Uref1period and UrefM')
+            legend('calculated distances', 'selected phase')
+            title(sprintf('Identification of phase of PJVS reference values\nphase, minimum distance is %.6f V', mindistance));
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_phase']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.pjvs_ident_Uref_phase
 
         % plot samples and Uref
-        figure('visible',dbg.showplots)
-        hold on
-        plot(y, '-x')
-        plot(Spjvs(1:numel(Uref1period)), Uref1period, '+')
-        plot(Spjvs(1:end-1), Uref, 'o')
-        yl = ylim;
-        plot(MRs.*[1 1], yl, '-k') 
-        plot((numel(y) - MRe).*[1 1], yl, '-k') 
-        legend('samples', 'input data: Uref1period', 'replicated and matched Uref', 'masking limits')
-        hold off
-        fn = fullfile(dbg.plotpath, [ssec 'identify_Uref_all']);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.pjvs_ident_Uref_all
+            figure('visible',dbg.showplots)
+            hold on
+            plot(y, '-x')
+            plot(Spjvs(1:numel(Uref1period)), Uref1period, '+')
+            plot(Spjvs(1:end-1), Uref, 'o')
+            yl = ylim;
+            plot(MRs.*[1 1], yl, '-k')
+            plot((numel(y) - MRe).*[1 1], yl, '-k')
+            legend('samples', 'input data: Uref1period', 'replicated and matched Uref', 'masking limits')
+            title(sprintf('Identification of phase of PJVS reference values\nwaveforms'))
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_all']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.pjvs_ident_Uref_all
+
     end % if DEBUG
 
 end % function Spjvs = identify_pjvs_steps

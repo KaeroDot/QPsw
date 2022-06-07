@@ -40,6 +40,8 @@ function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
     PRef = [];
     C = [];
     uC = [];
+    plot_segments = {};
+    plot_Uref = [];
 
     % get calibration data %<<<1
     % Masking of MRs a MRe is missing!!! XXX
@@ -59,6 +61,21 @@ function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
                 % XXX CCC needs to save intermediate results as binary data, because
                 % correlation matrices are too large in case of 1000 numbers
                 % fitting directly, without mean and std!
+
+                % XXXXXXXXXXXXXXX
+                % Plot all steps minus Uref
+                % for first period? YES
+                % for all periods? NOPE
+                % for all values in all periods? YES
+                %
+                if dbg.v
+                    if dbg.pjvs_segments_first_period
+                        % save values for plotting
+                        plot_segments{end+1} = segment;
+                        plot_Uref(end+1) = Uref(i);
+                    end % if dbg.pjvs_segments_first_period
+                end % if dbg.v
+
             end % if numel(segment) > PRs + PRe + 1
         end % if (Spjvs(i) > MRs) & (Spjvs(i+1) < numel(y) - MRe)
     end % for i
@@ -98,45 +115,79 @@ function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
     % debug plot fit data and fit result %<<<1
     if dbg.v
         ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
-        figure('visible',dbg.showplots)
-        hold on
-            plot(DI.x.v, DI.y.v,'xb')
-            % XXX make this general polynom
-            tmpy = cal.coefs.v(1) + DI.x.v.*cal.coefs.v(2);
-            plot(DI.x.v, tmpy, '-r')
-            legend('data', 'linear fit')
-            xlabel('PJVS reference voltages')
-            ylabel('average (V)')
-            title('PJVS vs average voltage measured by digitizer', 'interpreter', 'none')
-        hold off
-        fn = fullfile(dbg.plotpath, [ssec 'digitizer_calibration_fit']);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
 
-        % plot fit errors
-        figure('visible',dbg.showplots)
-        hold on
-            plot(DI.x.v, DI.y.v - tmpy,'xb')
-            xlabel('PJVS reference voltages')
-            ylabel('error from linear fit')
-            title('linear fit errors vs PJVS', 'interpreter', 'none')
-        hold off
-        fn = fullfile(dbg.plotpath, [ssec 'digitizer_calibration_fit_errors']);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.pjvs_segments_first_period
+            colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
+                        % plot_offset = max([plot_segments{:}]);
+            figure('visible',dbg.showplots)
+            hold on
+            legc = {};
+            % number of segments in periods:
+            segs = find(Uref == Uref(1))(2);
+            for j = 1:segs
+                % plot(1e6.*(plot_segments{j} - plot_Uref(j) + j.*plot_offset), '-')
+                plot(1e6.*(plot_segments{j} - plot_Uref(j)), '-')
+                legc{end+1} = sprintf('Uref=%.9f V', plot_Uref(j));
+            end
+            legend(legc)
+            title(sprintf('Segments minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
+            xlabel('time (s)')
+            ylabel('Segment voltage (uV)')
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.pjvs_segments_first_period
 
-        % plot fit errors versus segment number
-        figure('visible',dbg.showplots)
-        hold on
-            plot(DI.y.v - tmpy,'xb')
-            xlabel('PJVS segment index (function of time)')
-            ylabel('error from linear fit')
-            title('linear fit errors vs time')
-        hold off
-        fn = fullfile(dbg.plotpath, [ssec 'digitizer_calibration_fit_errors_time']);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
-    end
+        if dbg.adc_calibration_fit
+            figure('visible',dbg.showplots)
+            hold on
+                plot(DI.x.v, DI.y.v,'xb')
+                % XXX make this general polynom
+                tmpy = cal.coefs.v(1) + DI.x.v.*cal.coefs.v(2);
+                plot(DI.x.v, tmpy, '-r')
+                legend('data', 'linear fit')
+                xlabel('PJVS reference voltages')
+                ylabel('average (V)')
+                title('PJVS vs average voltage measured by digitizer', 'interpreter', 'none')
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.adc_calibration_fit
+
+        if dbg.adc_calibration_fit_errors
+            % plot fit errors
+            figure('visible',dbg.showplots)
+            hold on
+                plot(DI.x.v, DI.y.v - tmpy,'xb')
+                xlabel('PJVS reference voltages')
+                ylabel('error from linear fit')
+                title('Linear fit errors vs PJVS', 'interpreter', 'none')
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.adc_calibration_errors
+
+        if dbg.adc_calibration_fit_errors_time
+            % plot fit errors versus segment number
+            figure('visible',dbg.showplots)
+            hold on
+                plot(DI.y.v - tmpy,'xb')
+                xlabel('PJVS segment index (function of time)')
+                ylabel('error from linear fit')
+                title('Linear fit errors vs time', 'interpreter', 'none')
+            hold off
+            fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors_time']);
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.adc_calibration_fit_errors_time
+    end % if dbg.v
 
 end % function
 

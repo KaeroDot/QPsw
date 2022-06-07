@@ -23,52 +23,16 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
 
     % split multiplexed data into sections %<<<1
     yc = qpsw_demultiplex_split(y, S, M);
-    % DEBUG plot sections %<<<2
-    if dbg.v
-        figure('visible',dbg.showplots)
-        title('raw waveform sections after splitting')
-        hold on
-        % does not work for multichannel records!
-        cells = [1:4];
-        legc = {};
-        for c = cells
-            if size(yc, 2) >= c
-                plot(yc{c});
-                legc(end+1) = {num2str(c)};
-            end
-        end
-        plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
-        legc(end+1) = 'MRs-points removed before this line';
-        plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
-        legc(end+1) = 'MRe-points removed after this line';
-        legend(legc);
-        hold off
-        fn = fullfile(dbg.plotpath, 'sections1');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
 
-        figure('visible',dbg.showplots)
-        title('raw waveform sections after splitting')
-        hold on
-        % does not work for multichannel records!
-        cells = [10:10:40];
-        legc = {};
-        for c = cells
-            if size(yc, 2) >= c
-                plot(yc{c});
-                legc(end+1) = {num2str(c)};
-            end
+    % debug plot sections %<<<1
+    if dbg.v
+        if dbg.sections_1
+            plot_selected_sections(1:4, yc, sigconfig, dbg, 'sections_1')
         end
-        plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
-        legc(end+1) = 'MRs-points removed before this line';
-        plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
-        legc(end+1) = 'MRe-points removed after this line';
-        legend(legc);
-        hold off
-        fn = fullfile(dbg.plotpath, 'sections2');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
-    end % if DEBUG
+        if dbg.sections_10
+            plot_selected_sections(10:10:40, yc, sigconfig, dbg, 'sections_10')
+        end
+    end % if debug
 
     % get calibration data from particular sections %<<<1
     ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg);
@@ -91,34 +55,37 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
 
     % debug plot demultiplexed signal %<<<2
     if dbg.v
-        colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
-        legc = [];
-        % make time axis:
-        t = [0:size(y,2) - 1]./sigconfig.fs;
-        figure('visible',dbg.showplots)
-        hold on
-        % estimate amplitudes, so waveforms can be offseted:
-        plotoffset = max(max(y))*2.1;
-        % plot signal
-        for i = 1:rows(y)
-                plot(t, y(i, :) - plotoffset.*(i-1), [colors(i) '-'])
-                legc{end+1} = (['Signal ' num2str(i)]);
-        end % for i
-        % plot switch events
-        minmax = ylim;
-        minmax(1) = minmax(1) - abs(minmax(2) - minmax(1)).*0.1;
-        minmax(2) = minmax(2) + abs(minmax(2) - minmax(1)).*0.1;
-        for i = 1:length(S)
-            if S(i) <= size(t,2)
-                plot([t(S(i)) t(S(i))], minmax)
-            end
-        end % for i
-        legend(legc)
-        title('Demultiplexed signals, offseted')
-        hold off
-        fn = fullfile(dbg.plotpath, 'demultiplexed');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.demultiplexed
+            colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
+            legc = [];
+            % make time axis:
+            t = [0:size(y,2) - 1]./sigconfig.fs;
+            figure('visible',dbg.showplots)
+            hold on
+            % estimate amplitudes, so waveforms can be offseted:
+            plotoffset = max(max(y))*2.1;
+            % plot signal
+            for i = 1:rows(y)
+                    plot(t, y(i, :) - plotoffset.*(i-1), [colors(i) '-'])
+                    legc{end+1} = (['Signal ' num2str(i)]);
+            end % for i
+            % plot switch events
+            minmax = ylim;
+            minmax(1) = minmax(1) - abs(minmax(2) - minmax(1)).*0.1;
+            minmax(2) = minmax(2) + abs(minmax(2) - minmax(1)).*0.1;
+            for i = 1:length(S)
+                if S(i) <= size(t,2)
+                    plot([t(S(i)) t(S(i))], minmax)
+                end
+            end % for i
+            legend(legc)
+            title('Demultiplexed signals, offseted')
+            hold off
+            fn = fullfile(dbg.plotpath, 'demultiplexed');
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.demultiplexed
     end % if dbg.v
 
     % calculate amplitude and phase of sections %<<<1
@@ -159,31 +126,63 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
                         end
                 end % for j = 1:columns(res)
         end % for i = 1:rows(res)
-        figure('visible',dbg.showplots)
-        hold on
+
+        if dbg.signal_amplitudes
+            figure('visible',dbg.showplots)
+            hold on
             plot(amps', '-x')
-            title('calculated amplitudes, digitizer gain corrected')
+            title('calculated signal amplitudes, digitizer gain corrected')
             xlabel('sampled waveform section (index)')
             ylabel('amplitude (V)')
             % legend('amplitude');
-        hold off
-        fn = fullfile(dbg.plotpath, 'amplitudes');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            hold off
+            fn = fullfile(dbg.plotpath, 'signal_amplitudes');
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.signal_amplitudes
 
-        figure('visible',dbg.showplots)
-        hold on
-            plot(1e6.*offsets', '-x')
-            title('calculated amplitude offsets, digitizer offset corrected')
-            xlabel('sampled waveform section')
-            ylabel('offset (uV)')
-            % legend('offset');
-        hold off
-        fn = fullfile(dbg.plotpath, 'offsets');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.signal_offsets
+            figure('visible',dbg.showplots)
+            hold on
+                plot(1e6.*offsets', '-x')
+                title('calculated signal offsets, digitizer offset corrected')
+                xlabel('sampled waveform section')
+                ylabel('offset (uV)')
+                % legend('offset');
+            hold off
+            fn = fullfile(dbg.plotpath, 'signal_offsets');
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.signal_offsets
     end % if DEBUG
 end
+
+function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix)
+% plot waveforms in selected sections
+        figure('visible',dbg.showplots)
+        title('raw waveform sections after splitting')
+        hold on
+        % does not work for multichannel records!
+        legc = {};
+        for c = section_ids
+            if size(yc, 2) >= c
+                plot(yc{c});
+                legc(end+1) = {num2str(c)};
+            end
+        end
+        plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
+        legc(end+1) = 'MRs-points removed before this line';
+        plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
+        legc(end+1) = 'MRe-points removed after this line';
+        legend(legc);
+        hold off
+        fn = fullfile(dbg.plotpath, plotprefix);
+        if dbg.saveplotsplt printplt(fn) end
+        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        close
+end % function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix)
 
 % tests %<<<1
 % this function is tested by using qpsw_test.m

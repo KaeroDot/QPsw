@@ -35,9 +35,10 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 segmentlen = sigconfig.fs./sigconfig.fseg;
                                 % Find out indexes of PJVS segments automatically:
                                 dbg.section = [i, j];
-                                tmpSpjvs = identify_pjvs_segments(yc{i,j}, sigconfig.MRs, sigconfig.MRe, [], segmentlen, dbg);
+                                tmpSpjvs = pjvs_ident_segments(yc{i,j}, sigconfig.MRs, sigconfig.MRe, [], segmentlen, dbg);
                                 % Recreate PJVS reference values for whole sampled PJVS waveform section:
-                                tmpUref = identify_pjvs_Uref(yc{i,j}, sigconfig.MRs, sigconfig.MRe, tmpSpjvs, Uref1period, dbg);
+                                tmpUref = pjvs_ident_Uref(yc{i,j}, sigconfig.MRs, sigconfig.MRe, tmpSpjvs, Uref1period, dbg);
+                                % here will be ADEV calculation
                             else %<<<4
                                 error('deprecated?')
                                 % This part used indexes of all PJVS segments
@@ -62,6 +63,12 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 %     % no need to add Uref, it is already there
                                 % end
                             end %>>>4
+                            % XXX here should come split into segments and
+                            % removing MRs, MRe
+                            % Next optional automatic search of PRs,PRe
+                            % Next removal of PRs,PRe
+                            % Next plotting of segments
+                            % Next ADEV for all segments
                             ycal(i,j) = adc_pjvs_calibration(yc{i,j}, tmpSpjvs, tmpUref, sigconfig.PRs, sigconfig.PRe, sigconfig.MRs, sigconfig.MRe, dbg);
                     else
                             % not a quantum measurement, not yet available calibration of digitizer (will be added later):
@@ -112,36 +119,40 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                         end
                 end % for j = 1:columns(yc)
         end % for i = 1:rows(yc)
-        
-        lfmt = {'-xr','-xg','-xb','-xk','-xc','-xy'};
-        ofmt = {'or','og','ob','ok','oc','oy'};
-        figure('visible',dbg.showplots)
-        hold on
+
+        if dbg.adc_calibration_gains
+            lfmt = {'-xr','-xg','-xb','-xk','-xc','-xy'};
+            ofmt = {'or','og','ob','ok','oc','oy'};
+            figure('visible',dbg.showplots)
+            hold on
             plot(1e6.*(gains' - 1),      lfmt(1:size(gains,1))                    );
             plot(1e6.*(PJVS_gains' - 1), ofmt(1:size(PJVS_gains,1)), 'linewidth',2);
             title(sprintf('calculated digitizer gains (minus 1)\nx - applied gain, o - gain calculated from PJVS'));
             xlabel('sampled waveform section')
             ylabel('gain - 1 (uV/V)')
             % legend('all gains', 'gains calculated from PJVS');
-        hold off
-        fn = fullfile(dbg.plotpath, 'calibration-gains');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
-        close
+            hold off
+            fn = fullfile(dbg.plotpath, 'adc_calibration_gains');
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.adc_calibration_gains
 
-        figure('visible',dbg.showplots)
-        hold on
+        if dbg.adc_calibration_offsets
+            figure('visible',dbg.showplots)
+            hold on
             plot(1e6.*offsets',         lfmt(1:size(offsets,1))                    );
             plot(1e6.*PJVS_offsets',    ofmt(1:size(PJVS_offsets,1)), 'linewidth',2)
             title(sprintf('calculated digitizer offsets\nx - applied gain, o - gain calculated from PJVS'));
             xlabel('sampled waveform section')
             ylabel('offset (uV)')
             % legend('all offsets', 'offsets calculated from PJVS');
-        hold off
-        fn = fullfile(dbg.plotpath, 'calibration-offsets');
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
-        close
+            hold off
+            fn = fullfile(dbg.plotpath, 'adc_calibration_offsets');
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.adc_calibration_offsets
     end % if DEBUG
 end
 

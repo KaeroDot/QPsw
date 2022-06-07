@@ -16,11 +16,9 @@ simconfig.fm = 75e9;
 simconfig.apply_filter = 0;
 
 % debug setup:
-dbg = check_gen_dbg();
+dbg = check_gen_dbg([], 1);
 dbg.v = 1;
-dbg.showplots = 'off'; % 'on' or 'off'
-dbg.saveplotsplt = 1;
-dbg.saveplotspng = 1;
+dbg.saveplotsplt = 0;
 dbg.plotpath = 'simulation_results';
 if ~exist(dbg.plotpath, 'dir')
     mkdir(dbg.plotpath);
