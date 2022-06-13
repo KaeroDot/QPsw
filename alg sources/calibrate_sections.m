@@ -36,9 +36,6 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 % Find out indexes of PJVS segments automatically:
                                 dbg.section = [i, j];
                                 tmpSpjvs = pjvs_ident_segments(yc{i,j}, sigconfig.MRs, sigconfig.MRe, [], segmentlen, dbg);
-                                % Recreate PJVS reference values for whole sampled PJVS waveform section:
-                                tmpUref = pjvs_ident_Uref(yc{i,j}, sigconfig.MRs, sigconfig.MRe, tmpSpjvs, Uref1period, dbg);
-                                % here will be ADEV calculation
                             else %<<<4
                                 error('deprecated?')
                                 % This part used indexes of all PJVS segments
@@ -63,13 +60,44 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 %     % no need to add Uref, it is already there
                                 % end
                             end %>>>4
-                            % XXX here should come split into segments and
-                            % removing MRs, MRe
-                            % Next optional automatic search of PRs,PRe
+                            [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(yc{i,j}, tmpSpjvs, sigconfig.MRs, sigconfig.MRe, sigconfig.PRs, sigconfig.PRe, dbg);
+                            % Recreate PJVS reference values for whole sampled PJVS waveform section:
+                            tmpUref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
+
+                            % debug plot %<<<2
+                            if dbg.v & dbg.pjvs_segments_first_period
+                                ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+                                figure('visible',dbg.showplots)
+                                hold on
+                                legc = {};
+                                % this limit is to correctly set limits for
+                                % plot, because NaN values cause unnecesary
+                                % empty space on right side of the plot
+                                plotlim = 0;
+                                for k = 1:numel(Uref1period)
+                                    plot(1e6.*(s_y(:,k) - tmpUref(k)), '-')
+                                    legc{end+1} = sprintf('U_{ref}=%.9f', tmpUref(k));
+                                    plotlim = max(plotlim, sum(~isnan(s_y(:,k))));
+                                end
+                                xlim([1 plotlim]);
+                                legend(legc, 'location', 'eastoutside')
+                                title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
+                                xlabel('time (s)')
+                                ylabel('Voltage difference (uV)')
+                                hold off
+                                fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
+                                if dbg.saveplotsplt printplt(fn) end
+                                if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                                close
+                            end % if dbg
+
+                                % here will be ADEV calculation
+                            % Next optional automatic search of PRs,PRe?
                             % Next removal of PRs,PRe
                             % Next plotting of segments
                             % Next ADEV for all segments
-                            ycal(i,j) = adc_pjvs_calibration(yc{i,j}, tmpSpjvs, tmpUref, sigconfig.PRs, sigconfig.PRe, sigconfig.MRs, sigconfig.MRe, dbg);
+                            % ycal(i,j) = adc_pjvs_calibration(yc{i,j}, tmpSpjvs, tmpUref, sigconfig.PRs, sigconfig.PRe, sigconfig.MRs, sigconfig.MRe, dbg);
+                            ycal(i,j) = adc_pjvs_calibration(tmpUref, s_mean, s_uA, dbg);
                     else
                             % not a quantum measurement, not yet available calibration of digitizer (will be added later):
                             ycal(i,j) = empty_ycal;

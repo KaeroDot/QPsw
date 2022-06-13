@@ -15,70 +15,37 @@
 % Outputs:
 % cal - calibration data for this section of waveform
 
-function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
-    % check inputs %<<<1
-    if Spjvs(1) != 1
-        error('adc_pjvs_calibration: S(1) must be equal to 1!')
-    end
-    if Spjvs(end) != size(y,2) + 1
-        error('adc_pjvs_calibration: S(end) must be equal to data length + 1!')
-    end
-    if numel(Uref) != numel(Spjvs) - 1
-        error('adc_pjvs_calibration: number of Uref must be equal to number of switches S minus 1')
-    end
-    if PRs < 0
-        error('adc_pjvs_calibration: negative number of samples to be removed at start of segment!')
-    end
-    if PRe < 0
-        error('adc_pjvs_calibration: negative number of samples to be removed at end of segment!')
-    end
-    if all(diff(Spjvs) < PRs + PRe + 1)
-        error('adc_pjvs_calibration: not enough samples in segments after start and end removal!')
-    end
+function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
+    % XXX
+    % % check inputs %<<<1
+    % if Spjvs(1) != 1
+    %     error('adc_pjvs_calibration: S(1) must be equal to 1!')
+    % end
+    % if Spjvs(end) != size(y,2) + 1
+    %     error('adc_pjvs_calibration: S(end) must be equal to data length + 1!')
+    % end
+    % if numel(Uref) != numel(Spjvs) - 1
+    %     error('adc_pjvs_calibration: number of Uref must be equal to number of switches S minus 1')
+    % end
+    % if PRs < 0
+    %     error('adc_pjvs_calibration: negative number of samples to be removed at start of segment!')
+    % end
+    % if PRe < 0
+    %     error('adc_pjvs_calibration: negative number of samples to be removed at end of segment!')
+    % end
+    % if all(diff(Spjvs) < PRs + PRe + 1)
+    %     error('adc_pjvs_calibration: not enough samples in segments after start and end removal!')
+    % end
 
     % initialize %<<<1
     PRef = [];
     C = [];
     uC = [];
-    plot_segments = {};
     plot_Uref = [];
 
-    % get calibration data %<<<1
-    % Masking of MRs a MRe is missing!!! XXX
-    for i = 1:length(Spjvs) - 1
-        % do only if not in MRs, MRe regions (outside part affected by multiplexer switching)
-        if (Spjvs(i) >= MRs) && (Spjvs(i+1) <= numel(y) - MRe)
-            % get one segment
-            segment = y(Spjvs(i) : Spjvs(i+1) - 1);
-            % remove samples at start and at end of the segment, if possible:
-            if numel(segment) > PRs + PRe + 1
-                segment = segment(1 + PRs : end - PRe);
-                % calculate mean value:
-                PRef(end+1) = Uref(i);
-                C(end+1) = mean(segment);
-                uC(end+1) = std(segment)./sqrt(length(segment));
-                % XXX This should be improved - just take all values in segment and make
-                % XXX CCC needs to save intermediate results as binary data, because
-                % correlation matrices are too large in case of 1000 numbers
-                % fitting directly, without mean and std!
-
-                % XXXXXXXXXXXXXXX
-                % Plot all steps minus Uref
-                % for first period? YES
-                % for all periods? NOPE
-                % for all values in all periods? YES
-                %
-                if dbg.v
-                    if dbg.pjvs_segments_first_period
-                        % save values for plotting
-                        plot_segments{end+1} = segment;
-                        plot_Uref(end+1) = Uref(i);
-                    end % if dbg.pjvs_segments_first_period
-                end % if dbg.v
-
-            end % if numel(segment) > PRs + PRe + 1
-        end % if (Spjvs(i) > MRs) & (Spjvs(i+1) < numel(y) - MRe)
-    end % for i
+    PRef = Uref;
+    C = s_mean;
+    uC = s_uA;
 
     % sort data based on x axis? is it needed? CCC does it or not? XXX
 
@@ -86,9 +53,7 @@ function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
     if numel(PRef) < 2
         % no or only one suitable step found, return empty result:
         warning(['adc_pjvs_calibration: found ' num2str(numel(PRef)) ...
-                 ' suitable PJVS steps (after removing ' num2str(PRs) ...
-                 ' samples from start and ' num2str(PRe) ...
-                 ' from end of step). Cannot fit by line.']);
+                 ' PJVS steps. Cannot fit by line.']);
         cal.coefs = [];
         cal.exponents = [];
         cal.func = [];
@@ -115,30 +80,6 @@ function [cal] = adc_pjvs_calibration(y, Spjvs, Uref, PRs, PRe, MRs, MRe, dbg)
     % debug plot fit data and fit result %<<<1
     if dbg.v
         ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
-
-        if dbg.pjvs_segments_first_period
-            colors = 'rgbkcyrgbkcyrgbkcyrgbkcy';
-                        % plot_offset = max([plot_segments{:}]);
-            figure('visible',dbg.showplots)
-            hold on
-            legc = {};
-            % number of segments in periods:
-            segs = find(Uref == Uref(1))(2);
-            for j = 1:segs
-                % plot(1e6.*(plot_segments{j} - plot_Uref(j) + j.*plot_offset), '-')
-                plot(1e6.*(plot_segments{j} - plot_Uref(j)), '-')
-                legc{end+1} = sprintf('Uref=%.9f V', plot_Uref(j));
-            end
-            legend(legc)
-            title(sprintf('Segments minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
-            xlabel('time (s)')
-            ylabel('Segment voltage (uV)')
-            hold off
-            fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
-            close
-        end % if dbg.pjvs_segments_first_period
 
         if dbg.adc_calibration_fit
             figure('visible',dbg.showplots)
