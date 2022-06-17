@@ -16,7 +16,7 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
         Spjvs = [1 Spjvs];
     end
     if Spjvs(end) ~= numel(y) + 1
-         % because Spjvs marks start of step, next
+        % because Spjvs marks start of step, next
         % step is after the last data sample
         Spjvs(end+1) = numel(y) + 1;
     end
@@ -31,7 +31,7 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
     % available. Second method is 10x slower.
     if exist('nanmean')
         % faster version
-        for j = 1:length(Spjvs) - 1
+        for j = 1:numel(Spjvs) - 1
             % get one segment
             actlen = Spjvs(j+1) - Spjvs(j);
             tmp = y(Spjvs(j) : Spjvs(j+1) - 1);
@@ -39,8 +39,13 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                 tmp = tmp(1 + PRs : end-PRe);
                 s_y(1:numel(tmp), j) = tmp;
             else
-                % XXX if last segment, neglect data?
-                error(sprintf('not enough samples in segment after start and end removal, section %d-%d, segment j', dbg.section, dbg.segment, j));
+                if j == numel(Spjvs) - 1
+                    % it is last segment, lets neglect it
+                    warning(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j));
+                    % XXX is this good idea?
+                else
+                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
+                end
             end
         end
         s_mean = nanmean(s_y, 1);
@@ -58,8 +63,13 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                 tmp = tmp(1 + PRs : end-PRe);
                 s_y(1:numel(tmp), j) = tmp;
             else
-                % XXX if last segment, neglect data?
-                error(sprintf('not enough samples in segment after start and end removal, section %d-%d, segment j', dbg.section, dbg.segment, j));
+                if j == numel(Spjvs) - 1
+                    % it is last segment, lets neglect it
+                    warning(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j));
+                    % XXX is this good idea?
+                else
+                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
+                end
             end
             s_mean(j)        = mean(tmp);
             s_std(j)         =  std(tmp);

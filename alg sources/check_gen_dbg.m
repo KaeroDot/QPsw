@@ -80,6 +80,7 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
     dbg = check_set_int8(dbg, 'pjvs_ident_Uref_phase', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_ident_Uref_all', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_segments_first_period', 0 | switch_missing_on);
+    dbg = check_set_int8(dbg, 'pjvs_segments_mean_std', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'adc_calibration_fit', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'adc_calibration_fit_errors', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'adc_calibration_fit_errors_time', 0 | switch_missing_on);

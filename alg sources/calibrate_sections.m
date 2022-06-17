@@ -65,30 +65,50 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                             tmpUref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
 
                             % debug plot %<<<2
-                            if dbg.v & dbg.pjvs_segments_first_period
+                            if dbg.v 
                                 ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
-                                figure('visible',dbg.showplots)
-                                hold on
-                                legc = {};
-                                % this limit is to correctly set limits for
-                                % plot, because NaN values cause unnecesary
-                                % empty space on right side of the plot
-                                plotlim = 0;
-                                for k = 1:numel(Uref1period)
-                                    plot(1e6.*(s_y(:,k) - tmpUref(k)), '-')
-                                    legc{end+1} = sprintf('U_{ref}=%.9f', tmpUref(k));
-                                    plotlim = max(plotlim, sum(~isnan(s_y(:,k))));
-                                end
-                                xlim([1 plotlim]);
-                                legend(legc, 'location', 'eastoutside')
-                                title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
-                                xlabel('time (s)')
-                                ylabel('Voltage difference (uV)')
-                                hold off
-                                fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
-                                if dbg.saveplotsplt printplt(fn) end
-                                if dbg.saveplotspng print([fn '.png'], '-dpng') end
-                                close
+                                if dbg.pjvs_segments_first_period
+                                    % plot with segments minus reference value,
+                                    % for first PJVS period:
+                                    figure('visible',dbg.showplots)
+                                    hold on
+                                    legc = {};
+                                    % this limit is to correctly set limits for
+                                    % plot, because NaN values cause unnecesary
+                                    % empty space on right side of the plot
+                                    plotlim = 0;
+                                    for k = 1:numel(Uref1period)
+                                        plot(1e6.*(s_y(:,k) - tmpUref(k)), '-')
+                                        legc{end+1} = sprintf('U_{ref}=%.9f', tmpUref(k));
+                                        plotlim = max(plotlim, sum(~isnan(s_y(:,k))));
+                                    end
+                                    xlim([1 plotlim]);
+                                    legend(legc, 'location', 'eastoutside')
+                                    title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
+                                    xlabel('time (s)')
+                                    ylabel('Voltage difference (uV)')
+                                    hold off
+                                    fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
+                                    if dbg.saveplotsplt printplt(fn) end
+                                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                                    close
+                                end % if dbg.pjvs_segments_first_period
+                                if dbg.pjvs_segments_mean_std
+                                    % plot means and std of segments minus reference value,
+                                    figure('visible',dbg.showplots)
+                                    hold on
+                                    legc = {};
+                                    plot(1e6.*(s_mean - tmpUref), 'b-x', 1e6.*s_std, 'r-x')
+                                    legend('mean of segments', 'std')
+                                    title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
+                                    xlabel('segment index')
+                                    ylabel('Voltage (uV)')
+                                    hold off
+                                    fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_mean_std']);
+                                    if dbg.saveplotsplt printplt(fn) end
+                                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                                    close
+                                end % if dbg.pjvs_segments_first_period
                             end % if dbg
 
                                 % here will be ADEV calculation

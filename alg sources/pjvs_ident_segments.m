@@ -59,9 +59,9 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
     % call one of phase identification methods:
     switch pjvs_phase_method
         case 1
-            Spjvs = highest_peak(y, segmentlen);
+            Spjvs = highest_peak(y2, segmentlen);
         case 2
-            Spjvs = split_and_highest_peak(y, segmentlen);
+            Spjvs = split_and_highest_peak(y2, segmentlen);
         otherwise
             error('pjvs_ident_segments: uknown method for identification of PJVS phase')
     end % switch
@@ -70,10 +70,10 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
     if Spjvs(1) ~= 1
         Spjvs = [1 Spjvs];
     end
-    if Spjvs(end) ~= numel(y) + 1
+    if Spjvs(end) ~= numel(y2) + 1
          % because Spjvs marks start of step, next
         % step is after the last data sample
-        Spjvs(end+1) = numel(y) + 1;
+        Spjvs(end+1) = numel(y2) + 1;
     end
 
     % debug plots %<<<1
@@ -86,12 +86,11 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
             hold on
             plot( y(1:plotmax),'-x');
             plot(y2(1:plotmax),'-');
-            % plot(y3(1:plotmax),'-x'); %XXX
             plot([0, numel(plotmax)], [max_adc_noise max_adc_noise])
             tmpSpjvs = Spjvs(Spjvs < plotmax);
-            plot(tmpSpjvs, y(tmpSpjvs), 'o', 'linewidth', 2);
+            plot(tmpSpjvs, y2(tmpSpjvs), 'o', 'linewidth', 2);
             % legend('samples', 'samples with masked start/end', 'abs(diff(y))', 'max_adc_noise', 'ids - first identified segment starts', 'final segment starts')
-            legend('samples', 'samples with masked start/end', 'max_adc_noise', 'identified start of segment')
+            legend('samples', 'samples with masked MRs,MRe', 'max_adc_noise', 'identified start of segment')
             title(sprintf('PJVS section with PJVS phase identification\nfirst 10 segments after MRs'))
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_segments_10']);
@@ -109,8 +108,8 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
             plot(y,'-x');
             plot(y2,'-');
             plot([0, numel(y)], [max_adc_noise max_adc_noise])
-            plot(Spjvs(1:end-1), y(Spjvs(1:end-1)), 'o', 'linewidth', 2);
-            legend('samples', 'samples with masked start/end', 'max_adc_noise', 'identified start of segment')
+            plot(Spjvs(1:end-1), y2(Spjvs(1:end-1)), 'o', 'linewidth', 2);
+            legend('samples', 'samples with masked MRs,MRe', 'max_adc_noise', 'identified start of segment')
             % legend('samples', 'samples with masked start/end', 'abs(diff(y))', 'max_adc_noise', 'final segment starts')
             title(sprintf('PJVS section with PJVS phase identification\nall data'))
             hold off
@@ -143,6 +142,14 @@ function Spjvs = highest_peak(y, segmentlen); %<<<1
     % ensure proper values of indexes:
     Spjvs(Spjvs < 1) = [];
     Spjvs(Spjvs > numel(y) + 1) = [];
+        % Only for very detailed debuggging:
+        % figure
+        % hold on
+        % plot(y,'-b')
+        % plot(ydiff,'-k')
+        % plot(maxid, y(maxid),'or', 'linewidth',2)
+        % hold off
+        % keyboard
 end % function Spjvs = highest_peak(y, segmentlen);
 
 function Spjvs = split_and_highest_peak(y, segmentlen); %<<<1
