@@ -25,6 +25,7 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
     empty_ycal.func = [];
     empty_ycal.model = [];
     empty_ycal.yhat = [];
+    find_PR_done = 0; % flag, sets to one if PRs and PRe was automatically found, so it is not done again in next section
     for i = 1:rows(yc)
             for j = 1:columns(yc)
                     % check if quantum measurement:
@@ -60,7 +61,22 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 %     % no need to add Uref, it is already there
                                 % end
                             end %>>>4
+                            % automatically find PRs, PRe:
+                            if sigconfig.PRs < 0 || sigconfig.PRe < 0
+                                if find_PR_done == 0 
+                                    [newPRs, newPRe] = pjvs_find_PR(yc{i,j}, tmpSpjvs, sigconfig, dbg);
+                                    % set flag so the searching of PRs,PRe is not repeated in next sections:
+                                    find_PR_done == 1;
+                                    % set new values of PRs,PRe:
+                                    sigconfig.PRs = newPRs;
+                                    sigconfig.PRe = newPRe;
+                                end
+                            end
+                            % Split the pjvs section into segments, remove PRs,PRe,MRs,MRe, calculate means, std, uA:
                             [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(yc{i,j}, tmpSpjvs, sigconfig.MRs, sigconfig.MRe, sigconfig.PRs, sigconfig.PRe, dbg);
+                            % Now Spjvs can be incorrect, because trailing
+                            % segments (first or last one with smaller number of
+                            % samples than typical) were neglected.
                             % Recreate PJVS reference values for whole sampled PJVS waveform section:
                             tmpUref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
 
@@ -78,11 +94,11 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     % empty space on right side of the plot
                                     plotlim = 0;
                                     for k = 1:numel(Uref1period)
-                                        plot(1e6.*(s_y(:,k) - tmpUref(k)), '-')
+                                        plot(1e6.*(s_y(:,k) - tmpUref(k)), '-x')
                                         legc{end+1} = sprintf('U_{ref}=%.9f', tmpUref(k));
                                         plotlim = max(plotlim, sum(~isnan(s_y(:,k))));
                                     end
-                                    xlim([1 plotlim]);
+                                    xlim([0.9 plotlim+0.1]);
                                     legend(legc, 'location', 'eastoutside')
                                     title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
                                     xlabel('time (s)')
@@ -109,14 +125,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     if dbg.saveplotspng print([fn '.png'], '-dpng') end
                                     close
                                 end % if dbg.pjvs_segments_first_period
-                            end % if dbg
-
-                                % here will be ADEV calculation
-                            % Next optional automatic search of PRs,PRe?
-                            % Next removal of PRs,PRe
-                            % Next plotting of segments
+                            end % if dbg %>>>2
+                            % here will be ADEV calculation
                             % Next ADEV for all segments
-                            % ycal(i,j) = adc_pjvs_calibration(yc{i,j}, tmpSpjvs, tmpUref, sigconfig.PRs, sigconfig.PRe, sigconfig.MRs, sigconfig.MRe, dbg);
                             ycal(i,j) = adc_pjvs_calibration(tmpUref, s_mean, s_uA, dbg);
                     else
                             % not a quantum measurement, not yet available calibration of digitizer (will be added later):

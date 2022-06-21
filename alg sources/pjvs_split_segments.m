@@ -39,14 +39,25 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                 tmp = tmp(1 + PRs : end-PRe);
                 s_y(1:numel(tmp), j) = tmp;
             else
-                if j == numel(Spjvs) - 1
+                if j == 1
+                    % it is first segment, lets neglect it
+                    disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is first segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
+                elseif j == numel(Spjvs) - 1
                     % it is last segment, lets neglect it
-                    warning(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j));
-                    % XXX is this good idea?
+                    disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
                 else
                     error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
                 end
             end
+        end
+        % remove neglected:
+        if all(isnan(s_y(:,1)))
+            % first segment was neglected, remove it from matrices:
+            s_y(:,1) = [];
+        end
+        if all(isnan(s_y(:,end)))
+            % last segment was neglected, remove it from matrices:
+            s_y(:,end) = [];
         end
         s_mean = nanmean(s_y, 1);
         s_std = nanstd(s_y, 0, 1);
@@ -63,13 +74,24 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                 tmp = tmp(1 + PRs : end-PRe);
                 s_y(1:numel(tmp), j) = tmp;
             else
-                if j == numel(Spjvs) - 1
+                if j == 1
+                    % it is first segment, lets neglect it
+                    disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is first segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
+                elseif j == numel(Spjvs) - 1
                     % it is last segment, lets neglect it
-                    warning(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j));
-                    % XXX is this good idea?
+                    disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
                 else
                     error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
                 end
+            end
+            % remove neglected:
+            if all(isnan(s_y(:,1)))
+                % first segment was neglected, remove it from matrices:
+                s_y(1,:) = [];
+            end
+            if all(isnan(s_y(:,end)))
+                % last segment was neglected, remove it from matrices:
+                s_y(:,end) = [];
             end
             s_mean(j)        = mean(tmp);
             s_std(j)         =  std(tmp);
