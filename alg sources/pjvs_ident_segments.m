@@ -53,7 +53,7 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
     % mask data from start and beginning of the section, and set the values to
     % voltage at end/start of the mask so no voltage change is added:
     y2 = y;
-    y2(1 : MRs) = y2(MRs);                  % works even for MR = 0;
+    y2(1 : MRs + 1) = y2(MRs + 1);
     y2(end - MRe : end) = y2(end - MRe);    % works even for MRe = 0;
 
     % call one of phase identification methods:
