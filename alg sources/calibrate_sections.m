@@ -126,8 +126,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     close
                                 end % if dbg.pjvs_segments_first_period
                             end % if dbg %>>>2
-                            % here will be ADEV calculation
-                            % Next ADEV for all segments
+                            % ADEV calculation and plotting:
+                            pjvs_adev(s_y, tmpUref, Uref1period, dbg);
+                            % calibration of ADC:
                             ycal(i,j) = adc_pjvs_calibration(tmpUref, s_mean, s_uA, dbg);
                     else
                             % not a quantum measurement, not yet available calibration of digitizer (will be added later):
