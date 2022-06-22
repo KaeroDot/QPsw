@@ -55,7 +55,7 @@ function [PRs, PRe] = pjvs_find_PR(yc, Spjvs, sigconfig, dbg)
             title(sprintf('log10 of average standard deviation of PJVS steps\nminimal value: %g', min(min(metric))));
             xlabel('PRse');
             ylabel('PRse');
-            ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+            ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_find_PR']);
             if dbg.saveplotsplt printplt(fn) end
             if dbg.saveplotspng print([fn '.png'], '-dpng') end

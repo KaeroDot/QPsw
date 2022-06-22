@@ -36,7 +36,7 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                 segmentlen = sigconfig.fs./sigconfig.fseg;
                                 % Find out indexes of PJVS segments automatically:
                                 dbg.section = [i, j];
-                                tmpSpjvs = pjvs_ident_segments(yc{i,j}, sigconfig.MRs, sigconfig.MRe, [], segmentlen, dbg);
+                                tmpSpjvs = pjvs_ident_segments(yc{i,j}, sigconfig.MRs, sigconfig.MRe, segmentlen, dbg);
                             else %<<<4
                                 error('deprecated?')
                                 % This part used indexes of all PJVS segments
@@ -82,7 +82,7 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
 
                             % debug plot %<<<2
                             if dbg.v 
-                                ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+                                ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
                                 if dbg.pjvs_segments_first_period
                                     % plot with segments minus reference value,
                                     % for first PJVS period:
@@ -100,8 +100,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     end
                                     xlim([0.9 plotlim+0.1]);
                                     legend(legc, 'location', 'eastoutside')
-                                    title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
-                                    xlabel('time (s)')
+                                    title(sprintf('Segment samples minus PJVS reference value\n(masked MRs, MRe, PRs, PRe)'))
+                                    xlabel('Sample index')
                                     ylabel('Voltage difference (uV)')
                                     hold off
                                     fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
@@ -115,9 +115,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     hold on
                                     legc = {};
                                     plot(1e6.*(s_mean - tmpUref), 'b-x', 1e6.*s_std, 'r-x')
-                                    legend('mean of segments', 'std')
-                                    title(sprintf('Segments samples minus PJVS reference value\n(without MRs,MRe,PRs,PRe)'))
-                                    xlabel('segment index')
+                                    legend('Mean of segments', 'Std. of segments')
+                                    title(sprintf('Segments samples minus PJVS reference value\n(masked MRs, MRe, PRs, PRe)'))
+                                    xlabel('Segment index')
                                     ylabel('Voltage (uV)')
                                     hold off
                                     fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_mean_std']);
@@ -187,9 +187,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
             hold on
             plot(1e6.*(gains' - 1),      lfmt(1:size(gains,1))                    );
             plot(1e6.*(PJVS_gains' - 1), ofmt(1:size(PJVS_gains,1)), 'linewidth',2);
-            title(sprintf('calculated digitizer gains (minus 1)\nx - applied gain, o - gain calculated from PJVS'));
-            xlabel('sampled waveform section')
-            ylabel('gain - 1 (uV/V)')
+            title(sprintf('Calculated digitizer gains (minus 1)\nx - applied gain, o - gain calculated from PJVS'));
+            xlabel('Section index')
+            ylabel('Gain - 1 (uV/V)')
             % legend('all gains', 'gains calculated from PJVS');
             hold off
             fn = fullfile(dbg.plotpath, 'adc_calibration_gains');
@@ -203,9 +203,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
             hold on
             plot(1e6.*offsets',         lfmt(1:size(offsets,1))                    );
             plot(1e6.*PJVS_offsets',    ofmt(1:size(PJVS_offsets,1)), 'linewidth',2)
-            title(sprintf('calculated digitizer offsets\nx - applied gain, o - gain calculated from PJVS'));
-            xlabel('sampled waveform section')
-            ylabel('offset (uV)')
+            title(sprintf('Calculated digitizer offsets\nx - applied offset, o - offset calculated from PJVS'));
+            xlabel('Section index')
+            ylabel('Offset (uV)')
             % legend('all offsets', 'offsets calculated from PJVS');
             hold off
             fn = fullfile(dbg.plotpath, 'adc_calibration_offsets');

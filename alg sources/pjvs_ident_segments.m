@@ -8,13 +8,6 @@
 %
 % inputs:
 % y - record of PJVS steps
-% max_adc_noise - maximum distance of measured value and PJVS step value (ADC
-%   noise). This is to filter out nosie of ADC before detecting sudden voltage
-%   changes caused by changing PJVS quantum number (step to step voltage
-%   change). If empty, value of 100 uV is used. 
-%   It should be less than half of one quantum junction voltage (max_adc_noise
-%   must be lower than 1*f_m/K_J, where f_m is microwave frequency and K_J is
-%   josephson constant). 
 % MRs -...
 % MRe - how many samples are masked from beginning/end of the section to get
 %   rid of possible voltage changes caused by multiplexer switches. If empty,
@@ -23,16 +16,12 @@
 % output:
 % Spjvs - indexes of segments (samples just after PJVS step change happened).
 %
-function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg)
+function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
    pjvs_phase_method = 2;  %XXX move to sigconfig!
 
     % initialize %<<<1
 
     % check inputs %<<<1
-    if isempty(max_adc_noise)
-        max_adc_noise = 7e-4; % for NI5922 5 MSa/s
-        % max_adc_noise = 1e-4; % for HP3458 10 kSa/s
-    end
     if isempty(MRs)
         MRs = fix(numel(y).*0.1);
     end
@@ -79,19 +68,19 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
     % debug plots %<<<1
     if dbg.v
         if dbg.pjvs_ident_segments_10
-            ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+            ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
             % plot samples and ids - first short version with only 10 PJVS segments after MRs:
             plotmax = MRs + 10*segmentlen;
             figure('visible',dbg.showplots)
             hold on
             plot( y(1:plotmax),'-x');
             plot(y2(1:plotmax),'-');
-            plot([0, numel(plotmax)], [max_adc_noise max_adc_noise])
             tmpSpjvs = Spjvs(Spjvs < plotmax);
             plot(tmpSpjvs, y2(tmpSpjvs), 'o', 'linewidth', 2);
-            % legend('samples', 'samples with masked start/end', 'abs(diff(y))', 'max_adc_noise', 'ids - first identified segment starts', 'final segment starts')
-            legend('samples', 'samples with masked MRs,MRe', 'max_adc_noise', 'identified start of segment')
-            title(sprintf('PJVS section with PJVS phase identification\nfirst 10 segments after MRs'))
+            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment')
+            xlabel('Sample index')
+            ylabel('Voltage (V)')
+            title(sprintf('PJVS phase identification, section %03d-%03d\nfirst 10 segments after MRs', dbg.section(1), dbg.section(2)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_segments_10']);
             if dbg.saveplotsplt printplt(fn) end
@@ -107,11 +96,11 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, max_adc_noise, segmentlen, dbg
             hold on
             plot(y,'-x');
             plot(y2,'-');
-            plot([0, numel(y)], [max_adc_noise max_adc_noise])
             plot(Spjvs(1:end-1), y2(Spjvs(1:end-1)), 'o', 'linewidth', 2);
-            legend('samples', 'samples with masked MRs,MRe', 'max_adc_noise', 'identified start of segment')
-            % legend('samples', 'samples with masked start/end', 'abs(diff(y))', 'max_adc_noise', 'final segment starts')
-            title(sprintf('PJVS section with PJVS phase identification\nall data'))
+            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment')
+            xlabel('Sample index')
+            ylabel('Voltage (V)')
+            title(sprintf('PJVS phase identification, section %03d-%03d\nall data', dbg.section(1), dbg.section(2)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_segments_all']);
             if dbg.saveplotsplt printplt(fn) end

@@ -79,7 +79,9 @@ function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg
                 end
             end % for i
             legend(legc)
-            title('Demultiplexed signals, offseted')
+            title('Demultiplexed signals (offseted)')
+            xlabel('Sample index')
+            ylabel('Voltage (V)')
             hold off
             fn = fullfile(dbg.plotpath, 'demultiplexed');
             if dbg.saveplotsplt printplt(fn) end
@@ -162,21 +164,23 @@ end
 function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix)
 % plot waveforms in selected sections
         figure('visible',dbg.showplots)
-        title('raw waveform sections after splitting')
+        title('Raw waveform sections after splitting')
         hold on
         % does not work for multichannel records!
         legc = {};
         for c = section_ids
             if size(yc, 2) >= c
                 plot(yc{c});
-                legc(end+1) = {num2str(c)};
+                legc(end+1) = {['Section ' num2str(c)]};
             end
         end
         plot([sigconfig.MRs sigconfig.MRs], ylim,'-k')
-        legc(end+1) = 'MRs-points removed before this line';
+        legc(end+1) = 'MRs points masked before this line';
         plot([numel(yc{1})-sigconfig.MRe numel(yc{1})-sigconfig.MRe], ylim,'-k')
-        legc(end+1) = 'MRe-points removed after this line';
+        legc(end+1) = 'MRe points masked after this line';
         legend(legc);
+        xlabel('Sample index')
+        ylabel('Voltage (V)')
         hold off
         fn = fullfile(dbg.plotpath, plotprefix);
         if dbg.saveplotsplt printplt(fn) end

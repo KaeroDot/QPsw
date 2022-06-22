@@ -79,7 +79,7 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
 
     % debug plot fit data and fit result %<<<1
     if dbg.v
-        ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+        ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
 
         if dbg.adc_calibration_fit
             figure('visible',dbg.showplots)
@@ -88,10 +88,10 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
                 % XXX make this general polynom
                 tmpy = cal.coefs.v(1) + DI.x.v.*cal.coefs.v(2);
                 plot(DI.x.v, tmpy, '-r')
-                legend('data', 'linear fit')
-                xlabel('PJVS reference voltages')
-                ylabel('average (V)')
-                title('PJVS vs average voltage measured by digitizer', 'interpreter', 'none')
+                legend('Segment averages', 'Linear fit', 'location', 'southeast')
+                xlabel('PJVS reference voltage (V)')
+                ylabel('Segment average (V)')
+                title(sprintf('Digitizer calibration, section %03d-%03d\n%d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit']);
             if dbg.saveplotsplt printplt(fn) end
@@ -103,10 +103,10 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
             % plot fit errors
             figure('visible',dbg.showplots)
             hold on
-                plot(DI.x.v, DI.y.v - tmpy,'xb')
-                xlabel('PJVS reference voltages')
-                ylabel('error from linear fit')
-                title('Linear fit errors vs PJVS', 'interpreter', 'none')
+                plot(DI.x.v, 1e6.*(DI.y.v - tmpy),'xb')
+                xlabel('PJVS reference voltage (V)')
+                ylabel('Segment average: error from linear fit (uV)')
+                title(sprintf('Digitizer calibration, section %03d-%03d\nfit errors of %d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors']);
             if dbg.saveplotsplt printplt(fn) end
@@ -118,10 +118,10 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
             % plot fit errors versus segment number
             figure('visible',dbg.showplots)
             hold on
-                plot(DI.y.v - tmpy,'xb')
-                xlabel('PJVS segment index (function of time)')
-                ylabel('error from linear fit')
-                title('Linear fit errors vs time', 'interpreter', 'none')
+                plot(1e6.*(DI.y.v - tmpy),'xb')
+                xlabel('PJVS segment index')
+                ylabel('Segment average: error from linear fit (uV)')
+                title(sprintf('Digitizer calibration, section %03d-%03d\nfit errors of %d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors_time']);
             if dbg.saveplotsplt printplt(fn) end

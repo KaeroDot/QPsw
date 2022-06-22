@@ -52,7 +52,7 @@ function Uref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
 
     % DEBUG plots and messages %<<<1
     if dbg.v
-        ssec = sprintf('00%d-00%d_', dbg.section(1), dbg.section(2));
+        ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
 
         if dbg.pjvs_ident_Uref_phase
             % plot matches of ids for various 'phase' of steplen
@@ -60,10 +60,10 @@ function Uref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
             hold on
             plot(1:numel(distance), distance, 'x-')
             plot(id, distance(id), 'ok')
-            xlabel('Uref phase')
-            ylabel('distance of Uref1period and Urefshifted')
-            legend('calculated distances', 'selected phase')
-            title(sprintf('Identification of phase of PJVS reference values\nphase, minimum distance is %.6f V', mindistance));
+            xlabel('PJVS reference value phase, segment index')
+            ylabel('Distance: sqrt(sum(reference values - segment averages)^2) (V)')
+            legend('Calculated distances', 'selected phase', 'location', 'southeast')
+            title(sprintf('Identification of PJVS phase, section %03d-%03d\nminimum distance is %.6f V', dbg.section(1), dbg.section(2), mindistance) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_phase']);
             if dbg.saveplotsplt printplt(fn) end
@@ -79,8 +79,10 @@ function Uref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
             plot(Uref1period, '+')
             plot(Uref, 'o')
             yl = ylim;
-            legend('segment means', 'Uref1period', 'replicated and matched Uref')
-            title(sprintf('Identification of phase of PJVS reference values\nwaveforms'))
+            xlabel('Sample index')
+            ylabel('Voltage (V)')
+            legend('Segment average', 'PJVS reference values for 1 period', 'Replicated and matched reference values')
+            title(sprintf('Identification of PJVS phase, section %03d-%03d\nwaveform', dbg.section(1), dbg.section(2)) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_all']);
             if dbg.saveplotsplt printplt(fn) end
