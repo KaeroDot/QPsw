@@ -35,7 +35,7 @@ function pjvs_adev(s_y, Uref, Uref1period, dbg);
 
         if dbg.pjvs_adev_all
             % calculate ADEVs for a all segments in whole section:
-            disp('Calculating OADEV for whole section, this can take time...')
+            printf('Calculating OADEV for whole section %03d-%03d, this can take time...\n', dbg.section(1), dbg.section(2))
             for j = 1:numel(Uref1period)
                 idx = find(Uref == Uref1period(j));
                 DI.y.v = s_y(:, idx);
@@ -62,6 +62,6 @@ function pjvs_adev(s_y, Uref, Uref1period, dbg);
             if dbg.saveplotsplt printplt(fn) end
             if dbg.saveplotspng print([fn '.png'], '-dpng') end
             close
-            disp('OADEV for whole section finished.')
+            printf('OADEV for whole section %03d-%03d finished.\n', dbg.section(1), dbg.section(2))
         end % if dbg.pjvs_adev_all
 end % function

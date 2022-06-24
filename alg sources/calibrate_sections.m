@@ -180,14 +180,16 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                 end % for j = 1:columns(yc)
         end % for i = 1:rows(yc)
 
+        lfmt = {'-xr','-xg','-xb','-xk','-xc','-xy'};
+        ofmt = {'or','og','ob','ok','oc','oy'};
+
         if dbg.adc_calibration_gains
-            lfmt = {'-xr','-xg','-xb','-xk','-xc','-xy'};
-            ofmt = {'or','og','ob','ok','oc','oy'};
             figure('visible',dbg.showplots)
             hold on
             plot(1e6.*(gains' - 1),      lfmt(1:size(gains,1))                    );
             plot(1e6.*(PJVS_gains' - 1), ofmt(1:size(PJVS_gains,1)), 'linewidth',2);
-            title(sprintf('Calculated digitizer gains (minus 1)\nx - applied gain, o - gain calculated from PJVS'));
+            title(sprintf('Calculated digitizer gains (minus 1)\nstd: %g uV', 1e6.*std(gains)));
+            legend('applied gain','gain calculated from PJVS')
             xlabel('Section index')
             ylabel('Gain - 1 (uV/V)')
             % legend('all gains', 'gains calculated from PJVS');
@@ -203,7 +205,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
             hold on
             plot(1e6.*offsets',         lfmt(1:size(offsets,1))                    );
             plot(1e6.*PJVS_offsets',    ofmt(1:size(PJVS_offsets,1)), 'linewidth',2)
-            title(sprintf('Calculated digitizer offsets\nx - applied offset, o - offset calculated from PJVS'));
+            title(sprintf('Calculated digitizer offsets\nstd: %g uV', 1e6.*std(offsets)));
+            legend('applied offsets','offsets calculated from PJVS')
             xlabel('Section index')
             ylabel('Offset (uV)')
             % legend('all offsets', 'offsets calculated from PJVS');

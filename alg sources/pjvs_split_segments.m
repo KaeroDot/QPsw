@@ -46,7 +46,7 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                     % it is last segment, lets neglect it
                     disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
                 else
-                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
+                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. This usually happens if the MX switching freuency is not right, and the disturbance caused by MX switch interfere with PJVS phase detection algorithm (pjvs_ident_segments).', dbg.section(1), dbg.section(2), j));
                 end
             end
         end
@@ -81,7 +81,7 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
                     % it is last segment, lets neglect it
                     disp(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d, PRs: %d, PRe: %d. It is last segment, neglecting.', dbg.section(1), dbg.section(2), j, PRs, PRe));
                 else
-                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d', dbg.section(1), dbg.section(2), j));
+                    error(sprintf('Not enough samples in segment after start and end removal, section %d-%d, segment %d. This usually happens if the MX switching freuency is not right, and the disturbance caused by MX switch interfere with PJVS phase detection algorithm (pjvs_ident_segments).', dbg.section(1), dbg.section(2), j));
                 end
             end
             % remove neglected:

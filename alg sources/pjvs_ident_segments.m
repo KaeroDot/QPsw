@@ -67,17 +67,19 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
 
     % debug plots %<<<1
     if dbg.v
+        ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
+
         if dbg.pjvs_ident_segments_10
-            ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
             % plot samples and ids - first short version with only 10 PJVS segments after MRs:
             plotmax = MRs + 10*segmentlen;
             figure('visible',dbg.showplots)
             hold on
             plot( y(1:plotmax),'-x');
             plot(y2(1:plotmax),'-');
+            plot([MRs MRs], ylim, '-k')
             tmpSpjvs = Spjvs(Spjvs < plotmax);
             plot(tmpSpjvs, y2(tmpSpjvs), 'o', 'linewidth', 2);
-            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment')
+            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment', 'MRs')
             xlabel('Sample index')
             ylabel('Voltage (V)')
             title(sprintf('PJVS phase identification, section %03d-%03d\nfirst 10 segments after MRs', dbg.section(1), dbg.section(2)), 'interpreter', 'none')
@@ -91,13 +93,14 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
         if dbg.pjvs_ident_segments_all
             % plot samples and ids - this plot takes VERY long time to draw!
             disp('plotting debug plot for identify_pjvs_segments_all. This will take a long time...')
-            % figure('visible',dbg.showplots)
-            figure
+            figure('visible',dbg.showplots)
             hold on
             plot(y,'-x');
             plot(y2,'-');
             plot(Spjvs(1:end-1), y2(Spjvs(1:end-1)), 'o', 'linewidth', 2);
-            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment')
+            plot([MRs MRs], ylim, '-k')
+            plot([MRe MRe], ylim, '-k')
+            legend('Samples', 'Samples with masked MRs, MRe', 'Identified start of segment', 'MRs', 'MRe')
             xlabel('Sample index')
             ylabel('Voltage (V)')
             title(sprintf('PJVS phase identification, section %03d-%03d\nall data', dbg.section(1), dbg.section(2)), 'interpreter', 'none')

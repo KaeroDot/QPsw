@@ -80,13 +80,13 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
     % debug plot fit data and fit result %<<<1
     if dbg.v
         ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
+        tmpy = cal.coefs.v(1) + DI.x.v.*cal.coefs.v(2);
 
         if dbg.adc_calibration_fit
             figure('visible',dbg.showplots)
             hold on
                 plot(DI.x.v, DI.y.v,'xb')
                 % XXX make this general polynom
-                tmpy = cal.coefs.v(1) + DI.x.v.*cal.coefs.v(2);
                 plot(DI.x.v, tmpy, '-r')
                 legend('Segment averages', 'Linear fit', 'location', 'southeast')
                 xlabel('PJVS reference voltage (V)')
