@@ -1,0 +1,3 @@
+[submodule "QPSCONTROL/PJVS drivers/acsvcontrol-driver"]
+	path = QPSCONTROL/PJVS drivers/acsvcontrol-driver
+	url = https://gitlab.com/KaeroDot/acsvcontrol-driver.git
