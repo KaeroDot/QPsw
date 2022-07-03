@@ -63,7 +63,11 @@
 				<Item Name="PJVS Setup.ctl" Type="VI" URL="../General PJVS driver/Type definitions/PJVS Setup.ctl"/>
 				<Item Name="PJVS Type.ctl" Type="VI" URL="../General PJVS driver/Type definitions/PJVS Type.ctl"/>
 			</Item>
+			<Item Name="Close PJVS.vi" Type="VI" URL="../General PJVS driver/Close PJVS.vi"/>
 			<Item Name="Initialize PJVS.vi" Type="VI" URL="../General PJVS driver/Initialize PJVS.vi"/>
+			<Item Name="Start PJVS.vi" Type="VI" URL="../General PJVS driver/Start PJVS.vi"/>
+			<Item Name="Stop PJVS.vi" Type="VI" URL="../General PJVS driver/Stop PJVS.vi"/>
+			<Item Name="Test PJVS.vi" Type="VI" URL="../General PJVS driver/Test PJVS.vi"/>
 		</Item>
 		<Item Name="GUI" Type="Folder">
 			<Item Name="About Dialog.vi" Type="VI" URL="../GUI/About Dialog.vi"/>
@@ -72,9 +76,12 @@
 		</Item>
 		<Item Name="Measurement" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
+				<Item Name="Measuement properties.ctl" Type="VI" URL="../Measurement/Type definitions/Measuement properties.ctl"/>
 				<Item Name="Measurement ID.ctl" Type="VI" URL="../Measurement/Type definitions/Measurement ID.ctl"/>
+				<Item Name="QPSsettings.ctl" Type="VI" URL="../General PJVS driver/QPSsettings.ctl"/>
 			</Item>
 			<Item Name="Get Measruement Properties.vi" Type="VI" URL="../Measurement/Get Measruement Properties.vi"/>
+			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
 			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.0.0.llb/ACSVcontrol-driver.lvlib"/>
@@ -82,7 +89,6 @@
 		<Item Name="Utilities" Type="Folder">
 			<Item Name="Merge Error Ex.vi" Type="VI" URL="../Utilities/Merge Error Ex.vi"/>
 		</Item>
-		<Item Name="Measuement properties.ctl" Type="VI" URL="../Measurement/Type definitions/Measuement properties.ctl"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
 				<Item Name="niScope Acquisition Status.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/Acquire/Fetch/niScope Acquisition Status.vi"/>
