@@ -72,6 +72,7 @@
 		<Item Name="GUI" Type="Folder">
 			<Item Name="About Dialog.vi" Type="VI" URL="../GUI/About Dialog.vi"/>
 			<Item Name="GUI main.vi" Type="VI" URL="../GUI/GUI main.vi"/>
+			<Item Name="GUI Measurement setup.vi" Type="VI" URL="../GUI/GUI Measurement setup.vi"/>
 			<Item Name="GUI PJVS setup.vi" Type="VI" URL="../GUI/GUI PJVS setup.vi"/>
 		</Item>
 		<Item Name="Measurement" Type="Folder">
@@ -80,8 +81,9 @@
 				<Item Name="Measurement ID.ctl" Type="VI" URL="../Measurement/Type definitions/Measurement ID.ctl"/>
 				<Item Name="QPSsettings.ctl" Type="VI" URL="../General PJVS driver/QPSsettings.ctl"/>
 			</Item>
-			<Item Name="Get Measruement Properties.vi" Type="VI" URL="../Measurement/Get Measruement Properties.vi"/>
+			<Item Name="Get Measruement Informations.vi" Type="VI" URL="../Measurement/Get Measruement Informations.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
+			<Item Name="Open &amp; Set TWM.vi" Type="VI" URL="../Measurement/Open &amp; Set TWM.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
 			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.0.0.llb/ACSVcontrol-driver.lvlib"/>
