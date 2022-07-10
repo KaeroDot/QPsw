@@ -81,6 +81,7 @@
 		</Item>
 		<Item Name="GUI" Type="Folder">
 			<Item Name="About Dialog.vi" Type="VI" URL="../GUI/About Dialog.vi"/>
+			<Item Name="GUI AWG setup.vi" Type="VI" URL="../GUI/GUI AWG setup.vi"/>
 			<Item Name="GUI main.vi" Type="VI" URL="../GUI/GUI main.vi"/>
 			<Item Name="GUI Measurement setup.vi" Type="VI" URL="../GUI/GUI Measurement setup.vi"/>
 			<Item Name="GUI PJVS setup.vi" Type="VI" URL="../GUI/GUI PJVS setup.vi"/>
@@ -90,10 +91,12 @@
 				<Item Name="Measuement properties.ctl" Type="VI" URL="../Measurement/Type definitions/Measuement properties.ctl"/>
 				<Item Name="Measurement ID.ctl" Type="VI" URL="../Measurement/Type definitions/Measurement ID.ctl"/>
 				<Item Name="QPSsettings.ctl" Type="VI" URL="../General PJVS driver/QPSsettings.ctl"/>
+				<Item Name="Trigger mode.ctl" Type="VI" URL="../Measurement/Type definitions/Trigger mode.ctl"/>
 			</Item>
-			<Item Name="Get Measruement Informations.vi" Type="VI" URL="../Measurement/Get Measruement Informations.vi"/>
+			<Item Name="Calc Measruement Details.vi" Type="VI" URL="../Measurement/Calc Measruement Details.vi"/>
+			<Item Name="Connect and Set TWM.vi" Type="VI" URL="../Measurement/Connect and Set TWM.vi"/>
+			<Item Name="Get Measruement Scenario.vi" Type="VI" URL="../Measurement/Get Measruement Scenario.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
-			<Item Name="Open &amp; Set TWM.vi" Type="VI" URL="../Measurement/Open &amp; Set TWM.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
 			<Item Name="JV modified NPL bias source" Type="Folder">
@@ -118,21 +121,18 @@
 			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.0.0.llb/ACSVcontrol-driver.lvlib"/>
 		</Item>
 		<Item Name="Utilities" Type="Folder">
+			<Item Name="GCD of array.vi" Type="VI" URL="../Utilities/GCD of array.vi"/>
 			<Item Name="Merge Error Ex.vi" Type="VI" URL="../Utilities/Merge Error Ex.vi"/>
 		</Item>
-		<Item Name="GUI AWG setup.vi" Type="VI" URL="../GUI/GUI AWG setup.vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
 				<Item Name="niFgen Abort Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Abort Generation.vi"/>
 				<Item Name="niFgen Close.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Close.vi"/>
 				<Item Name="niFgen Configure Output Mode.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Configure Output Mode.vi"/>
 				<Item Name="niFgen Configure Standard Waveform.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Configure Standard Waveform.vi"/>
-				<Item Name="niFgen Get Session Reference.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Get Session Reference.vi"/>
 				<Item Name="niFgen Initialize With Channels.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Initialize With Channels.vi"/>
 				<Item Name="niFgen Initiate Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Initiate Generation.vi"/>
-				<Item Name="niFgen IVI Error Converter.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen IVI Error Converter.vi"/>
 				<Item Name="niFgen Output Mode.ctl" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Output Mode.ctl"/>
-				<Item Name="niFgen Waveform Type.ctl" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Waveform Type.ctl"/>
 				<Item Name="niScope Acquisition Status.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/Acquire/Fetch/niScope Acquisition Status.vi"/>
 				<Item Name="niScope Actual Record Length.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/Configure/Horizontal/niScope Actual Record Length.vi"/>
 				<Item Name="niScope Close.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/niScope Close.vi"/>
@@ -368,9 +368,6 @@
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
 			<Item Name="lvanlys.dll" Type="Document" URL="/&lt;resource&gt;/lvanlys.dll"/>
-			<Item Name="niFgen_32.dll" Type="Document" URL="niFgen_32.dll">
-				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
-			</Item>
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
