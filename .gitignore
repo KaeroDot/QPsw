@@ -2,3 +2,4 @@
 alg sources/alg_CCC/
 alg sources/testdata/190422_PJVS_0147_results/
 alg sources/simulation_results/
+QPSCONTROL/qps_settings.xml
