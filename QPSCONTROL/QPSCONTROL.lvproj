@@ -71,8 +71,12 @@
 		<Item Name="General AWG" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
 				<Item Name="AWG type.ctl" Type="VI" URL="../General AWG/Type definitions/AWG type.ctl"/>
+				<Item Name="AWG.ctl" Type="VI" URL="../General AWG/Type definitions/AWG.ctl"/>
 			</Item>
+			<Item Name="AWG Type to AWG lib type.vi" Type="VI" URL="../General AWG/AWG Type to AWG lib type.vi"/>
 			<Item Name="Init AWG.vi" Type="VI" URL="../General AWG/Init AWG.vi"/>
+			<Item Name="Start AWG.vi" Type="VI" URL="../General AWG/Start AWG.vi"/>
+			<Item Name="Stop AWG.vi" Type="VI" URL="../General AWG/Stop AWG.vi"/>
 		</Item>
 		<Item Name="General PJVS driver" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
