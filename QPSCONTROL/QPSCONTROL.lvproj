@@ -68,6 +68,12 @@
 			</Item>
 			<Item Name="varilib.lvlib" Type="Library" URL="../external libraries/varilib/varilib.lvlib"/>
 		</Item>
+		<Item Name="General AWG" Type="Folder">
+			<Item Name="Type definitions" Type="Folder">
+				<Item Name="AWG type.ctl" Type="VI" URL="../General AWG/Type definitions/AWG type.ctl"/>
+			</Item>
+			<Item Name="Init AWG.vi" Type="VI" URL="../General AWG/Init AWG.vi"/>
+		</Item>
 		<Item Name="General PJVS driver" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
 				<Item Name="PJVS Setup.ctl" Type="VI" URL="../General PJVS driver/Type definitions/PJVS Setup.ctl"/>
@@ -100,24 +106,8 @@
 			<Item Name="TWM Measure.vi" Type="VI" URL="../Measurement/TWM Measure.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
-			<Item Name="JV modified NPL bias source" Type="Folder">
-				<Item Name="Basic NPL DS Write-Read external.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Basic NPL DS Write-Read external.vi"/>
-				<Item Name="Calc_time.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Calc_time.vi"/>
-				<Item Name="DataSocketCluster external.ctl" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/DataSocketCluster external.ctl"/>
-				<Item Name="Generate_Voltage_array_check_size.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Generate_Voltage_array_check_size.vi"/>
-				<Item Name="Initialise_bias_source.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Initialise_bias_source.vi"/>
-				<Item Name="JOSY Binarray Datasocket cmd external.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/JOSY Binarray Datasocket cmd external.vi"/>
-				<Item Name="JV PJVS GUI control.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/JV PJVS GUI control.vi"/>
-				<Item Name="NI 5413 trigger control.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/NI 5413 trigger control.vi"/>
-				<Item Name="Send DC.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send DC.vi"/>
-				<Item Name="Send_AC.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send_AC.vi"/>
-				<Item Name="Send_amplitude_return_voltages.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send_amplitude_return_voltages.vi"/>
-				<Item Name="Send_command_and_check_response_number.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send_command_and_check_response_number.vi"/>
-				<Item Name="Send_command_and_check_response_string.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send_command_and_check_response_string.vi"/>
-				<Item Name="Send_zero_DC.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Send_zero_DC.vi"/>
-				<Item Name="Set_up_waveform.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/Set_up_waveform.vi"/>
-				<Item Name="test.vi" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/test.vi"/>
-				<Item Name="vi Mode external.ctl" Type="VI" URL="../PJVS drivers/JV modified NPL Bias source/vi Mode external.ctl"/>
+			<Item Name="JV modified NPL Bias source" Type="Folder" URL="../PJVS drivers/JV modified NPL Bias source">
+				<Property Name="NI.DISK" Type="Bool">true</Property>
 			</Item>
 			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.0.0.llb/ACSVcontrol-driver.lvlib"/>
 		</Item>
@@ -132,10 +122,15 @@
 				<Item Name="niFgen Abort Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Abort Generation.vi"/>
 				<Item Name="niFgen Close.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Close.vi"/>
 				<Item Name="niFgen Configure Output Mode.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Configure Output Mode.vi"/>
+				<Item Name="niFgen Configure Sample Clock Source.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Configure Sample Clock Source.vi"/>
 				<Item Name="niFgen Configure Standard Waveform.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Configure Standard Waveform.vi"/>
+				<Item Name="niFgen Get Session Reference.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Get Session Reference.vi"/>
 				<Item Name="niFgen Initialize With Channels.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Initialize With Channels.vi"/>
 				<Item Name="niFgen Initiate Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Initiate Generation.vi"/>
+				<Item Name="niFgen IVI Error Converter.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen IVI Error Converter.vi"/>
 				<Item Name="niFgen Output Mode.ctl" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Output Mode.ctl"/>
+				<Item Name="niFgen Waveform Type.ctl" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Waveform Type.ctl"/>
+				<Item Name="niFgen_ctl Sample Clock Source Values (Ring).ctl" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen_ctl Sample Clock Source Values (Ring).ctl"/>
 				<Item Name="niScope Acquisition Status.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/Acquire/Fetch/niScope Acquisition Status.vi"/>
 				<Item Name="niScope Actual Record Length.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/Configure/Horizontal/niScope Actual Record Length.vi"/>
 				<Item Name="niScope Close.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/niScope Close.vi"/>
@@ -385,6 +380,9 @@
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
 			<Item Name="lvanlys.dll" Type="Document" URL="/&lt;resource&gt;/lvanlys.dll"/>
+			<Item Name="niFgen_32.dll" Type="Document" URL="niFgen_32.dll">
+				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
+			</Item>
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
