@@ -107,7 +107,7 @@
 			<Item Name="Connect and Set TWM.vi" Type="VI" URL="../Measurement/Connect and Set TWM.vi"/>
 			<Item Name="Get Measruement Scenario.vi" Type="VI" URL="../Measurement/Get Measruement Scenario.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
-			<Item Name="TWM Measure.vi" Type="VI" URL="../Measurement/TWM Measure.vi"/>
+			<Item Name="TWM Wati for Measure End.vi" Type="VI" URL="../Measurement/TWM Wati for Measure End.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
 			<Item Name="JV modified NPL Bias source" Type="Folder" URL="../PJVS drivers/JV modified NPL Bias source">
