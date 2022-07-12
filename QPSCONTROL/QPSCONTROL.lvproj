@@ -104,9 +104,9 @@
 				<Item Name="Trigger mode.ctl" Type="VI" URL="../Measurement/Type definitions/Trigger mode.ctl"/>
 			</Item>
 			<Item Name="Calc Measruement Details.vi" Type="VI" URL="../Measurement/Calc Measruement Details.vi"/>
-			<Item Name="Connect and Set TWM.vi" Type="VI" URL="../Measurement/Connect and Set TWM.vi"/>
 			<Item Name="Get Measruement Scenario.vi" Type="VI" URL="../Measurement/Get Measruement Scenario.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
+			<Item Name="Set TWM Measurement.vi" Type="VI" URL="../Measurement/Set TWM Measurement.vi"/>
 			<Item Name="TWM Wati for Measure End.vi" Type="VI" URL="../Measurement/TWM Wati for Measure End.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
@@ -121,6 +121,7 @@
 			<Item Name="Read settings from file.vi" Type="VI" URL="../Utilities/Read settings from file.vi"/>
 			<Item Name="Save settings to file.vi" Type="VI" URL="../Utilities/Save settings to file.vi"/>
 		</Item>
+		<Item Name="TWM Set Alg.vi" Type="VI" URL="../Measurement/TWM Set Alg.vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
 				<Item Name="niFgen Abort Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Abort Generation.vi"/>
@@ -289,6 +290,7 @@
 				<Item Name="NI_ReportGenerationCore.lvlib" Type="Library" URL="/&lt;vilib&gt;/Utility/NIReport.llb/NI_ReportGenerationCore.lvlib"/>
 				<Item Name="NI_ReportGenerationToolkit.lvlib" Type="Library" URL="/&lt;vilib&gt;/addons/_office/NI_ReportGenerationToolkit.lvlib"/>
 				<Item Name="NI_Standard Report.lvclass" Type="LVClass" URL="/&lt;vilib&gt;/Utility/NIReport.llb/Standard Report/NI_Standard Report.lvclass"/>
+				<Item Name="Normalize End Of Line.vi" Type="VI" URL="/&lt;vilib&gt;/AdvancedString/Normalize End Of Line.vi"/>
 				<Item Name="Not Found Dialog.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Not Found Dialog.vi"/>
 				<Item Name="Number of Waveform Samples.vi" Type="VI" URL="/&lt;vilib&gt;/Waveform/WDTOps.llb/Number of Waveform Samples.vi"/>
 				<Item Name="OccFireType.ctl" Type="VI" URL="/&lt;vilib&gt;/Platform/ax-events.llb/OccFireType.ctl"/>
@@ -379,6 +381,7 @@
 			</Item>
 			<Item Name="Basic NPL DS Write-Read.vi" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/Basic NPL DS Write-Read.vi"/>
 			<Item Name="DataSocketCluster.ctl" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/DataSocketCluster.ctl"/>
+			<Item Name="infolib.lvlib" Type="Library" URL="../../../TWM - github/lvprog/octave/infolib/infolib.lvlib"/>
 			<Item Name="JOSY Binarray Datasocket cmd.vi" Type="VI" URL="../PJVS drivers/JOSY Binarray Datasocket cmd.vi"/>
 			<Item Name="kernel32.dll" Type="Document" URL="kernel32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
@@ -390,10 +393,19 @@
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
+			<Item Name="TWM Client.lvlib" Type="Library" URL="../../../TWM - github/lvprog/server/TWM client/TWM Client.lvlib"/>
 			<Item Name="version.dll" Type="Document" URL="version.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
 			<Item Name="vi Mode.ctl" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/vi Mode.ctl"/>
+			<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 CloseHandle.vi"/>
+			<Item Name="wa32 CreateFileA.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 CreateFileA.vi"/>
+			<Item Name="wa32 Flush Read.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/high level/wa32 Flush Read.vi"/>
+			<Item Name="wa32 PeekNamedPipe.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 PeekNamedPipe.vi"/>
+			<Item Name="wa32 Read Till Key.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/high level/wa32 Read Till Key.vi"/>
+			<Item Name="wa32 ReadFile.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 ReadFile.vi"/>
+			<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WaitNamedPipeA.vi"/>
+			<Item Name="wa32 WriteFile.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WriteFile.vi"/>
 		</Item>
 		<Item Name="Build Specifications" Type="Build"/>
 	</Item>
