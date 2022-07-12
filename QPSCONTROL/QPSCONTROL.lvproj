@@ -95,6 +95,7 @@
 			<Item Name="GUI main.vi" Type="VI" URL="../GUI/GUI main.vi"/>
 			<Item Name="GUI Measurement setup.vi" Type="VI" URL="../GUI/GUI Measurement setup.vi"/>
 			<Item Name="GUI PJVS setup.vi" Type="VI" URL="../GUI/GUI PJVS setup.vi"/>
+			<Item Name="GUI TWM setup.vi" Type="VI" URL="../GUI/GUI TWM setup.vi"/>
 		</Item>
 		<Item Name="Measurement" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
