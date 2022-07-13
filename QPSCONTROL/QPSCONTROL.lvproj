@@ -122,6 +122,7 @@
 			<Item Name="Read settings from file.vi" Type="VI" URL="../Utilities/Read settings from file.vi"/>
 			<Item Name="Save settings to file.vi" Type="VI" URL="../Utilities/Save settings to file.vi"/>
 		</Item>
+		<Item Name="Make Default QPS.vi" Type="VI" URL="../Utilities/Make Default QPS.vi"/>
 		<Item Name="TWM Set Alg.vi" Type="VI" URL="../Measurement/TWM Set Alg.vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
