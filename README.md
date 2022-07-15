@@ -40,9 +40,9 @@ sw | update GOLPI to LabVIEW 2020 | ✔
 sw | update infostrings | ✔
 sw | update TWM to LabVIEW 2020 | ✔
 sw | improve TWM to handle QPsw | almost finished, postponed for TWM to LV2020 conversion and mutliplexer driver integration
-sw | design control QPsw | working on…
-sw | make control QPsw | ❌
-sw | check control QPsw | ❌
+sw | design control QPsw | ✔
+sw | make control QPsw | ✔
+sw | check control QPsw | working on…
 alg | make demultiplexing QPsw algorithm | ✔
 alg | test demultiplexing QPsw algorithm | ✔
 alg | make ADC calibration algorithm | ✔
