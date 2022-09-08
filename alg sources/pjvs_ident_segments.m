@@ -92,7 +92,7 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
 
         if dbg.pjvs_ident_segments_all
             % plot samples and ids - this plot takes VERY long time to draw!
-            disp('plotting debug plot for identify_pjvs_segments_all. This will take a long time...')
+            disp('Plotting debug plot for identify_pjvs_segments_all. This will take a long time...')
             figure('visible',dbg.showplots)
             hold on
             plot(y,'-x');
@@ -109,6 +109,7 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
             if dbg.saveplotsplt printplt(fn) end
             if dbg.saveplotspng print([fn '.png'], '-dpng') end
             close
+            disp('Debug plot for identify_pjvs_segments_all finished.')
         end % if dbg.pjvs_ident_segments_all
     end % if debug
 
