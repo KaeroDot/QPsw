@@ -26,10 +26,12 @@
 				<Item Name="TWM Client Processing Setup.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Processing Setup.ctl"/>
 				<Item Name="TWM Client Quantity Record.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Quantity Record.ctl"/>
 				<Item Name="TWM Client Meas Setup.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Meas Setup.ctl"/>
+				<Item Name="TWM Client Meas Setup Trig.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Meas Setup Trig.ctl"/>
 				<Item Name="TWM Client Result Max Dim.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Result Max Dim.ctl"/>
 				<Item Name="TWM Client Transducer Correction Item.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Transducer Correction Item.ctl"/>
 				<Item Name="TWM Client Algorithm Info.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Algorithm Info.ctl"/>
 				<Item Name="TWM Client Result Info.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Result Info.ctl"/>
+				<Item Name="TWM Client Mux Path.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Mux Path.ctl"/>
 				<Item Name="TWM Client Cmd Get Result.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Result.vi"/>
 				<Item Name="TWM Client Cmd Get Status.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Status.vi"/>
 				<Item Name="TWM Client Cmd Get Algorithm Info.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Algorithm Info.vi"/>
@@ -50,8 +52,10 @@
 				<Item Name="TWM Client Close.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Close.vi"/>
 				<Item Name="TWM Client Version.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Version.vi"/>
 				<Item Name="TWM Client Compare Version Strings.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Compare Version Strings.vi"/>
+				<Item Name="TWM Client Cmd Define Multiplexer Paths.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define Multiplexer Paths.vi"/>
+				<Item Name="TWM Client Cmd Define Multiplexer Sequence.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define Multiplexer Sequence.vi"/>
+				<Item Name="TWM Client Cmd Define QPMX.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define QPMX.vi"/>
 				<Item Name="infolib.lvlib" Type="Library" URL="../external libraries/TWM client.lvlibp/octave/infolib/infolib.lvlib"/>
-				<Item Name="Space Constant.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/dlg_ctls.llb/Space Constant.vi"/>
 				<Item Name="Trim Whitespace.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Trim Whitespace.vi"/>
 				<Item Name="whitespace.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/whitespace.ctl"/>
 				<Item Name="Clear Errors.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Clear Errors.vi"/>
@@ -61,8 +65,9 @@
 				<Item Name="wa32 PeekNamedPipe.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 PeekNamedPipe.vi"/>
 				<Item Name="wa32 Read Till Key.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/high level/wa32 Read Till Key.vi"/>
 				<Item Name="wa32 WriteFile.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 WriteFile.vi"/>
-				<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 CloseHandle.vi"/>
+				<Item Name="Space Constant.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/dlg_ctls.llb/Space Constant.vi"/>
 				<Item Name="wa32 Flush Read.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/high level/wa32 Flush Read.vi"/>
+				<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 CloseHandle.vi"/>
 				<Item Name="wa32 CreateFileA.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 CreateFileA.vi"/>
 				<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 WaitNamedPipeA.vi"/>
 			</Item>
@@ -118,11 +123,11 @@
 		</Item>
 		<Item Name="Utilities" Type="Folder">
 			<Item Name="GCD of array.vi" Type="VI" URL="../Utilities/GCD of array.vi"/>
+			<Item Name="Make Default QPS.vi" Type="VI" URL="../Utilities/Make Default QPS.vi"/>
 			<Item Name="Merge Error Ex.vi" Type="VI" URL="../Utilities/Merge Error Ex.vi"/>
 			<Item Name="Read settings from file.vi" Type="VI" URL="../Utilities/Read settings from file.vi"/>
 			<Item Name="Save settings to file.vi" Type="VI" URL="../Utilities/Save settings to file.vi"/>
 		</Item>
-		<Item Name="Make Default QPS.vi" Type="VI" URL="../Utilities/Make Default QPS.vi"/>
 		<Item Name="TWM Set Alg.vi" Type="VI" URL="../Measurement/TWM Set Alg.vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
