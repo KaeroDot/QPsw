@@ -30,7 +30,7 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).desc = 'Algorithm supports inputs from all phases at once';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 1;
-    alginfo.inputs(pid).parameter = 1;
+    alginfo.inputs(pid).parameter = 0;
     pid = pid + 1;
 
     % --- data processing %<<<2
@@ -53,7 +53,7 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).desc = 'Multiplexer switches (samples)';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 0;
+    alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
     % --- pjvs data %<<<2
@@ -61,14 +61,14 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).desc = 'PJVS reference values (V)';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 0;
+    alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
     alginfo.inputs(pid).name = 'Spjvs';
     alginfo.inputs(pid).desc = 'PJVS switches (samples)';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 0;
+    alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
     alginfo.inputs(pid).name = 'Rs';
