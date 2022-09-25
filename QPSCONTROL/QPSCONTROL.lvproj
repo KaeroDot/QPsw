@@ -113,7 +113,8 @@
 			<Item Name="Get Measruement Scenario.vi" Type="VI" URL="../Measurement/Get Measruement Scenario.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
 			<Item Name="Set TWM Measurement.vi" Type="VI" URL="../Measurement/Set TWM Measurement.vi"/>
-			<Item Name="TWM Wati for Measure End.vi" Type="VI" URL="../Measurement/TWM Wati for Measure End.vi"/>
+			<Item Name="Set TWM Processing.vi" Type="VI" URL="../Measurement/Set TWM Processing.vi"/>
+			<Item Name="TWM Wait for Measure End.vi" Type="VI" URL="../Measurement/TWM Wait for Measure End.vi"/>
 		</Item>
 		<Item Name="PJVS drivers" Type="Folder">
 			<Item Name="JV modified NPL Bias source" Type="Folder" URL="../PJVS drivers/JV modified NPL Bias source">
@@ -128,7 +129,6 @@
 			<Item Name="Read settings from file.vi" Type="VI" URL="../Utilities/Read settings from file.vi"/>
 			<Item Name="Save settings to file.vi" Type="VI" URL="../Utilities/Save settings to file.vi"/>
 		</Item>
-		<Item Name="TWM Set Alg.vi" Type="VI" URL="../Measurement/TWM Set Alg.vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="instr.lib" Type="Folder">
 				<Item Name="niFgen Abort Generation.vi" Type="VI" URL="/&lt;instrlib&gt;/niFgen/niFgen.llb/niFgen Abort Generation.vi"/>
