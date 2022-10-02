@@ -5,7 +5,7 @@
 % - calls data recalculation
 % Result are waveforms without digitizer errors.
 
-function [y, yc, res] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
+function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
     % check input data %<<<1
     if nargin ~= 8
         error('qpsw_process: bad number of input arguments!')

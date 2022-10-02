@@ -71,6 +71,13 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
+    alginfo.inputs(pid).name = 'fseg';
+    alginfo.inputs(pid).desc = 'Frequency of PJVS segments (Hz)';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 0;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
+
     alginfo.inputs(pid).name = 'Rs';
     alginfo.inputs(pid).desc = 'PJVS remove after switch (samples)';
     alginfo.inputs(pid).alternative = 0;
@@ -108,31 +115,10 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 0;
     pid = pid + 1;
     
-    alginfo.inputs(pid).name = 'u';
+    alginfo.inputs(pid).name = 'y'; %XXXXXXX this paragraph only for testing of single input algorithm!
     alginfo.inputs(pid).desc = 'Sampled voltage';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 0;
-    pid = pid + 1;
-    
-    alginfo.inputs(pid).name = 'u_lo';
-    alginfo.inputs(pid).desc = 'Sampled voltage low-side';
-    alginfo.inputs(pid).alternative = 0;
-    alginfo.inputs(pid).optional = 1;
-    alginfo.inputs(pid).parameter = 0;
-    pid = pid + 1;
-    
-    alginfo.inputs(pid).name = 'i';
-    alginfo.inputs(pid).desc = 'Sampled current';
-    alginfo.inputs(pid).alternative = 0;
-    alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 0;
-    pid = pid + 1;
-    
-    alginfo.inputs(pid).name = 'i_lo';
-    alginfo.inputs(pid).desc = 'Sampled current low-side';
-    alginfo.inputs(pid).alternative = 0;
-    alginfo.inputs(pid).optional = 1;
     alginfo.inputs(pid).parameter = 0;
     pid = pid + 1;
     
