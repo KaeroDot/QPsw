@@ -11,11 +11,17 @@ function dataout = alg_wrapper(datain, calcset)
 DEBUG = 0;
 
 % Prepare data --------------------------- %<<<1
+% This will have to be fixed in TWM/qwtb_exec_algorithm. This is only temporary
+% measure:
+eval(['datain.S.v = ' datain.S.v ';'])
+eval(['datain.M.v = ' datain.M.v ';'])
+eval(['datain.Spjvs.v = ' datain.Spjvs.v ';'])
+eval(['datain.Uref.v = ' datain.Uref.v ';'])
 % convert N+1 dimensional matrices back to cell of structures
 diC = matrices_to_cells(datain);
 % split data:
 for j = 1:numel(diC)
-    [data{j}, adc{j}, tr{j}, cable{j}, other{j}] = split_di(din);
+    [data{j}, adc{j}, tr{j}, cable{j}, other{j}] = split_di(diC{j});
 end % for j = 1:numel(diC)
 
 % get basic quantities for qpsw_process %<<<2
@@ -30,7 +36,7 @@ sigconfig.MRs = 10; % XXX assign!
 sigconfig.MRe = 10; % XXX assign!
 % convert sampled signals into matrix:
 for k = 1:numel(other)
-    y(k, :) = other{k}.y.v(:)';
+    y(k, :) = data{k}.y.v(:)';
 end % for k
 % get: S - indexes of multiplexer switches:
 S = other{1}.S.v;
@@ -53,6 +59,7 @@ if ~isfield(other{1}, 'Re')
 else
     sigconfig.PRe = other{1}.Re.v;
 end
+
 % debug setup:
 dbg = check_gen_dbg([], 1);
 dbg.v = 1;
@@ -63,6 +70,7 @@ if ~exist(dbg.plotpath, 'dir')
 end
 
 % qpsw process --------------------------- %<<<1
+keyboard
 [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
 
 % set adc corrections --------------------------- %<<<1
@@ -99,17 +107,20 @@ for j = 1:2:numel()
     algdi{end+1} = struct();
     algdi{end}.u.v = yc{j};
     algdi{end}.i.v = yc{j+1};
-    algdi{end} = join_structs(algdi{end}, prefix(adc(j), 'u'), prefix(tr, 'u'), cable, other);
-    algdi{end} = join_structs(algdi{end}, prefix(adc(j), 'i'), prefix(tr, 'i'));
+    algdi{end} = join_structs(algdi{end}, add_Q_prefix(adc(j), 'u'), add_Q_prefix(tr, 'u'), cable, other);
+    algdi{end} = join_structs(algdi{end}, add_Q_prefix(adc(j), 'i'), add_Q_prefix(tr, 'i'));
 end
 
+keyboard
+
 % call TWM algorithm --------------------------- %<<<1
+doout = cell();
 for j = 1:numel(algdi)
-    do{j} = qwtb(alg, algdi{j}, calcset)
+    doout{j} = qwtb(alg, algdi{j}, calcset);
 end
 
 % make outputs --------------------------- %<<<1
-2DO
+% 2DO XXX
 
 end % function dataout = alg_wrapper(datain, calcset)
 
@@ -229,8 +240,32 @@ function [data, adc, tr, cable, other] = split_di(din) %<<<1
     end % for j
 end % function [data, adc, tr, cable, other] = split_di(din)
 
-function [data, adc, tr, cable, other] = split_di(din) %<<<1
-    mergestructs = @(x,y) cell2struct([struct2cell(x);struct2cell(y)],[fieldnames(x);fieldnames(y)]);
+function [dout] = add_Q_prefix(din, prefix) %<<<1
+    % add prefix to all quantities in din
+    dout = struct();
+    Qs = fieldnames(din);
+    for j = 1:numel(Qs);
+        Q = Qs{j};
+        Qn = [prefix Qs{j}];
+        dout.(Qn) = din.(Q);
+    end
+end % function [dout] = add_Q_prefix(din, prefix) %<<<1
+
+function [sout] = join_structs(varargin) %<<<1
+    % this merge multiple structures with unique fields (no field can be named
+    % same in both structures)
+    % mergestructs = @(x,y) cell2struct([struct2cell(x);struct2cell(y)],[fieldnames(x);fieldnames(y)]);
+    sout = struct();
+    for j = 1:nargin
+        sout = cell2struct(
+            [
+                struct2cell(sout);
+                struct2cell(varargin{j})
+            ], [
+                fieldnames(sout);
+                fieldnames(varargin{j})
+            ]);
+    end % for j
 end
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
