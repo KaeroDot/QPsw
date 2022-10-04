@@ -112,6 +112,7 @@
 			<Item Name="Calc Measruement Details.vi" Type="VI" URL="../Measurement/Calc Measruement Details.vi"/>
 			<Item Name="Get Measruement Scenario.vi" Type="VI" URL="../Measurement/Get Measruement Scenario.vi"/>
 			<Item Name="Measure.vi" Type="VI" URL="../Measurement/Measure.vi"/>
+			<Item Name="Set TWM Corrections.vi" Type="VI" URL="../Measurement/Set TWM Corrections.vi"/>
 			<Item Name="Set TWM Measurement.vi" Type="VI" URL="../Measurement/Set TWM Measurement.vi"/>
 			<Item Name="Set TWM Processing.vi" Type="VI" URL="../Measurement/Set TWM Processing.vi"/>
 			<Item Name="TWM Wait for Measure End.vi" Type="VI" URL="../Measurement/TWM Wait for Measure End.vi"/>
