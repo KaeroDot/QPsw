@@ -64,13 +64,6 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
-    alginfo.inputs(pid).name = 'Spjvs';
-    alginfo.inputs(pid).desc = 'PJVS switches (samples)';
-    alginfo.inputs(pid).alternative = 0;
-    alginfo.inputs(pid).optional = 0;
-    alginfo.inputs(pid).parameter = 1;
-    pid = pid + 1;
-
     alginfo.inputs(pid).name = 'fseg';
     alginfo.inputs(pid).desc = 'Frequency of PJVS segments (Hz)';
     alginfo.inputs(pid).alternative = 0;
@@ -79,18 +72,33 @@ function alginfo = alg_info() %<<<1
     pid = pid + 1;
 
     alginfo.inputs(pid).name = 'Rs';
-    alginfo.inputs(pid).desc = 'PJVS remove after switch (samples)';
+    alginfo.inputs(pid).desc = 'PJVS remove before PJVS step (samples)';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 1;
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
     alginfo.inputs(pid).name = 'Re';
-    alginfo.inputs(pid).desc = 'PJVS remove before switch (samples)';
+    alginfo.inputs(pid).desc = 'PJVS remove after PJVS step (samples)';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 1;
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
+
+    alginfo.inputs(pid).name = 'Ms';
+    alginfo.inputs(pid).desc = 'PJVS remove before MX switch (samples)';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 1;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
+
+    alginfo.inputs(pid).name = 'Me';
+    alginfo.inputs(pid).desc = 'PJVS remove after MX switch (samples)';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 1;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
+
 
     % --- standard TWM inputs %<<<2
     % sample data
