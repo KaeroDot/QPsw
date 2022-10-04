@@ -121,7 +121,7 @@
 			<Item Name="JV modified NPL Bias source" Type="Folder" URL="../PJVS drivers/JV modified NPL Bias source">
 				<Property Name="NI.DISK" Type="Bool">true</Property>
 			</Item>
-			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.0.0.llb/ACSVcontrol-driver.lvlib"/>
+			<Item Name="ACSVcontrol-driver.lvlib" Type="Library" URL="../PJVS drivers/acsvcontrol-driver/build/ACSVcontrol-driver_0.2.1.0.llb/ACSVcontrol-driver.lvlib"/>
 		</Item>
 		<Item Name="Utilities" Type="Folder">
 			<Item Name="GCD of array.vi" Type="VI" URL="../Utilities/GCD of array.vi"/>
