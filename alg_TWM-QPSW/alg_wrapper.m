@@ -4,19 +4,13 @@ function dataout = alg_wrapper(datain, calcset)
 % See also qwtb
 %
 % This is part of the TWM - TracePQM WattMeter.
-% (c) 2018, Martin Sira, msira@cmi.cz
+% (c) 2022, Martin Sira, msira@cmi.cz
 % The script is distributed under MIT license, https://opensource.org/licenses/MIT.                
 
 % initialize %<<<1
 DEBUG = 0;
 
 % Prepare data --------------------------- %<<<1
-% This will have to be fixed in TWM/qwtb_exec_algorithm. This is only temporary
-% measure:
-eval(['datain.S.v = ' datain.S.v ';'])
-eval(['datain.M.v = ' datain.M.v ';'])
-eval(['datain.Spjvs.v = ' datain.Spjvs.v ';'])
-eval(['datain.Uref.v = ' datain.Uref.v ';'])
 % convert N+1 dimensional matrices back to cell of structures
 diC = matrices_to_cells(datain);
 % split data:
@@ -25,6 +19,11 @@ for j = 1:numel(diC)
 end % for j = 1:numel(diC)
 
 % get basic quantities for qpsw_process %<<<2
+% This will have to be fixed in TWM/qwtb_exec_algorithm. This is only temporary
+% measure:
+eval(['other{1}.S.v = ' other{1}.S.v ';'])
+eval(['other{1}.M.v = ' other{1}.M.v ';'])
+eval(['other{1}.Uref.v = ' other{1}.Uref.v ';'])
 
 if isfield(other{1}, 'fs')
     sigconfig.fs = other{1}.fs.v;
@@ -44,8 +43,6 @@ S = other{1}.S.v;
 M = other{1}.M.v;
 % get: Uref1period - PJVS reference values:
 Uref1period = other{1}.Uref.v;
-% XXX abandoned - to be removed:
-Spjvs = [];
 % get: alg - algorithm used to get final quantities:
 alg = other{1}.alg.v;
 % get optional Rs, Re:
@@ -59,19 +56,30 @@ if ~isfield(other{1}, 'Re')
 else
     sigconfig.PRe = other{1}.Re.v;
 end
+% get optional Ms, Me:
+if ~isfield(other{1}, 'Ms')
+    sigconfig.MRs = 5;
+else
+    sigconfig.MRs = other{1}.Ms.v;
+end
+if ~isfield(other{1}, 'Me')
+    sigconfig.MRe = 5;
+else
+    sigconfig.MRe = other{1}.Me.v;
+end
 
 % debug setup:
 dbg = check_gen_dbg([], 1);
 dbg.v = 1;
-dbg.saveplotsplt = 0;
+dbg.saveplotsplt = 1;
 dbg.plotpath = 'simulation_results';
 if ~exist(dbg.plotpath, 'dir')
     mkdir(dbg.plotpath);
 end
 
 % qpsw process --------------------------- %<<<1
-keyboard
-[y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
+% always use PSFE to calculate amplitudes and phases of particular sections:
+[y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
 
 % set adc corrections --------------------------- %<<<1
 % sets adc linearity and gain corrections to ideal 1, because sampled data are
@@ -176,13 +184,12 @@ function [diC] = matrices_to_cells(din, alginfo) %<<<1
     for q = 1:numel(Qs)
         Q = Qs{q};
         if din.(Q).par
-        % If quantity is parameter type, only take value from first cell:
-        % (every quantity gets field 'par', that is added by qwtb)
+        % If quantity is parameter type, values are stored in cells.
             for f = 1:numel(QWTBf)
                 F = QWTBf{f};
                 if isfield(din.(Q), F);
                     for c = 1:max_dim
-                        diC{c}.(Q).(F) = din.(Q).(F);
+                        diC{c}.(Q).(F) = din.(Q).(F){c};
                     end
                 end % if isfield(din.(Q), F);
             end
@@ -229,10 +236,10 @@ function [data, adc, tr, cable, other] = split_di(din) %<<<1
         elseif strfind(Q, 'adc_')
             % Q is correction of digitizer
             adc.(Q) = din.(Q);
-        elseif ( strfind(Q, 'Zcb_') | strfind(Q, 'Ycb_') )
+        elseif ( strfind(Q, 'Zcb_') || strfind(Q, 'Ycb_') )
             % Q is correction of connecting
             cable.(Q) = din.(Q);
-        elseif strcmp(Q, 'y') | strcmp(Q, 'u') | strcmp(Q, 'i')
+        elseif strcmp(Q, 'y') || strcmp(Q, 'u') || strcmp(Q, 'i')
             data.(Q) = din.(Q);
         else
             other.(Q) = din.(Q);

@@ -123,7 +123,7 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 0;
     pid = pid + 1;
     
-    alginfo.inputs(pid).name = 'y'; %XXXXXXX this paragraph only for testing of single input algorithm!
+    alginfo.inputs(pid).name = 'y';
     alginfo.inputs(pid).desc = 'Sampled voltage';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 0;
@@ -352,6 +352,13 @@ function alginfo = alg_info() %<<<1
     
     
     % Transducer phase calibration matrix (2D dependence, rows: freqs., columns: input rms levels)
+    alginfo.inputs(pid).name = 'tr_type';
+    alginfo.inputs(pid).desc = 'Transducer type';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 1;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
+
     alginfo.inputs(pid).name = 'tr_gain_f';
     alginfo.inputs(pid).desc = 'Transducer gain: frequency axis';
     alginfo.inputs(pid).alternative = 0;

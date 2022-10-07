@@ -93,6 +93,8 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
     % calculate amplitude and phase of sections %<<<1
     % calls QWTB algorithm for every nonquantum section
     res = struct();
+    CS.unc = 'none';
+    CS.loc = 0.6845; % XXX this is needed because Maslan spoiled qwtb, PSFE algorithm and all other things without pushing into mainstream!
     for i = 1:rows(yc)
             if My(i) > 0 % only non-quantum data
                 for j = 1:columns(yc)
@@ -100,7 +102,7 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
                             % calculate data
                             DI.y.v = yc{i, j};
                             DI.fs.v = sigconfig.fs;
-                            res(i,j) = qwtb(alg, DI);
+                            res(i,j) = qwtb(alg, DI, CS);
                         endif
                 end % for j = 1:columns(yc)
             end % if My > 0 % only non-quantum data
