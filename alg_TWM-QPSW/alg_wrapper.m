@@ -70,7 +70,7 @@ end
 
 % debug setup:
 dbg = check_gen_dbg([], 1);
-dbg.v = 1;
+dbg.v = 0;
 dbg.saveplotsplt = 1;
 dbg.plotpath = 'simulation_results';
 if ~exist(dbg.plotpath, 'dir')
@@ -80,15 +80,21 @@ end
 % qpsw process --------------------------- %<<<1
 % always use PSFE to calculate amplitudes and phases of particular sections:
 [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
+% load('intermediate_status_line_84_of_alg_wrapper.mat')
 
 % set adc corrections --------------------------- %<<<1
 % sets adc linearity and gain corrections to ideal 1, because sampled data are
 % already linearized by using PJVS calibration:
 for j = 1:numel(adc)
-    adc{j}.gain = 1;
-    adc{j}.gain_a = [1];
-    adc{j}.gain_f = [50];
-    adc{j}.gain_offset = 0;
+    adc{j}.adc_gain.v = 1;
+    adc{j}.adc_gain.u = 0;
+    adc{j}.adc_gain_a.v = [];
+    adc{j}.adc_gain_f.v = [];
+    adc{j}.adc_offset.v = 0;
+    % adc{j}.adc_gain.v = [1 1; 1 1];
+    % adc{j}.adc_gain_a.v = [1e-9 1e5];
+    % adc{j}.adc_gain_f.v = [1 1e6];
+    % adc{j}.adc_offset.v = 0;
 end % for j = 1:numel(adc)
 
 % construct input data for TWM algorithm --------------------------- %<<<1
@@ -103,32 +109,99 @@ end
 
 % remove signals that are PJVS:
 y = y(firstnotPJVS:end, :);
-yc = yc{firstnotPJVS:end};
+yc = yc(firstnotPJVS:end, :);
 
-if ~mod(numel(yc),2)
+if mod(size(yc, 1), 2)
     error('signals not in pairs voltage/current, odd count of signals!') % XXX better error message!
 end
 
-% construct voltage-current pairs:
-algdi = cell();
-for j = 1:2:numel()
-    algdi{end+1} = struct();
-    algdi{end}.u.v = yc{j};
-    algdi{end}.i.v = yc{j+1};
-    algdi{end} = join_structs(algdi{end}, add_Q_prefix(adc(j), 'u'), add_Q_prefix(tr, 'u'), cable, other);
-    algdi{end} = join_structs(algdi{end}, add_Q_prefix(adc(j), 'i'), add_Q_prefix(tr, 'i'));
-end
+% find pairs of signals
+idMur = cell();
+idMuc = cell();
+idMir = cell();
+idMic = cell();
+for j = 1:2:size(yc,1)
+    [idMur{end+1}, idMuc{end+1}] = find(M == j);
+    [idMir{end+1}, idMic{end+1}] = find(M == j+1);
+    % ensure pairs in time:
+    tmp = min(numel(idMuc{end}), numel(idMic{end}));
+    if tmp < 1
+        error('missing data') % XXX proper error message not any segment with signal number j
+    end
+    idMur{end} = idMur{end}(1:tmp); % id of matrix M, u-voltage, r-row
+    idMuc{end} = idMuc{end}(1:tmp); % id of matrix M, u-voltage, c-column
+    idMir{end} = idMir{end}(1:tmp); % id of matrix M, i-current, r-row
+    idMic{end} = idMic{end}(1:tmp); % id of matrix M, i-current, c-column
+end % for j = 1:2:size(yc,1)
 
-keyboard
+% construct voltage-current pairs:
+DI_section = cell();
+for j = 1:numel(idMuc) % for rows - signal
+    for k = 1:numel(idMur{j}) % for columns - time
+        DI_section{end+1} = struct();
+        % voltage:
+        % row of yc:
+        r = M(idMur{j}(k), idMuc{j}(k));
+        % column of yc:
+        c = idMuc{j}(k);
+        DI_section{end}.u.v = yc{r, c};
+        DI_section{end} = join_structs(DI_section{end}, add_Q_prefix(adc{idMur{j}(k)}, 'u_'), add_Q_prefix(tr{idMur{j}(k)}, 'u_'), cable{1}, other{1});
+        % current:
+        % row of yc:
+        r = M(idMir{j}(k), idMic{j}(k));
+        % column of yc:
+        c = idMic{j}(k);
+        DI_section{end}.i.v = yc{r, c};
+        % figure()
+        % plot(DI_section{end}.u.v) % XXX debug
+        % figure()
+        % plot(DI_section{end}.i.v)
+        % keyboard
+        % row index idur or idir contains id of an adequate transducer:
+        DI_section{end} = join_structs(DI_section{end}, add_Q_prefix(adc{idMir{j}(k)}, 'i_'), add_Q_prefix(tr{idMir{j}(k)}, 'i_'), cable{1}, other{1});
+        DI_section{end}.adc_aper = DI_section{end}.u_adc_aper;
+        DI_section{end}.adc_bits = DI_section{end}.u_adc_bits;
+        DI_section{end}.adc_freq = DI_section{end}.u_adc_freq;
+    end % for k = 1:numel(idux{j})
+end % for j = 1:numel(idux)
+
 
 % call TWM algorithm --------------------------- %<<<1
-doout = cell();
-for j = 1:numel(algdi)
-    doout{j} = qwtb(alg, algdi{j}, calcset);
+DO_section = cell();
+dataout = struct();
+for j = 1:numel(DI_section)
+    DO_section{j} = qwtb(alg, DI_section{j}, calcset);
+    dataout.U_t.v(j) =      DO_section{j}.U.v;
+    dataout.I_t.v(j) =      DO_section{j}.I.v;
+    dataout.P_t.v(j) =      DO_section{j}.P.v;
+    dataout.S_t.v(j) =      DO_section{j}.S.v;
+    dataout.Q_t.v(j) =      DO_section{j}.Q.v;
+    dataout.PF_t.v(j) =     DO_section{j}.PF.v;
+    dataout.Udc_t.v(j) =    DO_section{j}.Udc.v;
+    dataout.Idc_t.v(j) =    DO_section{j}.Idc.v;
+    dataout.phi_ef_t.v(j) = DO_section{j}.phi_ef.v;
 end
 
 % make outputs --------------------------- %<<<1
-% 2DO XXX
+dataout.U.v =      mean(dataout.U_t.v);
+dataout.I.v =      mean(dataout.I_t.v);
+dataout.P.v =      mean(dataout.P_t.v);
+dataout.S.v =      mean(dataout.S_t.v);
+dataout.Q.v =      mean(dataout.Q_t.v);
+dataout.PF.v =     mean(dataout.PF_t.v);
+dataout.Udc.v =    mean(dataout.Udc_t.v);
+dataout.Idc.v =    mean(dataout.Idc_t.v);
+dataout.phi_ef.v = mean(dataout.phi_ef_t.v);
+
+dataout.U.v =      sqrt(sum(dataout.U_t.v.^2));
+dataout.I.v =      sqrt(sum(dataout.I_t.v.^2));
+dataout.P.v =      sqrt(sum(dataout.P_t.v.^2));
+dataout.S.v =      sqrt(sum(dataout.S_t.v.^2));
+dataout.Q.v =      sqrt(sum(dataout.Q_t.v.^2));
+dataout.PF.v =     sqrt(sum(dataout.PF_t.v.^2));
+dataout.Udc.v =    sqrt(sum(dataout.Udc_t.v.^2));
+dataout.Idc.v =    sqrt(sum(dataout.Idc_t.v.^2));
+dataout.phi_ef.v = sqrt(sum(dataout.phi_ef_t.v.^2));
 
 end % function dataout = alg_wrapper(datain, calcset)
 
@@ -253,7 +326,7 @@ function [dout] = add_Q_prefix(din, prefix) %<<<1
     Qs = fieldnames(din);
     for j = 1:numel(Qs);
         Q = Qs{j};
-        Qn = [prefix Qs{j}];
+        Qn = [prefix Q];
         dout.(Qn) = din.(Q);
     end
 end % function [dout] = add_Q_prefix(din, prefix) %<<<1
