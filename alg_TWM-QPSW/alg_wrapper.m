@@ -120,7 +120,7 @@ idMur = cell();
 idMuc = cell();
 idMir = cell();
 idMic = cell();
-for j = 1:2:size(yc,1)
+for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
     [idMur{end+1}, idMuc{end+1}] = find(M == j);
     [idMir{end+1}, idMic{end+1}] = find(M == j+1);
     % ensure pairs in time:
@@ -135,161 +135,99 @@ for j = 1:2:size(yc,1)
 end % for j = 1:2:size(yc,1)
 
 % construct voltage-current pairs:
-DI_section = cell();
-for j = 1:numel(idMuc) % for rows - signal
-    for k = 1:numel(idMur{j}) % for columns - time
-        DI_section{end+1} = struct();
-        % voltage:
-        % row of yc:
+DI_section = cell();                     %                                           (phase, time)
+for j = 1:numel(idMuc) % for signal phases (voltage+current) (rows of DI_section)
+    for k = 1:numel(idMur{j}) % for time (sections) (columns of DI_section)
+        DI_section{j, k} = struct();
+        % Voltage
+        % get row of yc:
         r = M(idMur{j}(k), idMuc{j}(k));
-        % column of yc:
+        % get column of yc:
         c = idMuc{j}(k);
-        DI_section{end}.u.v = yc{r, c};
-        DI_section{end} = join_structs(DI_section{end}, add_Q_prefix(adc{idMur{j}(k)}, 'u_'), add_Q_prefix(tr{idMur{j}(k)}, 'u_'), cable{1}, other{1});
-        % current:
-        % row of yc:
-        r = M(idMir{j}(k), idMic{j}(k));
-        % column of yc:
-        c = idMic{j}(k);
-        DI_section{end}.i.v = yc{r, c};
-        % figure()
-        % plot(DI_section{end}.u.v) % XXX debug
-        % figure()
-        % plot(DI_section{end}.i.v)
-        % keyboard
+        DI_section{j, k}.u.v = yc{r, c};
+        % add transducer, digitizer and and cable corrections.
         % row index idur or idir contains id of an adequate transducer:
-        DI_section{end} = join_structs(DI_section{end}, add_Q_prefix(adc{idMir{j}(k)}, 'i_'), add_Q_prefix(tr{idMir{j}(k)}, 'i_'), cable{1}, other{1});
-        DI_section{end}.adc_aper = DI_section{end}.u_adc_aper;
-        DI_section{end}.adc_bits = DI_section{end}.u_adc_bits;
-        DI_section{end}.adc_freq = DI_section{end}.u_adc_freq;
+        % SELECTION OF ADC CORRECTIONS MUST BE DIFFERENT THAN OF THE TRANSDUCER!
+        % WHAT ABOUT CABLE? XXX
+        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idMur{j}(k)}, 'u_'), add_Q_prefix(tr{idMur{j}(k)}, 'u_'), cable{1}, other{1});
+        % Current
+        % get row of yc:
+        r = M(idMir{j}(k), idMic{j}(k));
+        % get column of yc:
+        c = idMic{j}(k);
+        DI_section{j, k}.i.v = yc{r, c};
+        % add transducer, digitizer and and cable corrections.
+        % row index idur or idir contains id of an adequate transducer:
+        % SELECTION OF ADC CORRECTIONS MUST BE DIFFERENT THAN OF THE TRANSDUCER!
+        % WHAT ABOUT CABLE? XXX
+        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idMir{j}(k)}, 'i_'), add_Q_prefix(tr{idMir{j}(k)}, 'i_'), cable{1}, other{1});
+        % IS THIS NEEDED?:
+        DI_section{j, k}.adc_aper = DI_section{j, k}.u_adc_aper;
+        DI_section{j, k}.adc_bits = DI_section{j, k}.u_adc_bits;
+        DI_section{j, k}.adc_freq = DI_section{j, k}.u_adc_freq;
     end % for k = 1:numel(idux{j})
 end % for j = 1:numel(idux)
 
-
 % call TWM algorithm --------------------------- %<<<1
 DO_section = cell();
-dataout = struct();
-for j = 1:numel(DI_section)
-    DO_section{j} = qwtb(alg, DI_section{j}, calcset);
-    dataout.U_t.v(j) =      DO_section{j}.U.v;
-    dataout.I_t.v(j) =      DO_section{j}.I.v;
-    dataout.P_t.v(j) =      DO_section{j}.P.v;
-    dataout.S_t.v(j) =      DO_section{j}.S.v;
-    dataout.Q_t.v(j) =      DO_section{j}.Q.v;
-    dataout.PF_t.v(j) =     DO_section{j}.PF.v;
-    dataout.Udc_t.v(j) =    DO_section{j}.Udc.v;
-    dataout.Idc_t.v(j) =    DO_section{j}.Idc.v;
-    dataout.phi_ef_t.v(j) = DO_section{j}.phi_ef.v;
+dataout = cell();
+for j = 1:size(DI_section, 1) % for signal phases
+    for k = 1:size(DI_section, 2) % for sections in time
+        % call qwtb algorithm to calculate actual power:
+        DO_section{j, k} = qwtb(alg, DI_section{j, k}, calcset);
+        % add output qunatities into vectors:
+        dataout{j}.U_t.v(k) =      DO_section{j, k}.U.v;
+        dataout{j}.I_t.v(k) =      DO_section{j, k}.I.v;
+        dataout{j}.P_t.v(k) =      DO_section{j, k}.P.v;
+        dataout{j}.S_t.v(k) =      DO_section{j, k}.S.v;
+        dataout{j}.Q_t.v(k) =      DO_section{j, k}.Q.v;
+        dataout{j}.PF_t.v(k) =     DO_section{j, k}.PF.v;
+        dataout{j}.Udc_t.v(k) =    DO_section{j, k}.Udc.v;
+        dataout{j}.Idc_t.v(k) =    DO_section{j, k}.Idc.v;
+        dataout{j}.phi_ef_t.v(k) = DO_section{j, k}.phi_ef.v;
+    end
 end
 
-% make outputs --------------------------- %<<<1
-dataout.U.v =      mean(dataout.U_t.v);
-dataout.I.v =      mean(dataout.I_t.v);
-dataout.P.v =      mean(dataout.P_t.v);
-dataout.S.v =      mean(dataout.S_t.v);
-dataout.Q.v =      mean(dataout.Q_t.v);
-dataout.PF.v =     mean(dataout.PF_t.v);
-dataout.Udc.v =    mean(dataout.Udc_t.v);
-dataout.Idc.v =    mean(dataout.Idc_t.v);
-dataout.phi_ef.v = mean(dataout.phi_ef_t.v);
+% make averaged outputs --------------------------- %<<<1
+for j = 1:size(DI_section, 1) % for signal phases
+    dataout{j}.U.v =      mean(dataout{j}.U_t.v);
+    dataout{j}.I.v =      mean(dataout{j}.I_t.v);
+    dataout{j}.P.v =      mean(dataout{j}.P_t.v);
+    dataout{j}.S.v =      mean(dataout{j}.S_t.v);
+    dataout{j}.Q.v =      mean(dataout{j}.Q_t.v);
+    dataout{j}.PF.v =     mean(dataout{j}.PF_t.v);
+    dataout{j}.Udc.v =    mean(dataout{j}.Udc_t.v);
+    dataout{j}.Idc.v =    mean(dataout{j}.Idc_t.v);
+    dataout{j}.phi_ef.v = mean(dataout{j}.phi_ef_t.v);
 
-dataout.U.v =      sqrt(sum(dataout.U_t.v.^2));
-dataout.I.v =      sqrt(sum(dataout.I_t.v.^2));
-dataout.P.v =      sqrt(sum(dataout.P_t.v.^2));
-dataout.S.v =      sqrt(sum(dataout.S_t.v.^2));
-dataout.Q.v =      sqrt(sum(dataout.Q_t.v.^2));
-dataout.PF.v =     sqrt(sum(dataout.PF_t.v.^2));
-dataout.Udc.v =    sqrt(sum(dataout.Udc_t.v.^2));
-dataout.Idc.v =    sqrt(sum(dataout.Idc_t.v.^2));
-dataout.phi_ef.v = sqrt(sum(dataout.phi_ef_t.v.^2));
+    dataout{j}.U.v =      sqrt(sum(dataout{j}.U_t.v.^2));
+    dataout{j}.I.v =      sqrt(sum(dataout{j}.I_t.v.^2));
+    dataout{j}.P.v =      sqrt(sum(dataout{j}.P_t.v.^2));
+    dataout{j}.S.v =      sqrt(sum(dataout{j}.S_t.v.^2));
+    dataout{j}.Q.v =      sqrt(sum(dataout{j}.Q_t.v.^2));
+    dataout{j}.PF.v =     sqrt(sum(dataout{j}.PF_t.v.^2));
+    dataout{j}.Udc.v =    sqrt(sum(dataout{j}.Udc_t.v.^2));
+    dataout{j}.Idc.v =    sqrt(sum(dataout{j}.Idc_t.v.^2));
+    dataout{j}.phi_ef.v = sqrt(sum(dataout{j}.phi_ef_t.v.^2));
+end
+
+% reorder into n-dimensional matrices
+
+dataout{1}.phase_info_index.v = 1;
+dataout{2}.phase_info_index.v = 2;
+dataout{3}.phase_info_index.v = 3;
+dataout{1}.phase_info_tags.v = 'u1, i1';
+dataout{2}.phase_info_tags.v = 'u2, i2';
+dataout{3}.phase_info_tags.v = 'u3, i3';
+dataout{1}.phase_info_section.v = 'L1';
+dataout{2}.phase_info_section.v = 'L2';
+dataout{3}.phase_info_section.v = 'L3';
+
+% convert to standard quantities:
+dataout = cells_to_matrices(dataout, []);
 
 end % function dataout = alg_wrapper(datain, calcset)
 
-function [diC] = matrices_to_cells(din, alginfo) %<<<1
-% Reorder data from the Cell diC of size N with structures with matrices to a
-% Strucure with matrices of one dimension more. The added dimension will have
-% size N.
-% This is done with respect to the qwtb and TWM quantities, so parameter
-% dimensions are not increased.
-% If matrices diC{i}.Q.F and diC{j}.Q.F are not of same dimensions, they are
-% padded by NaNs to the size of larger one.
-% Structures in cells must have the same fields to whole depth.
-
-
-% Reorder data from a structure with matrices of dimension N+1 into cells of structures
-% with matrices of dimension N. The last dimension was used for different phases of the sampled system.
-% This is done with respect to the qwtb and TWM quantities, so parameter
-% dimensions are not increased.
-% Script qwtb_exec_algorithm.m did the conversion from cell of structs to
-% struct of N+1 matrices. If matrices were of incompatible sizes, padding by
-% NaNs occured.
-% This function removes the padding back.
-
-    % List of possible quantity fields in QWTB:
-    QWTBf = {'v', 'u', 'd', 'c', 'r'};
-
-    % list of quantities of the algorithm:
-    Qs = fieldnames(din);
-
-    % Go through fields 'v' of all quantities and find size of the latest
-    % dimension:
-    max_dim = [];
-    for q = 1:numel(Qs)
-        Q = Qs{q};
-        % only if not parameter:
-        % (every quantity gets field 'par', that is added by QWTB)
-        if not(din.(Q).par)
-            % take size of last dimension:
-            max_dim(end+1) = size(din.(Q).v)(end);
-        end % if not(Q.par)
-    end
-    if not(all(max_dim(1) == max_dim))
-        error('QPSW wrapper - last dimension of some quantity is not same as of others. Concatenating all phases into one did not worked properly.')
-    end
-    max_dim = max(max_dim);
-
-    % Prepare output cell for every phase:
-    diC = cell(max_dim, 1);
-
-    % For all quantities in the structure, for all fields, split matrices by last
-    % dimension and put them into cells of structures.
-    % From din.Q_j.F_k of size (m x n x i) -> diC{i}.Q_j.F_k of sizes (m x n)
-    for q = 1:numel(Qs)
-        Q = Qs{q};
-        if din.(Q).par
-        % If quantity is parameter type, values are stored in cells.
-            for f = 1:numel(QWTBf)
-                F = QWTBf{f};
-                if isfield(din.(Q), F);
-                    for c = 1:max_dim
-                        diC{c}.(Q).(F) = din.(Q).(F){c};
-                    end
-                end % if isfield(din.(Q), F);
-            end
-        else
-            % Q is not of parameter type, split matrix into cells:
-            for f = 1:numel(QWTBf)
-                F = QWTBf{f};
-                % check existence of field! XXX
-                if isempty(din.(Q).(F))
-                    for c = 1:max_dim
-                        diC{c}.(Q).(F) = [];
-                    end
-                else
-                    % use subscript reference assignement because number of
-                    % dimensions of the matrices is not known:
-                    mat = din.(Q).(F);
-                    S.subs = repmat({':'}, 1, ndims(mat));
-                    S.type = '()';
-                    for c = 1:max_dim
-                        S.subs{end} = c;
-                        diC{c}.(Q).(F) = subsref(mat, S);
-                    end
-                end % if isempty
-            end % for f
-        end % if din.(Q).par
-    end % for q
-end % function [diC] = matrices_to_cells(din, alginfo)
 
 function [data, adc, tr, cable, other] = split_di(din) %<<<1
 % function returns structures with: transducer corrections, digitizer

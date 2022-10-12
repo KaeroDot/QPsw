@@ -551,6 +551,19 @@ function alginfo = alg_info() %<<<1
     alginfo.outputs(pid).name = 'Idc_t';
     alginfo.outputs(pid).desc = 'DC current component';
     pid = pid + 1;
+
+    alginfo.outputs(pid).name = 'phase_info_index';
+    alginfo.outputs(pid).desc = '';
+    pid = pid + 1;
+
+    alginfo.outputs(pid).name = 'phase_info_tags';
+    alginfo.outputs(pid).desc = '';
+    pid = pid + 1;
+
+    alginfo.outputs(pid).name = 'phase_info_section';
+    alginfo.outputs(pid).desc = '';
+    pid = pid + 1;
+
 end % function alginfo = alg_info() %<<<1
 
 % create a differential complement of the last input parameter in the list 'par'
