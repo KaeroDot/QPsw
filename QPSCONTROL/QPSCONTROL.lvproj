@@ -125,6 +125,7 @@
 		</Item>
 		<Item Name="Utilities" Type="Folder">
 			<Item Name="GCD of array.vi" Type="VI" URL="../Utilities/GCD of array.vi"/>
+			<Item Name="Get number of channels from digitizer correction file.vi" Type="VI" URL="../Utilities/Get number of channels from digitizer correction file.vi"/>
 			<Item Name="Make Default QPS.vi" Type="VI" URL="../Utilities/Make Default QPS.vi"/>
 			<Item Name="Merge Error Ex.vi" Type="VI" URL="../Utilities/Merge Error Ex.vi"/>
 			<Item Name="Read settings from file.vi" Type="VI" URL="../Utilities/Read settings from file.vi"/>
