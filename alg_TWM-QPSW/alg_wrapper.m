@@ -12,6 +12,7 @@ DEBUG = 0;
 
 % Prepare data --------------------------- %<<<1
 % convert N+1 dimensional matrices back to cell of structures
+% XXXX ADCS GOT VALUES NOT NANS IN REMAINING ELEMENTS OF N-DIM MATRICES!
 diC = matrices_to_cells(datain);
 % split data:
 for j = 1:numel(diC)
@@ -91,10 +92,7 @@ for j = 1:numel(adc)
     adc{j}.adc_gain_a.v = [];
     adc{j}.adc_gain_f.v = [];
     adc{j}.adc_offset.v = 0;
-    % adc{j}.adc_gain.v = [1 1; 1 1];
-    % adc{j}.adc_gain_a.v = [1e-9 1e5];
-    % adc{j}.adc_gain_f.v = [1 1e6];
-    % adc{j}.adc_offset.v = 0;
+    % XXX FIXME add uncertainty as calculated by qpsw_process algorithm.
 end % for j = 1:numel(adc)
 
 % construct input data for TWM algorithm --------------------------- %<<<1
@@ -121,13 +119,17 @@ idMuc = cell();
 idMir = cell();
 idMic = cell();
 for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
-    [idMur{end+1}, idMuc{end+1}] = find(M == j);
-    [idMir{end+1}, idMic{end+1}] = find(M == j+1);
-    % ensure pairs in time:
+    % every second index because the signals are (must be) sorted in following
+    % manner: voltage, current, voltage, current etc.
+    [idMur{end+1}, idMuc{end+1}] = find(M == j);    % finds voltage signal rows and collumns
+    [idMir{end+1}, idMic{end+1}] = find(M == j+1);  % finds current signal rows and collumns
+    % ensure pairs in time
+    % get lowest count of voltage or current sections (measurement repetitions in time):
     tmp = min(numel(idMuc{end}), numel(idMic{end}));
     if tmp < 1
         error('missing data') % XXX proper error message not any segment with signal number j
     end
+    % cut to same number of sections for both voltage and current:
     idMur{end} = idMur{end}(1:tmp); % id of matrix M, u-voltage, r-row
     idMuc{end} = idMuc{end}(1:tmp); % id of matrix M, u-voltage, c-column
     idMir{end} = idMir{end}(1:tmp); % id of matrix M, i-current, r-row
@@ -135,32 +137,30 @@ for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
 end % for j = 1:2:size(yc,1)
 
 % construct voltage-current pairs:
-DI_section = cell();                     %                                           (phase, time)
+DI_section = cell();                     % indexes: (phase, time)
 for j = 1:numel(idMuc) % for signal phases (voltage+current) (rows of DI_section)
-    for k = 1:numel(idMur{j}) % for time (sections) (columns of DI_section)
+    for k = 1:numel(idMuc{j}) % for time (sections) (columns of DI_section)
         DI_section{j, k} = struct();
         % Voltage
-        % get row of yc:
-        r = M(idMur{j}(k), idMuc{j}(k));
-        % get column of yc:
-        c = idMuc{j}(k);
-        DI_section{j, k}.u.v = yc{r, c};
+                % printf('phase %d, time %d\n', j, k) % for debugging
+        r = idMur{j}(k);    % row of M matrix of actual segment
+        c = idMuc{j}(k);    % column of M matrix of actual segment
+        idadc = r;          % index of adc - row of M matrix
+        idtr = M(r,c);      % index of transducer - value of M matrix segment
+                % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
+        % get voltage samples and remove data needed for stabilization of MX:
+        DI_section{j, k}.u.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
         % add transducer, digitizer and and cable corrections.
-        % row index idur or idir contains id of an adequate transducer:
-        % SELECTION OF ADC CORRECTIONS MUST BE DIFFERENT THAN OF THE TRANSDUCER!
-        % WHAT ABOUT CABLE? XXX
-        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idMur{j}(k)}, 'u_'), add_Q_prefix(tr{idMur{j}(k)}, 'u_'), cable{1}, other{1});
+        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'u_'), add_Q_prefix(tr{idtr}, 'u_'), cable{idtr}, other{1});
         % Current
-        % get row of yc:
-        r = M(idMir{j}(k), idMic{j}(k));
-        % get column of yc:
-        c = idMic{j}(k);
-        DI_section{j, k}.i.v = yc{r, c};
+        r = idMir{j}(k);    % row of M matrix of actual segment
+        c = idMic{j}(k);    % column of M matrix of actual segment
+        idadc = r;          % index of adc - row of M matrix
+        idtr = M(r,c);      % index of transducer - value of M matrix segment
+                % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
+        DI_section{j, k}.i.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
         % add transducer, digitizer and and cable corrections.
-        % row index idur or idir contains id of an adequate transducer:
-        % SELECTION OF ADC CORRECTIONS MUST BE DIFFERENT THAN OF THE TRANSDUCER!
-        % WHAT ABOUT CABLE? XXX
-        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idMir{j}(k)}, 'i_'), add_Q_prefix(tr{idMir{j}(k)}, 'i_'), cable{1}, other{1});
+        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'i_'), add_Q_prefix(tr{idtr}, 'i_'), cable{idtr}, other{1});
         % IS THIS NEEDED?:
         DI_section{j, k}.adc_aper = DI_section{j, k}.u_adc_aper;
         DI_section{j, k}.adc_bits = DI_section{j, k}.u_adc_bits;
