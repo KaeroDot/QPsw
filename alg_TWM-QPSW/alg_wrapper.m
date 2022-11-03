@@ -32,8 +32,6 @@ elseif isfield(other{1}, 'Ts')
     sigconfig.fs = 1/other{1}.Ts.v;
 end
 sigconfig.fseg = other{1}.fseg.v;
-sigconfig.MRs = 10; % XXX assign!
-sigconfig.MRe = 10; % XXX assign!
 % convert sampled signals into matrix:
 for k = 1:numel(other)
     y(k, :) = data{k}.y.v(:)';
@@ -109,122 +107,151 @@ end
 y = y(firstnotPJVS:end, :);
 yc = yc(firstnotPJVS:end, :);
 
-if mod(size(yc, 1), 2)
-    error('signals not in pairs voltage/current, odd count of signals!') % XXX better error message!
-end
-
-% find pairs of signals
-idMur = cell();
-idMuc = cell();
-idMir = cell();
-idMic = cell();
-for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
-    % every second index because the signals are (must be) sorted in following
-    % manner: voltage, current, voltage, current etc.
-    [idMur{end+1}, idMuc{end+1}] = find(M == j);    % finds voltage signal rows and collumns
-    [idMir{end+1}, idMic{end+1}] = find(M == j+1);  % finds current signal rows and collumns
-    % ensure pairs in time
-    % get lowest count of voltage or current sections (measurement repetitions in time):
-    tmp = min(numel(idMuc{end}), numel(idMic{end}));
-    if tmp < 1
-        error('missing data') % XXX proper error message not any segment with signal number j
+if size(yc, 1) == 1
+    % only report amplitudes
+    tmp = [[res.A].v];
+    tmpzeros = nan.*zeros(size(tmp));
+    dataout{1}.U_t.v =      tmp;
+    dataout{1}.I_t.v =      tmpzeros;
+    dataout{1}.P_t.v =      tmpzeros;
+    dataout{1}.S_t.v =      tmpzeros;
+    dataout{1}.Q_t.v =      tmpzeros;
+    dataout{1}.PF_t.v =     tmpzeros;
+    dataout{1}.Udc_t.v =    tmpzeros;
+    dataout{1}.Idc_t.v =    tmpzeros;
+    dataout{1}.phi_ef_t.v = tmpzeros;
+    dataout{1}.U.v =      sqrt(sum(dataout{1}.U_t.v.^2));
+    dataout{1}.I.v =      sqrt(sum(dataout{1}.I_t.v.^2));
+    dataout{1}.P.v =      sqrt(sum(dataout{1}.P_t.v.^2));
+    dataout{1}.S.v =      sqrt(sum(dataout{1}.S_t.v.^2));
+    dataout{1}.Q.v =      sqrt(sum(dataout{1}.Q_t.v.^2));
+    dataout{1}.PF.v =     sqrt(sum(dataout{1}.PF_t.v.^2));
+    dataout{1}.Udc.v =    sqrt(sum(dataout{1}.Udc_t.v.^2));
+    dataout{1}.Idc.v =    sqrt(sum(dataout{1}.Idc_t.v.^2));
+    dataout{1}.phi_ef.v = sqrt(sum(dataout{1}.phi_ef_t.v.^2));
+    Qs = fieldnames(dataout{1});
+    for k = 1:numel(Qs)
+        Q = Qs{k};
+        dataout{1}.(Q).u = nan.*zeros(size(dataout{1}.(Q).v));
+        dataout{1}.(Q).d = nan.*zeros(size(dataout{1}.(Q).v));
+        dataout{1}.(Q).c = nan.*zeros(size(dataout{1}.(Q).v));
+        dataout{1}.(Q).r = nan.*zeros(size(dataout{1}.(Q).v));
     end
-    % cut to same number of sections for both voltage and current:
-    idMur{end} = idMur{end}(1:tmp); % id of matrix M, u-voltage, r-row
-    idMuc{end} = idMuc{end}(1:tmp); % id of matrix M, u-voltage, c-column
-    idMir{end} = idMir{end}(1:tmp); % id of matrix M, i-current, r-row
-    idMic{end} = idMic{end}(1:tmp); % id of matrix M, i-current, c-column
-end % for j = 1:2:size(yc,1)
-
-% construct voltage-current pairs:
-DI_section = cell();                     % indexes: (phase, time)
-for j = 1:numel(idMuc) % for signal phases (voltage+current) (rows of DI_section)
-    for k = 1:numel(idMuc{j}) % for time (sections) (columns of DI_section)
-        DI_section{j, k} = struct();
-        % Voltage
-                % printf('phase %d, time %d\n', j, k) % for debugging
-        r = idMur{j}(k);    % row of M matrix of actual segment
-        c = idMuc{j}(k);    % column of M matrix of actual segment
-        idadc = r;          % index of adc - row of M matrix
-        idtr = M(r,c);      % index of transducer - value of M matrix segment
-                % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
-        % get voltage samples and remove data needed for stabilization of MX:
-        DI_section{j, k}.u.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
-        % add transducer, digitizer and and cable corrections.
-        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'u_'), add_Q_prefix(tr{idtr}, 'u_'), cable{idtr}, other{1});
-        % Current
-        r = idMir{j}(k);    % row of M matrix of actual segment
-        c = idMic{j}(k);    % column of M matrix of actual segment
-        idadc = r;          % index of adc - row of M matrix
-        idtr = M(r,c);      % index of transducer - value of M matrix segment
-                % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
-        DI_section{j, k}.i.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
-        % add transducer, digitizer and and cable corrections.
-        DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'i_'), add_Q_prefix(tr{idtr}, 'i_'), cable{idtr}, other{1});
-        % IS THIS NEEDED?:
-        DI_section{j, k}.adc_aper = DI_section{j, k}.u_adc_aper;
-        DI_section{j, k}.adc_bits = DI_section{j, k}.u_adc_bits;
-        DI_section{j, k}.adc_freq = DI_section{j, k}.u_adc_freq;
-    end % for k = 1:numel(idux{j})
-end % for j = 1:numel(idux)
-
-% call TWM algorithm --------------------------- %<<<1
-DO_section = cell();
-dataout = cell();
-for j = 1:size(DI_section, 1) % for signal phases
-    for k = 1:size(DI_section, 2) % for sections in time
-        % call qwtb algorithm to calculate actual power:
-        DO_section{j, k} = qwtb(alg, DI_section{j, k}, calcset);
-        % add output qunatities into vectors:
-        dataout{j}.U_t.v(k) =      DO_section{j, k}.U.v;
-        dataout{j}.I_t.v(k) =      DO_section{j, k}.I.v;
-        dataout{j}.P_t.v(k) =      DO_section{j, k}.P.v;
-        dataout{j}.S_t.v(k) =      DO_section{j, k}.S.v;
-        dataout{j}.Q_t.v(k) =      DO_section{j, k}.Q.v;
-        dataout{j}.PF_t.v(k) =     DO_section{j, k}.PF.v;
-        dataout{j}.Udc_t.v(k) =    DO_section{j, k}.Udc.v;
-        dataout{j}.Idc_t.v(k) =    DO_section{j, k}.Idc.v;
-        dataout{j}.phi_ef_t.v(k) = DO_section{j, k}.phi_ef.v;
+    dataout = cells_to_matrices(dataout, []);
+else % if size(yc, 1) == 1)
+    % calculate the real power
+    if mod(size(yc, 1), 2)
+        error('signals not in pairs voltage/current, odd count of signals!') % XXX better error message!
     end
-end
 
-% make averaged outputs --------------------------- %<<<1
-for j = 1:size(DI_section, 1) % for signal phases
-    dataout{j}.U.v =      mean(dataout{j}.U_t.v);
-    dataout{j}.I.v =      mean(dataout{j}.I_t.v);
-    dataout{j}.P.v =      mean(dataout{j}.P_t.v);
-    dataout{j}.S.v =      mean(dataout{j}.S_t.v);
-    dataout{j}.Q.v =      mean(dataout{j}.Q_t.v);
-    dataout{j}.PF.v =     mean(dataout{j}.PF_t.v);
-    dataout{j}.Udc.v =    mean(dataout{j}.Udc_t.v);
-    dataout{j}.Idc.v =    mean(dataout{j}.Idc_t.v);
-    dataout{j}.phi_ef.v = mean(dataout{j}.phi_ef_t.v);
+    % find pairs of signals
+    idMur = cell();
+    idMuc = cell();
+    idMir = cell();
+    idMic = cell();
+    for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
+        % every second index because the signals are (must be) sorted in following
+        % manner: voltage, current, voltage, current etc.
+        [idMur{end+1}, idMuc{end+1}] = find(M == j);    % finds voltage signal rows and collumns
+        [idMir{end+1}, idMic{end+1}] = find(M == j+1);  % finds current signal rows and collumns
+        % ensure pairs in time
+        % get lowest count of voltage or current sections (measurement repetitions in time):
+        tmp = min(numel(idMuc{end}), numel(idMic{end}));
+        if tmp < 1
+            error('missing data') % XXX proper error message not any segment with signal number j
+        end
+        % cut to same number of sections for both voltage and current:
+        idMur{end} = idMur{end}(1:tmp); % id of matrix M, u-voltage, r-row
+        idMuc{end} = idMuc{end}(1:tmp); % id of matrix M, u-voltage, c-column
+        idMir{end} = idMir{end}(1:tmp); % id of matrix M, i-current, r-row
+        idMic{end} = idMic{end}(1:tmp); % id of matrix M, i-current, c-column
+    end % for j = 1:2:size(yc,1)
 
-    dataout{j}.U.v =      sqrt(sum(dataout{j}.U_t.v.^2));
-    dataout{j}.I.v =      sqrt(sum(dataout{j}.I_t.v.^2));
-    dataout{j}.P.v =      sqrt(sum(dataout{j}.P_t.v.^2));
-    dataout{j}.S.v =      sqrt(sum(dataout{j}.S_t.v.^2));
-    dataout{j}.Q.v =      sqrt(sum(dataout{j}.Q_t.v.^2));
-    dataout{j}.PF.v =     sqrt(sum(dataout{j}.PF_t.v.^2));
-    dataout{j}.Udc.v =    sqrt(sum(dataout{j}.Udc_t.v.^2));
-    dataout{j}.Idc.v =    sqrt(sum(dataout{j}.Idc_t.v.^2));
-    dataout{j}.phi_ef.v = sqrt(sum(dataout{j}.phi_ef_t.v.^2));
-end
+    % construct voltage-current pairs:
+    DI_section = cell();                     % indexes: (phase, time)
+    for j = 1:numel(idMuc) % for signal phases (voltage+current) (rows of DI_section)
+        for k = 1:numel(idMuc{j}) % for time (sections) (columns of DI_section)
+            DI_section{j, k} = struct();
+            % Voltage
+                    % printf('phase %d, time %d\n', j, k) % for debugging
+            r = idMur{j}(k);    % row of M matrix of actual segment
+            c = idMuc{j}(k);    % column of M matrix of actual segment
+            idadc = r;          % index of adc - row of M matrix
+            idtr = M(r,c);      % index of transducer - value of M matrix segment
+                    % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
+            % get voltage samples and remove data needed for stabilization of MX:
+            DI_section{j, k}.u.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
+            % add transducer, digitizer and and cable corrections.
+            DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'u_'), add_Q_prefix(tr{idtr}, 'u_'), cable{idtr}, other{1});
+            % Current
+            r = idMir{j}(k);    % row of M matrix of actual segment
+            c = idMic{j}(k);    % column of M matrix of actual segment
+            idadc = r;          % index of adc - row of M matrix
+            idtr = M(r,c);      % index of transducer - value of M matrix segment
+                    % printf('u: M r %d, c %d, yc row %d, yc col %d, idadc %d, idtr %d\n', r, c, M(r,c), c, idadc, idtr) % for debugging
+            DI_section{j, k}.i.v = yc{M(r, c), c}(1 + sigconfig.MRs : end - sigconfig.MRe);
+            % add transducer, digitizer and and cable corrections.
+            DI_section{j, k} = join_structs(DI_section{j, k}, add_Q_prefix(adc{idadc}, 'i_'), add_Q_prefix(tr{idtr}, 'i_'), cable{idtr}, other{1});
+            % IS THIS NEEDED?:
+            DI_section{j, k}.adc_aper = DI_section{j, k}.u_adc_aper;
+            DI_section{j, k}.adc_bits = DI_section{j, k}.u_adc_bits;
+            DI_section{j, k}.adc_freq = DI_section{j, k}.u_adc_freq;
+        end % for k = 1:numel(idux{j})
+    end % for j = 1:numel(idux)
 
-% reorder into n-dimensional matrices
+    % call TWM algorithm --------------------------- %<<<1
+    DO_section = cell();
+    dataout = cell();
+    for j = 1:size(DI_section, 1) % for signal phases
+        for k = 1:size(DI_section, 2) % for sections in time
+            % call qwtb algorithm to calculate actual power:
+            DO_section{j, k} = qwtb(alg, DI_section{j, k}, calcset);
+            % add output qunatities into vectors:
+            dataout{j}.U_t.v(k) =      DO_section{j, k}.U.v;
+            dataout{j}.I_t.v(k) =      DO_section{j, k}.I.v;
+            dataout{j}.P_t.v(k) =      DO_section{j, k}.P.v;
+            dataout{j}.S_t.v(k) =      DO_section{j, k}.S.v;
+            dataout{j}.Q_t.v(k) =      DO_section{j, k}.Q.v;
+            dataout{j}.PF_t.v(k) =     DO_section{j, k}.PF.v;
+            dataout{j}.Udc_t.v(k) =    DO_section{j, k}.Udc.v;
+            dataout{j}.Idc_t.v(k) =    DO_section{j, k}.Idc.v;
+            dataout{j}.phi_ef_t.v(k) = DO_section{j, k}.phi_ef.v;
+        end
+    end
 
-dataout{1}.phase_info_index.v = 1;
-dataout{2}.phase_info_index.v = 2;
-dataout{3}.phase_info_index.v = 3;
-dataout{1}.phase_info_tags.v = 'u1, i1';
-dataout{2}.phase_info_tags.v = 'u2, i2';
-dataout{3}.phase_info_tags.v = 'u3, i3';
-dataout{1}.phase_info_section.v = 'L1';
-dataout{2}.phase_info_section.v = 'L2';
-dataout{3}.phase_info_section.v = 'L3';
+    % make averaged outputs --------------------------- %<<<1
+    for j = 1:size(DI_section, 1) % for signal phases
+        dataout{j}.U.v =      mean(dataout{j}.U_t.v);
+        dataout{j}.I.v =      mean(dataout{j}.I_t.v);
+        dataout{j}.P.v =      mean(dataout{j}.P_t.v);
+        dataout{j}.S.v =      mean(dataout{j}.S_t.v);
+        dataout{j}.Q.v =      mean(dataout{j}.Q_t.v);
+        dataout{j}.PF.v =     mean(dataout{j}.PF_t.v);
+        dataout{j}.Udc.v =    mean(dataout{j}.Udc_t.v);
+        dataout{j}.Idc.v =    mean(dataout{j}.Idc_t.v);
+        dataout{j}.phi_ef.v = mean(dataout{j}.phi_ef_t.v);
 
-% convert to standard quantities:
-dataout = cells_to_matrices(dataout, []);
+        dataout{j}.U.v =      sqrt(sum(dataout{j}.U_t.v.^2));
+        dataout{j}.I.v =      sqrt(sum(dataout{j}.I_t.v.^2));
+        dataout{j}.P.v =      sqrt(sum(dataout{j}.P_t.v.^2));
+        dataout{j}.S.v =      sqrt(sum(dataout{j}.S_t.v.^2));
+        dataout{j}.Q.v =      sqrt(sum(dataout{j}.Q_t.v.^2));
+        dataout{j}.PF.v =     sqrt(sum(dataout{j}.PF_t.v.^2));
+        dataout{j}.Udc.v =    sqrt(sum(dataout{j}.Udc_t.v.^2));
+        dataout{j}.Idc.v =    sqrt(sum(dataout{j}.Idc_t.v.^2));
+        dataout{j}.phi_ef.v = sqrt(sum(dataout{j}.phi_ef_t.v.^2));
+    end
+
+    % reorder into n-dimensional matrices
+    for j = 1:size(DI_section, 1) % for signal phases
+        dataout{j}.phase_info_index.v = j;
+        dataout{j}.phase_info_tags.v = sprintf('u%d, i%d', j, j);
+        dataout{j}.phase_info_section.v = sprintf('L%d', j);
+    end
+
+    % convert to standard quantities:
+    dataout = cells_to_matrices(dataout, []);
+end % if size(yc, 1) == 1)
 
 end % function dataout = alg_wrapper(datain, calcset)
 
@@ -267,7 +294,7 @@ function [dout] = add_Q_prefix(din, prefix) %<<<1
         Qn = [prefix Q];
         dout.(Qn) = din.(Q);
     end
-end % function [dout] = add_Q_prefix(din, prefix) %<<<1
+end % function [dout] = add_Q_prefix(din, prefix)
 
 function [sout] = join_structs(varargin) %<<<1
     % this merge multiple structures with unique fields (no field can be named
