@@ -416,6 +416,47 @@
 			<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WaitNamedPipeA.vi"/>
 			<Item Name="wa32 WriteFile.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WriteFile.vi"/>
 		</Item>
-		<Item Name="Build Specifications" Type="Build"/>
+		<Item Name="Build Specifications" Type="Build">
+			<Item Name="QPSCONTROL" Type="EXE">
+				<Property Name="App_copyErrors" Type="Bool">true</Property>
+				<Property Name="App_INI_aliasGUID" Type="Str">{09C9D4D2-7977-4DFE-977E-42DFCCEB0475}</Property>
+				<Property Name="App_INI_GUID" Type="Str">{9A172AA0-599F-4357-AE36-F7A82A32C0B2}</Property>
+				<Property Name="App_serverConfig.httpPort" Type="Int">8002</Property>
+				<Property Name="App_serverType" Type="Int">0</Property>
+				<Property Name="Bld_buildCacheID" Type="Str">{0A2FAF75-9505-4362-8DF3-C88BEBACF02A}</Property>
+				<Property Name="Bld_buildSpecName" Type="Str">QPSCONTROL</Property>
+				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
+				<Property Name="Bld_excludeLibraryItems" Type="Bool">true</Property>
+				<Property Name="Bld_excludePolymorphicVIs" Type="Bool">true</Property>
+				<Property Name="Bld_localDestDir" Type="Path">../QPSCONTROL builds/QPSCONTROL [VersionNumber]</Property>
+				<Property Name="Bld_localDestDirType" Type="Str">relativeToCommon</Property>
+				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
+				<Property Name="Bld_previewCacheID" Type="Str">{D07E181F-3DCC-42DD-8E6A-23A4BE7CBC67}</Property>
+				<Property Name="Bld_version.minor" Type="Int">1</Property>
+				<Property Name="Destination[0].destName" Type="Str">QPSCONTROL.exe</Property>
+				<Property Name="Destination[0].path" Type="Path">../QPSCONTROL builds/QPSCONTROL [VersionNumber]/NI_AB_PROJECTNAME.exe</Property>
+				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
+				<Property Name="Destination[0].type" Type="Str">App</Property>
+				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
+				<Property Name="Destination[1].path" Type="Path">../QPSCONTROL builds/QPSCONTROL [VersionNumber]/data</Property>
+				<Property Name="DestinationCount" Type="Int">2</Property>
+				<Property Name="Source[0].itemID" Type="Str">{D982E03A-0532-4DAF-AC95-4868BC0C3C9A}</Property>
+				<Property Name="Source[0].type" Type="Str">Container</Property>
+				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
+				<Property Name="Source[1].itemID" Type="Ref">/My Computer/GUI/GUI main.vi</Property>
+				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
+				<Property Name="Source[1].type" Type="Str">VI</Property>
+				<Property Name="SourceCount" Type="Int">2</Property>
+				<Property Name="TgtF_companyName" Type="Str">Czech Metrology Institute</Property>
+				<Property Name="TgtF_enableDebugging" Type="Bool">true</Property>
+				<Property Name="TgtF_fileDescription" Type="Str">QPSCONTROL</Property>
+				<Property Name="TgtF_internalName" Type="Str">QPSCONTROL</Property>
+				<Property Name="TgtF_legalCopyright" Type="Str">Copyright © 2022 Czech Metrology Institute</Property>
+				<Property Name="TgtF_productName" Type="Str">QPSCONTROL</Property>
+				<Property Name="TgtF_targetfileGUID" Type="Str">{FCFB363C-3DA7-4115-9BF7-23E1B99E8B3A}</Property>
+				<Property Name="TgtF_targetfileName" Type="Str">QPSCONTROL.exe</Property>
+				<Property Name="TgtF_versionIndependent" Type="Bool">true</Property>
+			</Item>
+		</Item>
 	</Item>
 </Project>
