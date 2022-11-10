@@ -1,0 +1,296 @@
+% === QWTB processing setup ===
+
+#startsection:: QWTB processing setup
+        algorithm id:: TWM-QPSW
+
+        calculate whole average at once:: 0
+        uncertainty mode:: none
+        level of confidence [-]:: 0.9500
+        time stamp mode:: relative
+        #startmatrix:: list of parameter names
+                "alg"
+                "M"
+                "S"
+                "Uref"
+                "Rs"
+                "Re"
+                "Ms"
+                "Me"
+                "fseg"
+        #endmatrix:: list of parameter names
+        
+        #startmatrix:: alg
+                "TWM-PWRFFT"
+        #endmatrix:: alg
+        
+        #startmatrix:: M
+                "[-1,  1,  2, -1,  1,  2, -1,  1,  2]"
+        #endmatrix:: M
+        
+        #startmatrix:: S
+                "[1,    2401,    4801,    7201,    9601,   12001,   14401,   16801,   19201,   21601]"
+        #endmatrix:: S
+        
+        #startmatrix:: Uref
+                "[0.140354222464353,   0.438122296642871,   0.693086210158227,   0.880121781751609,   0.981083769402762, 0.986046570639071,   0.894389835305996,   0.715263728182981,   0.466038053597107,   0.171216642652648, -0.140354222464353,  -0.438122296642871,  -0.693086210158227,  -0.880121781751609,  -0.981083769402762, -0.986046570639071,  -0.894389835305996,  -0.715263728182981,  -0.466038053597107,  -0.171216642652648]"
+        #endmatrix:: Uref
+        
+        #startmatrix:: Rs
+                "1"
+        #endmatrix:: Rs
+        
+        #startmatrix:: Re
+                "1"
+        #endmatrix:: Re
+        
+        #startmatrix:: Ms
+                "200"
+        #endmatrix:: Ms
+        
+        #startmatrix:: Me
+                "200"
+        #endmatrix:: Me
+        
+        #startmatrix:: fseg
+                "1000"
+        #endmatrix:: fseg
+        
+#endsection:: QWTB processing setup
+#startmatrix:: list
+        L1
+#endmatrix:: list
+#startsection:: L1
+        phase index:: 1
+        #startmatrix:: channel tag
+                u1, i1
+        #endmatrix:: channel tag
+        #startmatrix:: variable names
+                U_t
+                I_t
+                P_t
+                S_t
+                Q_t
+                PF_t
+                Udc_t
+                Idc_t
+                phi_ef_t
+                U
+                I
+                P
+                S
+                Q
+                PF
+                Udc
+                Idc
+                phi_ef
+                phase_info_index
+                phase_info_tags
+                phase_info_section
+        #endmatrix:: variable names
+        #startsection:: U_t
+                name:: U_t
+                description:: RMS voltage
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.707814179044614; 0.707814179044613; 0.707814179044614
+                #endmatrix:: value
+        #endsection:: U_t
+        #startsection:: I_t
+                name:: I_t
+                description:: RMS current
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.637669157505563; 0.637669157505563; 0.637669157505563
+                #endmatrix:: value
+        #endsection:: I_t
+        #startsection:: P_t
+                name:: P_t
+                description:: Active power
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.451351271221871; 0.451351271221871; 0.451351271221871
+                #endmatrix:: value
+        #endsection:: P_t
+        #startsection:: S_t
+                name:: S_t
+                description:: Apparent power
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.451351271221871; 0.451351271221871; 0.451351271221871
+                #endmatrix:: value
+        #endsection:: S_t
+        #startsection:: Q_t
+                name:: Q_t
+                description:: Reactive power
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0; 0; 0
+                #endmatrix:: value
+        #endsection:: Q_t
+        #startsection:: PF_t
+                name:: PF_t
+                description:: Power factor
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        1; 1; 1
+                #endmatrix:: value
+        #endsection:: PF_t
+        #startsection:: Udc_t
+                name:: Udc_t
+                description:: DC voltage component
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        -5.04390911936322e-18; 3.94441499506171e-17; 2.73226990259345e-16
+                #endmatrix:: value
+        #endsection:: Udc_t
+        #startsection:: Idc_t
+                name:: Idc_t
+                description:: DC current component
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        -8.51346191344672e-17; -5.5380232679743e-17; 3.1035502606557e-16
+                #endmatrix:: value
+        #endsection:: Idc_t
+        #startsection:: phi_ef_t
+                name:: phi_ef_t
+                description:: Effective phase shift acos(PF) [rad]
+                #startmatrix:: dimensions
+                        1; 3
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0; 0; 0
+                #endmatrix:: value
+        #endsection:: phi_ef_t
+        #startsection:: U
+                name:: U
+                description:: RMS voltage
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        1.22597012042292
+                #endmatrix:: value
+        #endsection:: U
+        #startsection:: I
+                name:: I
+                description:: RMS current
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        1.10447537921928
+                #endmatrix:: value
+        #endsection:: I
+        #startsection:: P
+                name:: P
+                description:: Active power
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.78176333381708
+                #endmatrix:: value
+        #endsection:: P
+        #startsection:: S
+                name:: S
+                description:: Apparent power
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0.78176333381708
+                #endmatrix:: value
+        #endsection:: S
+        #startsection:: Q
+                name:: Q
+                description:: Reactive power
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0
+                #endmatrix:: value
+        #endsection:: Q
+        #startsection:: PF
+                name:: PF
+                description:: Power factor
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        1.73205080756888
+                #endmatrix:: value
+        #endsection:: PF
+        #startsection:: Udc
+                name:: Udc
+                description:: DC voltage component
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        2.76105541760232e-16
+                #endmatrix:: value
+        #endsection:: Udc
+        #startsection:: Idc
+                name:: Idc
+                description:: DC current component
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        3.26550326521034e-16
+                #endmatrix:: value
+        #endsection:: Idc
+        #startsection:: phi_ef
+                name:: phi_ef
+                description:: Effective phase shift acos(PF) [rad]
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        0
+                #endmatrix:: value
+        #endsection:: phi_ef
+        #startsection:: phase_info_index
+                name:: phase_info_index
+                description::
+                #startmatrix:: dimensions
+                        1; 1
+                #endmatrix:: dimensions
+                #startmatrix:: value
+                        1
+                #endmatrix:: value
+        #endsection:: phase_info_index
+        #startsection:: phase_info_tags
+                name:: phase_info_tags
+                description::
+                #startmatrix:: dimensions
+                        1; 6
+                #endmatrix:: dimensions
+                value:: u1, i1
+        #endsection:: phase_info_tags
+        #startsection:: phase_info_section
+                name:: phase_info_section
+                description::
+                #startmatrix:: dimensions
+                        1; 2
+                #endmatrix:: dimensions
+                value:: L1
+        #endsection:: phase_info_section
+#endsection:: L1

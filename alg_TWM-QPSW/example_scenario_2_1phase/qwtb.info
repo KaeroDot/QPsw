@@ -1,0 +1,58 @@
+% === QWTB processing setup ===
+
+#startsection:: QWTB processing setup
+        algorithm id:: TWM-QPSW
+
+        calculate whole average at once:: 0
+        uncertainty mode:: none
+        level of confidence [-]:: 0.9500
+        time stamp mode:: relative
+        #startmatrix:: list of parameter names
+                "alg"
+                "M"
+                "S"
+                "Uref"
+                "Rs"
+                "Re"
+                "Ms"
+                "Me"
+                "fseg"
+        #endmatrix:: list of parameter names
+        
+        #startmatrix:: alg
+                "TWM-PWRFFT"
+        #endmatrix:: alg
+        
+        #startmatrix:: M
+                "[-1,  1,  2, -1,  1,  2, -1,  1,  2]"
+        #endmatrix:: M
+        
+        #startmatrix:: S
+                "[1,    2401,    4801,    7201,    9601,   12001,   14401,   16801,   19201,   21601]"
+        #endmatrix:: S
+        
+        #startmatrix:: Uref
+                "[0.140354222464353,   0.438122296642871,   0.693086210158227,   0.880121781751609,   0.981083769402762, 0.986046570639071,   0.894389835305996,   0.715263728182981,   0.466038053597107,   0.171216642652648, -0.140354222464353,  -0.438122296642871,  -0.693086210158227,  -0.880121781751609,  -0.981083769402762, -0.986046570639071,  -0.894389835305996,  -0.715263728182981,  -0.466038053597107,  -0.171216642652648]"
+        #endmatrix:: Uref
+        
+        #startmatrix:: Rs
+                "1"
+        #endmatrix:: Rs
+        
+        #startmatrix:: Re
+                "1"
+        #endmatrix:: Re
+        
+        #startmatrix:: Ms
+                "200"
+        #endmatrix:: Ms
+        
+        #startmatrix:: Me
+                "200"
+        #endmatrix:: Me
+        
+        #startmatrix:: fseg
+                "1000"
+        #endmatrix:: fseg
+        
+#endsection:: QWTB processing setup

@@ -1,0 +1,44 @@
+% digitizer 02
+% type of the correction
+type:: channel
+
+% correction name string
+name:: Simulated ADC test correction
+
+% device/channel identification as it appears in the digitizer identification
+% note: leave empty or remove if this correction should be independent of the instrument/channel
+channel identifier::
+
+
+% nominal gain correction of the channel
+#startsection:: nominal gain
+
+  % scalar real value
+  #startmatrix:: value
+    1.002
+  #endmatrix:: value
+  #startmatrix:: uncertainty
+    1e-7
+  #endmatrix:: uncertainty
+
+#endsection:: nominal gain
+
+% input admittance of the channel
+#startsection:: input admittance
+
+  % CSV table with the 1D dependence on frequency
+  #startmatrix:: value
+    csv\Y_inp.csv
+  #endmatrix:: value
+  
+#endsection:: input admittance
+
+% SFDR value
+#startsection:: sfdr
+
+  % CSV table with the 1D dependence on frequency
+  #startmatrix:: value
+    csv\SFDR.csv
+  #endmatrix:: value
+  
+#endsection:: sfdr
