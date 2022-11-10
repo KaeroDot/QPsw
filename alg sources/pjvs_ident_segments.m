@@ -72,6 +72,7 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
         if dbg.pjvs_ident_segments_10
             % plot samples and ids - first short version with only 10 PJVS segments after MRs:
             plotmax = MRs + 10*segmentlen;
+            plotmax = min(plotmax, length(y));
             figure('visible',dbg.showplots)
             hold on
             plot( y(1:plotmax),'-x');
