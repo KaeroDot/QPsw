@@ -1,0 +1,146 @@
+====== COMMON SETUP ======
+
+
+#startmatrix:: comment
+"simulated data"
+#endmatrix:: comment
+#startmatrix:: channel descriptors
+        "Simulated ADC, channel 1"
+        "Simulated ADC, channel 2"
+        "Simulated ADC, channel 3"
+#endmatrix:: channel descriptors
+#startmatrix:: auxiliary HW descriptors
+        "QuP Multiplexer V2.0 2021-05-24"
+#endmatrix:: auxiliary HW descriptors
+channels count:: 3
+sample data format:: mat-v4
+sample data variable name:: y
+groups count:: 1
+temperature available:: 0
+temperature log available:: 0
+multiplexer enabled:: 1
+multiplexer descriptor:: QuP Multiplexer V2.0 2021-05-24
+multiplexer sequence cycles:: 1
+
+
+====== SETUP(S) FOR AVERAGE GROUPS ======
+
+
+#startsection:: measurement group 1
+        repetitions count:: 1
+
+        sub-records count:: 1
+        samples count:: 21600
+        bit resolution:: 30
+        sampling rate [Sa/s]:: 10000
+        #startmatrix:: voltage ranges [V]
+                10.00; 10.00; 10.00
+        #endmatrix:: voltage ranges [V]
+        
+        trigger mode:: Immediate
+        #startmatrix:: aperture [s]
+                0.00001
+        #endmatrix:: aperture [s]
+        
+        #startmatrix:: sampling mode
+                DCV
+        #endmatrix:: sampling mode
+        
+        #startmatrix:: synchronization mode
+                MASTER-SLAVE, MASTER clocked by TIMER
+        #endmatrix:: synchronization mode
+        
+        #startmatrix:: record sample data files
+                "RAW\G0001-A0001.mat"
+        #endmatrix:: record sample data files
+        
+        #startmatrix:: record samples counts
+                21600
+        #endmatrix:: record samples counts
+        
+        #startmatrix:: sub-record sample offsets
+                0
+        #endmatrix:: sub-record sample offsets
+        
+        #startmatrix:: sub-record relative timestamps [s]
+                0.0000000000000000000
+        #endmatrix:: sub-record relative timestamps [s]
+        
+        #startmatrix:: record time increments [s]
+                1e-4
+        #endmatrix:: record time increments [s]
+        
+        #startmatrix:: record sample data gains [V]
+                1; 1; 1
+        #endmatrix:: record sample data gains [V]
+        
+        #startmatrix:: record sample data offsets [V]
+                0.0000000; 0.0000000; 0.0000000
+        #endmatrix:: record sample data offsets [V]
+        
+        #startmatrix:: record relative timestamps [s]
+                0; 1e-6; 2e-6
+        #endmatrix:: record relative timestamps [s]
+        
+        # this date should generate nice rounded 1660100100 seconds since epoch (1.1.1970)
+        #startmatrix:: record absolute timestamps
+                2022-08-10T04:55:00.0+00:00
+        #endmatrix:: record absolute timestamps
+        
+#endsection:: measurement group 1
+
+
+====== MEASUREMENT SETUP CONFIGURATION ======
+
+
+#startsection:: measurement setup configuration
+        
+// Path to the digitizer correction file
+// (originally without digitizer correction path)
+        digitizer corrections path:: DIGITIZER\dummy_6x.info
+
+// Paths to the transducer correction files, one row per channel
+        #startmatrix:: transducer paths
+                "TRANSDUCERS\T01\dummy.info"
+                "TRANSDUCERS\T02\dummy.info"
+                "TRANSDUCERS\T03\dummy.info"
+                "TRANSDUCERS\T04\dummy.info"
+                "TRANSDUCERS\T05\dummy.info"
+                "TRANSDUCERS\T06\dummy.info"
+        #endmatrix:: transducer paths
+        
+// Phase index to which each channel/transducer belongs (1, 2, 3, ...), one row per channel
+        #startmatrix:: channel phase indexes
+                1
+                2
+                3
+                4
+                5
+                6
+        #endmatrix:: channel phase indexes
+        
+// Mapping of the digitizer channels to the transducers:
+// one row per transducer, each row contain index(es) of the attached channels (1 or 1;2, etc.)
+// for single-ended connection: one index per row
+// for differential connection: two indexes, first high-side, then low-side
+        #startmatrix:: transducer to digitizer channels mapping
+                1
+                2
+                3
+                4
+                5
+                6
+        #endmatrix:: transducer to digitizer channels mapping
+        
+// Mapping of transducers to the multiplexing sequence cycles:
+// one row per transducer, each value is 1-based index of the sequence cycle, 1 is neutral value for no multiplex
+        #startmatrix:: transducer to multiplexing cycle mapping
+                1
+                1
+                1
+                1
+                1
+                1
+        #endmatrix:: transducer to multiplexing cycle mapping
+        
+#endsection:: measurement setup configuration
