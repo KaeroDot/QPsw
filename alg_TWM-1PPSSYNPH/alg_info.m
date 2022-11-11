@@ -34,6 +34,14 @@ function alginfo = alg_info() %<<<1
     pid = pid + 1;
 
     % --- data processing %<<<2
+    alginfo.inputs(pid).name = 'time_stamp';
+    alginfo.inputs(pid).desc = 'Time of start of the measurement';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 0;
+    alginfo.inputs(pid).parameter = 0;
+    pid = pid + 1;
+
+    % --- data processing %<<<2
     alginfo.inputs(pid).name = 'alg';
     alginfo.inputs(pid).desc = 'Algorithm to be used for amplitude and phase estimation';
     alginfo.inputs(pid).alternative = 0;
