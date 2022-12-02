@@ -100,7 +100,7 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
                 for j = 1:columns(yc)
                         if ~all(isnan(yc{i,j}))
                             % calculate data
-                            DI.y.v = yc{i, j};
+                            DI.y.v = yc{i, j}(1 + sigconfig.MRs : end - sigconfig.MRe);
                             DI.fs.v = sigconfig.fs;
                             res(i,j) = qwtb(alg, DI, CS);
                         endif
