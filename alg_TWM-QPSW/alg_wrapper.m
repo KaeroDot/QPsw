@@ -108,36 +108,62 @@ y = y(firstnotPJVS:end, :);
 yc = yc(firstnotPJVS:end, :);
 
 if size(yc, 1) == 1
-    % only report amplitudes
-    tmp = [[res.A].v];
-    tmpzeros = nan.*zeros(size(tmp));
-    dataout{1}.U_t.v =      tmp;
-    dataout{1}.I_t.v =      tmpzeros;
-    dataout{1}.P_t.v =      tmpzeros;
-    dataout{1}.S_t.v =      tmpzeros;
-    dataout{1}.Q_t.v =      tmpzeros;
-    dataout{1}.PF_t.v =     tmpzeros;
-    dataout{1}.Udc_t.v =    tmpzeros;
-    dataout{1}.Idc_t.v =    tmpzeros;
-    dataout{1}.phi_ef_t.v = tmpzeros;
-    dataout{1}.U.v =      sqrt(sum(dataout{1}.U_t.v.^2));
-    dataout{1}.I.v =      sqrt(sum(dataout{1}.I_t.v.^2));
-    dataout{1}.P.v =      sqrt(sum(dataout{1}.P_t.v.^2));
-    dataout{1}.S.v =      sqrt(sum(dataout{1}.S_t.v.^2));
-    dataout{1}.Q.v =      sqrt(sum(dataout{1}.Q_t.v.^2));
-    dataout{1}.PF.v =     sqrt(sum(dataout{1}.PF_t.v.^2));
-    dataout{1}.Udc.v =    sqrt(sum(dataout{1}.Udc_t.v.^2));
-    dataout{1}.Idc.v =    sqrt(sum(dataout{1}.Idc_t.v.^2));
-    dataout{1}.phi_ef.v = sqrt(sum(dataout{1}.phi_ef_t.v.^2));
-    Qs = fieldnames(dataout{1});
+    % only one signal, calculate amplitudes (not power)
+    % create data in structures:
+    [idM] = find(M > 0);    % finds non PJVS signals
+
+    for j = 1:numel(idM)
+        DI_section{j} = struct();
+        c = idM(j);    % column of M matrix of actual segment
+        % get voltage samples and remove data needed for stabilization of MX:
+        DI_section{j}.y.v = yc{c}(1 + sigconfig.MRs : end - sigconfig.MRe);
+        % add transducer, digitizer and and cable corrections.
+        DI_section{j} = join_structs(DI_section{j}, adc{1}, tr{1}, cable{1}, other{1});
+    endfor
+    % call TWM algorithm --------------------------- %<<<1
+    DO_section = cell();
+    for j = 1:numel(DI_section)
+        % call qwtb algorithm to calculate actual voltage:
+        DO_section{j} = qwtb(alg, DI_section{j}, calcset);
+        dataout.U_t.v(j) =      DO_section{j}.A.v;
+        dataout.U_t.u(j) =      DO_section{j}.A.u;
+    end
+
+    tmpzeros = nan.*zeros(dataout.U_t.v);
+    dataout.I_t.v =      tmpzeros;
+    dataout.P_t.v =      tmpzeros;
+    dataout.S_t.v =      tmpzeros;
+    dataout.Q_t.v =      tmpzeros;
+    dataout.PF_t.v =     tmpzeros;
+    dataout.Udc_t.v =    tmpzeros;
+    dataout.Idc_t.v =    tmpzeros;
+    dataout.phi_ef_t.v = tmpzeros;
+
+    dataout.U.v =        mean(dataout.U_t.v);
+    dataout.U.u =        sqrt(sum(dataout.U_t.u.^2));
+    dataout.I.v =        NaN;
+    dataout.P.v =        NaN;
+    dataout.S.v =        NaN;
+    dataout.Q.v =        NaN;
+    dataout.PF.v =       NaN;
+    dataout.Udc.v =      NaN;
+    dataout.Idc.v =      NaN;
+    dataout.phi_ef.v =   NaN;
+    dataout.I.u =        NaN;
+    dataout.P.u =        NaN;
+    dataout.S.u =        NaN;
+    dataout.Q.u =        NaN;
+    dataout.PF.u =       NaN;
+    dataout.Udc.u =      NaN;
+    dataout.Idc.u =      NaN;
+    dataout.phi_ef.u =   NaN;
+    Qs = fieldnames(dataout);
     for k = 1:numel(Qs)
         Q = Qs{k};
-        dataout{1}.(Q).u = nan.*zeros(size(dataout{1}.(Q).v));
-        dataout{1}.(Q).d = nan.*zeros(size(dataout{1}.(Q).v));
-        dataout{1}.(Q).c = nan.*zeros(size(dataout{1}.(Q).v));
-        dataout{1}.(Q).r = nan.*zeros(size(dataout{1}.(Q).v));
+        dataout.(Q).d = nan.*zeros(size(dataout.(Q).v));
+        dataout.(Q).c = nan.*zeros(size(dataout.(Q).v));
+        dataout.(Q).r = nan.*zeros(size(dataout.(Q).v));
     end
-    dataout = cells_to_matrices(dataout, []);
 else % if size(yc, 1) == 1)
     % calculate the real power
     if mod(size(yc, 1), 2)
@@ -216,6 +242,15 @@ else % if size(yc, 1) == 1)
             dataout{j}.Udc_t.v(k) =    DO_section{j, k}.Udc.v;
             dataout{j}.Idc_t.v(k) =    DO_section{j, k}.Idc.v;
             dataout{j}.phi_ef_t.v(k) = DO_section{j, k}.phi_ef.v;
+            dataout{j}.U_t.u(k) =      DO_section{j, k}.U.u;
+            dataout{j}.I_t.u(k) =      DO_section{j, k}.I.u;
+            dataout{j}.P_t.u(k) =      DO_section{j, k}.P.u;
+            dataout{j}.S_t.u(k) =      DO_section{j, k}.S.u;
+            dataout{j}.Q_t.u(k) =      DO_section{j, k}.Q.u;
+            dataout{j}.PF_t.u(k) =     DO_section{j, k}.PF.u;
+            dataout{j}.Udc_t.u(k) =    DO_section{j, k}.Udc.u;
+            dataout{j}.Idc_t.u(k) =    DO_section{j, k}.Idc.u;
+            dataout{j}.phi_ef_t.u(k) = DO_section{j, k}.phi_ef.u;
         end
     end
 
@@ -231,15 +266,15 @@ else % if size(yc, 1) == 1)
         dataout{j}.Idc.v =    mean(dataout{j}.Idc_t.v);
         dataout{j}.phi_ef.v = mean(dataout{j}.phi_ef_t.v);
 
-        dataout{j}.U.v =      sqrt(sum(dataout{j}.U_t.v.^2));
-        dataout{j}.I.v =      sqrt(sum(dataout{j}.I_t.v.^2));
-        dataout{j}.P.v =      sqrt(sum(dataout{j}.P_t.v.^2));
-        dataout{j}.S.v =      sqrt(sum(dataout{j}.S_t.v.^2));
-        dataout{j}.Q.v =      sqrt(sum(dataout{j}.Q_t.v.^2));
-        dataout{j}.PF.v =     sqrt(sum(dataout{j}.PF_t.v.^2));
-        dataout{j}.Udc.v =    sqrt(sum(dataout{j}.Udc_t.v.^2));
-        dataout{j}.Idc.v =    sqrt(sum(dataout{j}.Idc_t.v.^2));
-        dataout{j}.phi_ef.v = sqrt(sum(dataout{j}.phi_ef_t.v.^2));
+        dataout{j}.U.u =      sqrt(sum(dataout{j}.U_t.u.^2));
+        dataout{j}.I.u =      sqrt(sum(dataout{j}.I_t.u.^2));
+        dataout{j}.P.u =      sqrt(sum(dataout{j}.P_t.u.^2));
+        dataout{j}.S.u =      sqrt(sum(dataout{j}.S_t.u.^2));
+        dataout{j}.Q.u =      sqrt(sum(dataout{j}.Q_t.u.^2));
+        dataout{j}.PF.u =     sqrt(sum(dataout{j}.PF_t.u.^2));
+        dataout{j}.Udc.u =    sqrt(sum(dataout{j}.Udc_t.u.^2));
+        dataout{j}.Idc.u =    sqrt(sum(dataout{j}.Idc_t.u.^2));
+        dataout{j}.phi_ef.u = sqrt(sum(dataout{j}.phi_ef_t.u.^2));
     end
 
     % reorder into n-dimensional matrices
