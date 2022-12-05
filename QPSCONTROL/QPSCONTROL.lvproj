@@ -125,6 +125,9 @@
 		</Item>
 		<Item Name="Utilities" Type="Folder">
 			<Item Name="GCD of array.vi" Type="VI" URL="../Utilities/GCD of array.vi"/>
+			<Item Name="Generate Dummy Channel Correction Text.vi" Type="VI" URL="../Utilities/Generate Dummy Channel Correction Text.vi"/>
+			<Item Name="Generate Dummy Digitizer Corrections Files.vi" Type="VI" URL="../Utilities/Generate Dummy Digitizer Corrections Files.vi"/>
+			<Item Name="Generate Dummy Digitizer Main Correction Text.vi" Type="VI" URL="../Utilities/Generate Dummy Digitizer Main Correction Text.vi"/>
 			<Item Name="Get number of channels from digitizer correction file.vi" Type="VI" URL="../Utilities/Get number of channels from digitizer correction file.vi"/>
 			<Item Name="Make Default QPS.vi" Type="VI" URL="../Utilities/Make Default QPS.vi"/>
 			<Item Name="Merge Error Ex.vi" Type="VI" URL="../Utilities/Merge Error Ex.vi"/>
@@ -223,6 +226,7 @@
 				<Item Name="compatOpenFileOperation.vi" Type="VI" URL="/&lt;vilib&gt;/_oldvers/_oldvers.llb/compatOpenFileOperation.vi"/>
 				<Item Name="Convert property node font to graphics font.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Convert property node font to graphics font.vi"/>
 				<Item Name="Create ActiveX Event Queue.vi" Type="VI" URL="/&lt;vilib&gt;/Platform/ax-events.llb/Create ActiveX Event Queue.vi"/>
+				<Item Name="Create Directory Recursive.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/libraryn.llb/Create Directory Recursive.vi"/>
 				<Item Name="Create Error Clust.vi" Type="VI" URL="/&lt;vilib&gt;/Platform/ax-events.llb/Create Error Clust.vi"/>
 				<Item Name="Create Mask By Alpha.vi" Type="VI" URL="/&lt;vilib&gt;/picture/picture.llb/Create Mask By Alpha.vi"/>
 				<Item Name="Destroy ActiveX Event Queue.vi" Type="VI" URL="/&lt;vilib&gt;/Platform/ax-events.llb/Destroy ActiveX Event Queue.vi"/>
@@ -345,6 +349,7 @@
 				<Item Name="Stall Data Flow.vim" Type="VI" URL="/&lt;vilib&gt;/Utility/Stall Data Flow.vim"/>
 				<Item Name="STR_ASCII-Unicode.vi" Type="VI" URL="/&lt;vilib&gt;/registry/registry.llb/STR_ASCII-Unicode.vi"/>
 				<Item Name="sub2ShouldUseDefSigName.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/SimulateSignalBlock.llb/sub2ShouldUseDefSigName.vi"/>
+				<Item Name="subFile Dialog.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/FileDialogBlock.llb/subFile Dialog.vi"/>
 				<Item Name="subGetSignalName.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/SimulateSignalBlock.llb/subGetSignalName.vi"/>
 				<Item Name="subInternalTiming.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/SimulateSignalBlock.llb/subInternalTiming.vi"/>
 				<Item Name="subShouldUseDefSigName.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/SimulateSignalBlock.llb/subShouldUseDefSigName.vi"/>
