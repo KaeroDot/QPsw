@@ -3,7 +3,7 @@
 % If some part of structure is missing, error is produced. User has to properly
 % setup everything.
 
-function dbg = check_sigconfig(sigconfig)
+function sigconfig = check_sigconfig(sigconfig)
     if nargin ~= 1
         error('check_sigconfig: missing sigconfig structure.')
     end

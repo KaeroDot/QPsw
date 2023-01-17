@@ -1,18 +1,53 @@
 % Generates debug structure with default values
-% Is used as definition of dbg. If dbg structure is set as input, if ensures
+% Is used as definition of dbg.
+% If input dbg is empty, minmal set of plots is generated.
+% If input dbg is zero, all is turned off.
+% If input dbg is one, all debug is on.
+% If dbg structure is set as input, values are preserved and function ensures
 % the dbg structure is correct and returns it.
+% if input switch_missing_on is 1, all missing values of a structure are set to 1, otherwise to 0.
 
 function dbg = check_gen_dbg(dbg, switch_missing_on)
     % check inputs %<<<1
+    % input dbg:
     if nargin == 0
-        % create a new debug structure with any values
+        % ensure minimal plots
         dbg = struct();
-    elseif nargin == 1
-        switch_missing_on = 0;
-    elseif nargin == 2
-        if isempty(dbg)
-            dbg = struct();
+        dbg.v = 1;
+        dbg.saveplotspng = 1;
+        dbg.pjvs_ident_sections_1 = 1;
+        dbg.pjvs_ident_segments_10 = 1;
+        dbg.pjvs_segments_first_period = 1;
+    else
+        if not(isstruct(dbg))
+            if isempty(dbg)
+                % ensure minimal plots
+                dbg = struct();
+                dbg.v = 1;
+                dbg.saveplotspng = 1;
+                dbg.pjvs_ident_segments_10 = 1;
+                dbg.pjvs_segments_first_period = 1;
+            else
+                if dbg
+                    % explicit all on
+                    dbg = struct();
+                    dbg.v = 1;
+                    switch_missing_on = 1;
+                else
+                    % explicit off
+                    dbg = struct();
+                    dbg.v = 0;
+                end % if dbg
+            end % if isempty(dbg)
+        end % if not(isstruct(dbg))
+    end % if nargin == 0
+    % input switch_missing_on:
+    if nargin < 2
+        % set off only if already not defined by previous code:
+        if not(exist('switch_missing_on', 'var'))
+            switch_missing_on = 0;
         end
+    else
         if isempty(switch_missing_on)
             switch_missing_on = 0;
         else
@@ -20,9 +55,7 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
             switch_missing_on = switch_missing_on(1);
         end
     end
-    if ~isstruct(dbg)
-        error('check_gen_dbg: input `dbg` has to be a structure!')
-    end
+
     % check one field after another
 
     % v - debug switch %<<<1
@@ -32,12 +65,12 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
 
     % section - actual section of the data, in between multiplexer switches %<<<1
     % integer (0)
-    % Used for plot titles
+    % Used to store value for plot titles
     dbg = check_set_int8(dbg, 'section', 0 | switch_missing_on);
 
     % segment - actual segment of the data, in between PJVS step changes %<<<1
     % integer (0)
-    % Used for plot titles
+    % Used to store value for plot titles
     dbg = check_set_int8(dbg, 'segment', 0 | switch_missing_on);
 
     % showplots - show generated plots?
@@ -62,13 +95,13 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
     % saveplotspng - save plots to png files %<<<1
     % integer (0)
     % If nonzero, plots are saved as png files
-    dbg = check_set_int8(dbg, 'saveplotspng', 0 | switch_missing_on);
+    dbg = check_set_int8(dbg, 'saveplotspng', 1 | switch_missing_on);
 
     % plotpath - path to save plots
     % char ('.')
     % All plots will be saved to the specified path
     if ~isfield(dbg, 'plotpath')
-        dbg.plotpath = '.';
+        dbg.plotpath = 'QPSW_plots';
     end
 
     %%
@@ -81,7 +114,7 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
     dbg = check_set_int8(dbg, 'pjvs_ident_Uref_all', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_segments_first_period', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_segments_mean_std', 0 | switch_missing_on);
-    dbg = check_set_int8(dbg, 'pjvs_find_PR', 0 | switch_missing_on);
+    dbg = check_set_int8(dbg, 'pjvs_find_PR', 1 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_adev', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'pjvs_adev_all', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'adc_calibration_fit', 0 | switch_missing_on);

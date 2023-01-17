@@ -68,12 +68,14 @@ else
 end
 
 % debug setup:
-dbg = check_gen_dbg([], 1);
-dbg.v = 0;
-dbg.saveplotsplt = 1;
-dbg.plotpath = 'simulation_results';
-if ~exist(dbg.plotpath, 'dir')
-    mkdir(dbg.plotpath);
+% (basic plots are always plotted (dbg=[]). If allplots set, all fields of dbg
+% are set to 1)
+dbg = [];
+if isfield(other{1}, 'allplots')
+    if other{1}.allplots.v
+        dbg = check_gen_dbg(1, 1);
+        dbg.showplots = 'off';
+    end
 end
 
 % qpsw process --------------------------- %<<<1

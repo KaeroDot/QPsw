@@ -10,8 +10,8 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
     if nargin ~= 8
         error('qpsw_process: bad number of input arguments!')
     end
-    check_gen_dbg(dbg);
-    check_sigconfig(sigconfig);
+    dbg = check_gen_dbg(dbg);
+    sigconfig = check_sigconfig(sigconfig);
     % ensure the directory for plots exists
     if dbg.v
         if dbg.saveplotsplt || dbg.saveplotspng
@@ -25,10 +25,14 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
     yc = qpsw_demultiplex_split(y, S, M);
 
     % debug plot sections %<<<1
+    % plot with sections 1, 2, 3 and 4, to be plotted only if asked for:
     if dbg.v
         if dbg.sections_1
             plot_selected_sections(1:4, yc, sigconfig, dbg, 'sections_1')
         end
+    end % if debug
+    % plot with sections 10, 20, 30 and 40, to be plotted only if asked for:
+    if dbg.v
         if dbg.sections_10
             plot_selected_sections(10:10:40, yc, sigconfig, dbg, 'sections_10')
         end

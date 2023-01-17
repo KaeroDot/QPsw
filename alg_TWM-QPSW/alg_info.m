@@ -99,6 +99,12 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
+    alginfo.inputs(pid).name = 'allplots';
+    alginfo.inputs(pid).desc = 'Algorithm will plot everything if nonzero';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 1;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
 
     % --- standard TWM inputs %<<<2
     % sample data
