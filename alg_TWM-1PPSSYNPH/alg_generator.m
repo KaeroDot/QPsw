@@ -216,7 +216,7 @@ function [DO, DI] = alg_generator(DI)
     DO{2}.y.v = t_y;
 
     ai = alg_info;
-    DI = cells_to_matrices(DO, ai);
+    DO = cells_to_matrices(DO, ai);
 end
 
 function [DI, val] = setQ(DI, Qn, v, u) %<<<1
