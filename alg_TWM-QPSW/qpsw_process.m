@@ -70,8 +70,8 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
             plotoffset = max(max(y))*2.1;
             % plot signal
             for i = 1:rows(y)
-                    plot(t, y(i, :) - plotoffset.*(i-1), [colors(i) '-'])
-                    legc{end+1} = (['Signal ' num2str(i)]);
+                plot(t, y(i, :) - plotoffset.*(i-1), [colors(i) '-'])
+                legc{end+1} = (['Signal ' num2str(i)]);
             end % for i
             % plot switch events
             minmax = ylim;
@@ -99,75 +99,93 @@ function [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs,
     res = struct();
     CS.unc = 'none';
     CS.loc = 0.6845; % XXX this is needed because Maslan spoiled qwtb, PSFE algorithm and all other things without pushing into mainstream!
+    % create variables amplitudes and offsets, used only for debug plotting:
+    amplitudes = NaN.*zeros(size(yc));
+    offsets = NaN.*zeros(size(yc));
     for i = 1:rows(yc)
-            if My(i) > 0 % only non-quantum data
-                for j = 1:columns(yc)
-                        if ~all(isnan(yc{i,j}))
-                            % calculate data
-                            DI.y.v = yc{i, j}(1 + sigconfig.MRs : end - sigconfig.MRe);
-                            DI.fs.v = sigconfig.fs;
-                            res(i,j) = qwtb(alg, DI, CS);
-                        endif
-                end % for j = 1:columns(yc)
-            end % if My > 0 % only non-quantum data
+        if My(i) > 0 % only non-quantum data
+            for j = 1:columns(yc)
+                if ~all(isnan(yc{i,j}))
+                    % calculate data
+                    DI.y.v = yc{i, j}(1 + sigconfig.MRs : end - sigconfig.MRe);
+                    DI.fs.v = sigconfig.fs;
+                    % call QWTB:
+                    res(i,j) = qwtb(alg, DI, CS);
+                    % variables amplitudes and offsets, used only for debug plotting:
+                    if isfield(res(i, j), 'A')
+                        amplitudes(i, j) = res(i, j).A.v;
+                    end
+                    if isfield(res(i, j), 'O')
+                        offsets(i, j) = res(i, j).O.v;
+                    end
+                end % if ~all(isnan(yc{i,j}))
+            end % for j = 1:columns(yc)
+        end % if My > 0 % only non-quantum data
     end % for i = 1:rows(yc)
 
-    % DEBUG plot amplitudes and offsets vs time %<<<2
+    % plot amplitudes and offsets:
+    plot_amps_offs(yc, My, amplitudes, offsets, alg, sigconfig, dbg)
+end % function qpsw_process
+
+function plot_amps_offs(yc, My, amplitudes, offsets, alg, sigconfig, dbg) %<<<1
+% plots amplitudes and offsets of particular sections as calculated by selected
+% algorithm, time series
     if dbg.v
-        for i = 1:rows(res)
-                for j = 1:columns(res)
-                        % for cycle because matlab has issues with indexing concatenation ([x].y)
-                        if isempty(res(i,j).A)
-                            offsets(i,j) = nan;
-                            amps(i,j) = nan;
-                        else
-                            if isfield(res(i,j), 'O')
-                                offsets(i,j) = res(i,j).O.v;
-                            else
-                                offsets(i,j) = nan;
-                            end
-                            if isfield(res(i,j), 'A')
-                                amps(i,j) = res(i,j).A.v;
-                            else
-                                offsets(i,j) = nan;
-                            end
-                        end
-                end % for j = 1:columns(res)
-        end % for i = 1:rows(res)
+        % generate data without nans for plots with continuous lines:
+        for j = 1:numel(My)
+            % designation of actual signal:
+            sigid = My(j);
+            if sigid >= 0 % only for nonquantum signals
+                % amplitudes
+                if dbg.signal_amplitudes
+                    % generate data without nans so plots got continuous line:
+                    tmpy = amplitudes(j, :);
+                    tmpx = 1:numel(tmpy);
+                    tmpI = ~isnan(tmpy);
+                    tmpy = tmpy(tmpI);
+                    tmpx = tmpx(tmpI);
+                    tmpymean = mean(tmpy);
+                    % plot:
+                    figure('visible', dbg.showplots)
+                    hold on
+                        plot(tmpx, (tmpy - tmpymean)*1e6, '-x')
+                        title(sprintf('Sig. %d, ampl. at digitizer (gain corrected), alg: %s, mean=%8g', sigid, alg, tmpymean))
+                        xlabel('sampled waveform section (index)')
+                        ylabel('amplitude minus mean (uV)')
+                    hold off
+                    fn = fullfile(dbg.plotpath, sprintf('signal_amplitudes_sig_%03d', sigid));
+                    if dbg.saveplotsplt printplt(fn) end
+                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                    close
+                end % if dbg.signal_amplitudes
 
-        if dbg.signal_amplitudes
-            figure('visible',dbg.showplots)
-            hold on
-            plot(amps', '-x')
-            title('calculated signal amplitudes, digitizer gain corrected')
-            xlabel('sampled waveform section (index)')
-            ylabel('amplitude (V)')
-            % legend('amplitude');
-            hold off
-            fn = fullfile(dbg.plotpath, 'signal_amplitudes');
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
-            close
-        end % if dbg.signal_amplitudes
+                % offsets
+                if dbg.signal_offsets
+                    % generate data without nans so plots got continuous line:
+                    tmpy = offsets(j, :);
+                    tmpx = 1:numel(tmpy);
+                    tmpI = ~isnan(tmpy);
+                    tmpy = tmpy(tmpI);
+                    tmpx = tmpx(tmpI);
+                    % plot:
+                    figure('visible', dbg.showplots)
+                    hold on
+                        plot(tmpx, tmpy.*1e6, '-x')
+                        title(sprintf('Sig. %d: offs. at digitizer (offset corrected), alg: %s', sigid, alg))
+                        xlabel('sampled waveform section (index)')
+                        ylabel('offset (uV)')
+                    hold off
+                    fn = fullfile(dbg.plotpath, sprintf('signal_offsets_sig_%03d', sigid));
+                    if dbg.saveplotsplt printplt(fn) end
+                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                    close
+                end % if dbg.signal_offsets
+            end % if sigid >= 0 % only for nonquantum signals
+        end % for j = 1:numel(My)
+    end % if dbg.v
+end % function plot_amps_offs(yc, My, amplitudes, offsets, alg, sigconfig, dbg) %<<<1
 
-        if dbg.signal_offsets
-            figure('visible',dbg.showplots)
-            hold on
-                plot(1e6.*offsets', '-x')
-                title('calculated signal offsets, digitizer offset corrected')
-                xlabel('sampled waveform section')
-                ylabel('offset (uV)')
-                % legend('offset');
-            hold off
-            fn = fullfile(dbg.plotpath, 'signal_offsets');
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
-            close
-        end % if dbg.signal_offsets
-    end % if DEBUG
-end
-
-function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix)
+function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix) %<<<1
 % plot waveforms in selected sections
         figure('visible',dbg.showplots)
         title('Raw waveform sections after splitting')
