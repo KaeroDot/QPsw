@@ -80,7 +80,7 @@ end
 
 % qpsw process --------------------------- %<<<1
 % always use PSFE to calculate amplitudes and phases of particular sections:
-[y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
+[y, yc, res, My, dbg] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
 
 % set adc corrections --------------------------- %<<<1
 % sets adc linearity and gain corrections to ideal 1, because sampled data are
