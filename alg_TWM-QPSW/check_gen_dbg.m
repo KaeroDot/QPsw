@@ -126,6 +126,7 @@ function dbg = check_gen_dbg(dbg, switch_missing_on)
     dbg = check_set_int8(dbg, 'signal_amplitudes', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'signal_offsets', 0 | switch_missing_on);
     dbg = check_set_int8(dbg, 'simulator_signals', 0 | switch_missing_on);
+    dbg = check_set_int8(dbg, 'signal_spectrum', 0 | switch_missing_on);
 
 end % function
 

@@ -81,7 +81,6 @@ end
 % qpsw process --------------------------- %<<<1
 % always use PSFE to calculate amplitudes and phases of particular sections:
 [y, yc, res, My] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
-% load('intermediate_status_line_84_of_alg_wrapper.mat')
 
 % set adc corrections --------------------------- %<<<1
 % sets adc linearity and gain corrections to ideal 1, because sampled data are
@@ -131,7 +130,7 @@ if size(yc, 1) == 1
         dataout.U_t.u(j) =      DO_section{j}.A.u;
     end
 
-    tmpzeros = nan.*zeros(dataout.U_t.v);
+    tmpzeros = nan.*zeros(size(dataout.U_t.v));
     dataout.I_t.v =      tmpzeros;
     dataout.P_t.v =      tmpzeros;
     dataout.S_t.v =      tmpzeros;
@@ -234,6 +233,8 @@ else % if size(yc, 1) == 1)
         for k = 1:size(DI_section, 2) % for sections in time
             % call qwtb algorithm to calculate actual power:
             DO_section{j, k} = qwtb(alg, DI_section{j, k}, calcset);
+            % plot spectrum from fft, if available:
+            plot_spectrum(j, k, DO_section{j, k}, dbg);
             % add output qunatities into vectors:
             dataout{j}.U_t.v(k) =      DO_section{j, k}.U.v;
             dataout{j}.I_t.v(k) =      DO_section{j, k}.I.v;
@@ -349,5 +350,39 @@ function [sout] = join_structs(varargin) %<<<1
             ]);
     end % for j
 end
+
+function [sout] = plot_spectrum(phaseid, sectionid, DO, dbg) %<<<1
+% prints spectrum of signals, needs quantities spec_U and spec_I in structure DO.
+% phaseid is a identification of phase
+% sectionid is a identification of a measurement data section
+% Note: maybe it would be wise to calculate spectrum not during power
+% calculation, but independently in qpsw_process, but it would need more calls
+% to qwtb calculating the same thing.
+    if dbg.v
+        if dbg.signal_spectrum
+            figure('visible', dbg.showplots)
+            title('FFT spectrum')
+            hold on
+            if isfield(DO, 'spec_f')
+                if isfield(DO, 'spec_U')
+                    semilogy(DO.spec_f.v, DO.spec_U.v, '-xb')
+                end
+                if isfield(DO, 'spec_I')
+                    semilogy(DO.spec_f.v, DO.spec_I.v, '-xr')
+                end
+            end % if isfield(DO, 'spec_f')
+            hold off
+            xlim([0 200]);
+            xlabel('frequency (Hz)')
+            ylabel('amplitude (V)')
+            legend('U','I')
+            fn = fullfile(dbg.plotpath, sprintf('spectrum_phase_%03d-sig_%03d_spectrum', phaseid, sectionid));
+            if dbg.saveplotsplt printplt(fn) end
+            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            close
+        end % if dbg.signal_spectrum
+    end % if dbg.v
+
+end % function [sout] = plot_spectrum(varargin) %<<<1
 
 % vim settings modeline: vim: foldmarker=%<<<,%>>> fdm=marker fen ft=octave textwidth=80 tabstop=4 shiftwidth=4
