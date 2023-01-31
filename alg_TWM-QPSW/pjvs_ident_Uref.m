@@ -66,8 +66,8 @@ function Uref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
             title(sprintf('Identification of PJVS phase, section %03d-%03d\nminimum distance is %.6f V', dbg.section(1), dbg.section(2), mindistance) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_phase']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.pjvs_ident_Uref_phase
 
@@ -85,8 +85,8 @@ function Uref = pjvs_ident_Uref(s_mean, Uref1period, dbg);
             title(sprintf('Identification of PJVS phase, section %03d-%03d\nwaveform', dbg.section(1), dbg.section(2)) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_Uref_all']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.pjvs_ident_Uref_all
 

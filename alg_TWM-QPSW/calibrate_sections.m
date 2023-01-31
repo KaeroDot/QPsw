@@ -105,8 +105,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     ylabel('Voltage difference (uV)')
                                     hold off
                                     fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_first_period']);
-                                    if dbg.saveplotsplt printplt(fn) end
-                                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                                    if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+                                    if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
                                     close
                                 end % if dbg.pjvs_segments_first_period
                                 if dbg.pjvs_segments_mean_std
@@ -121,8 +121,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     ylabel('Voltage (uV)')
                                     hold off
                                     fn = fullfile(dbg.plotpath, [ssec 'pjvs_segments_mean_std']);
-                                    if dbg.saveplotsplt printplt(fn) end
-                                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                                    if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+                                    if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
                                     close
                                 end % if dbg.pjvs_segments_first_period
                             end % if dbg %>>>2
@@ -195,8 +195,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
             % legend('all gains', 'gains calculated from PJVS');
             hold off
             fn = fullfile(dbg.plotpath, 'adc_calibration_gains');
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.adc_calibration_gains
 
@@ -212,8 +212,8 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
             % legend('all offsets', 'offsets calculated from PJVS');
             hold off
             fn = fullfile(dbg.plotpath, 'adc_calibration_offsets');
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.adc_calibration_offsets
     end % if DEBUG

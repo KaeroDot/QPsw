@@ -164,8 +164,8 @@ function [D, S, M, Uref, Uref1period, Sid] = qps_simulator(simconfig, dbg)
             title('Simulated signals, offseted')
             hold off
             fn = fullfile(dbg.plotpath, sprintf('simulator_signals_scenario_%03d', scenario));
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.simulator_signals
     end % if dbg.v

@@ -71,11 +71,8 @@ end
 % (basic plots are always plotted (dbg=[]). If allplots set, all fields of dbg
 % are set to 1)
 dbg = [];
-if isfield(other{1}, 'allplots')
-    if other{1}.allplots.v
-        dbg = check_gen_dbg(1, 1);
-        dbg.showplots = 'off';
-    end
+if isfield(other{1}, 'plots')
+    dbg = check_gen_dbg(other{1}.plots.v);
 end
 
 % qpsw process --------------------------- %<<<1
@@ -376,9 +373,9 @@ function [sout] = plot_spectrum(phaseid, sectionid, DO, dbg) %<<<1
             xlabel('frequency (Hz)')
             ylabel('amplitude (V)')
             legend('U','I')
-            fn = fullfile(dbg.plotpath, sprintf('spectrum_phase_%03d-sig_%03d_spectrum', phaseid, sectionid));
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            fn = fullfile(dbg.plotpath, sprintf('spectrum_ph_%03d-sig_%03d_spectrum', phaseid, sectionid));
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.signal_spectrum
     end % if dbg.v

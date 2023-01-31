@@ -86,8 +86,8 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
             title(sprintf('PJVS phase identification, section %03d-%03d\nfirst 10 segments after MRs', dbg.section(1), dbg.section(2)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_segments_10']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.pjvs_identify_segments_10_segments
 
@@ -107,8 +107,8 @@ function Spjvs = pjvs_ident_segments(y, MRs, MRe, segmentlen, dbg)
             title(sprintf('PJVS phase identification, section %03d-%03d\nall data', dbg.section(1), dbg.section(2)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_ident_segments_all']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
             disp('Debug plot for identify_pjvs_segments_all finished.')
         end % if dbg.pjvs_ident_segments_all

@@ -1,6 +1,8 @@
 % calculate adev for all segments in actual section
 function pjvs_adev(s_y, Uref, Uref1period, dbg);
-    if dbg.v 
+    % calculate and plot only if debug enabled, allan calc. enabled, and at least one plot output is enabled:
+    if dbg.v && (dbg.pjvs_adev || dbg.pjvs_adev_all) && (dbg.saveplotsfig || dbg.saveplotspng)
+        disp('calculating ALLAN')
         ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
         if dbg.pjvs_adev
             % calculate ADEVs for a single PJVS period:
@@ -28,8 +30,8 @@ function pjvs_adev(s_y, Uref, Uref1period, dbg);
             ylabel('OADEV (uV)')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_oadev']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.pjvs_adev
 
@@ -59,8 +61,8 @@ function pjvs_adev(s_y, Uref, Uref1period, dbg);
             ylabel('OADEV (uV)')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_oadev_all']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
             printf('OADEV for whole section %03d-%03d finished.\n', dbg.section(1), dbg.section(2))
         end % if dbg.pjvs_adev_all

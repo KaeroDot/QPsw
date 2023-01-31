@@ -13,11 +13,9 @@ function [y, yc, res, My, dbg] = qpsw_process(sigconfig, y, S, M, Uref1period, S
     dbg = check_gen_dbg(dbg);
     sigconfig = check_sigconfig(sigconfig);
     % ensure the directory for plots exists
-    if dbg.v
-        if dbg.saveplotsplt || dbg.saveplotspng
-            if ~exist(dbg.plotpath, 'dir')
-                mkdir(dbg.plotpath);
-            end
+    if dbg.v && (dbg.saveplotsfig || dbg.saveplotspng)
+        if ~exist(dbg.plotpath, 'dir')
+            mkdir(dbg.plotpath);
         end
     end
 
@@ -88,8 +86,8 @@ function [y, yc, res, My, dbg] = qpsw_process(sigconfig, y, S, M, Uref1period, S
             ylabel('Voltage (V)')
             hold off
             fn = fullfile(dbg.plotpath, 'demultiplexed');
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.demultiplexed
     end % if dbg.v
@@ -154,8 +152,8 @@ function plot_amps_offs(yc, My, amplitudes, offsets, alg, sigconfig, dbg) %<<<1
                         ylabel('amplitude minus mean (uV)')
                     hold off
                     fn = fullfile(dbg.plotpath, sprintf('signal_amplitudes_sig_%03d', sigid));
-                    if dbg.saveplotsplt printplt(fn) end
-                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                    if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+                    if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
                     close
                 end % if dbg.signal_amplitudes
 
@@ -176,8 +174,8 @@ function plot_amps_offs(yc, My, amplitudes, offsets, alg, sigconfig, dbg) %<<<1
                         ylabel('offset (uV)')
                     hold off
                     fn = fullfile(dbg.plotpath, sprintf('signal_offsets_sig_%03d', sigid));
-                    if dbg.saveplotsplt printplt(fn) end
-                    if dbg.saveplotspng print([fn '.png'], '-dpng') end
+                    if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+                    if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
                     close
                 end % if dbg.signal_offsets
             end % if sigid >= 0 % only for nonquantum signals
@@ -207,8 +205,8 @@ function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix) %<<
         ylabel('Voltage (V)')
         hold off
         fn = fullfile(dbg.plotpath, plotprefix);
-        if dbg.saveplotsplt printplt(fn) end
-        if dbg.saveplotspng print([fn '.png'], '-dpng') end
+        if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+        if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
         close
 end % function plot_selected_sections(section_ids, yc, sigconfig, dbg, plotprefix)
 

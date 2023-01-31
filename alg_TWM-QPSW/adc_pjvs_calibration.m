@@ -94,8 +94,8 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
                 title(sprintf('Digitizer calibration, section %03d-%03d\n%d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.adc_calibration_fit
 
@@ -109,8 +109,8 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
                 title(sprintf('Digitizer calibration, section %03d-%03d\nfit errors of %d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)), 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.adc_calibration_errors
 
@@ -124,8 +124,8 @@ function [cal] = adc_pjvs_calibration(Uref, s_mean, s_uA, dbg) %y, Spjvs, Uref, 
                 title(sprintf('Digitizer calibration, section %03d-%03d\nfit errors of %d segment averages', dbg.section(1), dbg.section(2), numel(DI.y.v)) , 'interpreter', 'none')
             hold off
             fn = fullfile(dbg.plotpath, [ssec 'adc_calibration_fit_errors_time']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             close
         end % if dbg.adc_calibration_fit_errors_time
     end % if dbg.v

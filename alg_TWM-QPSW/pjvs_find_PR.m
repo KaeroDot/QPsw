@@ -57,8 +57,8 @@ function [PRs, PRe] = pjvs_find_PR(yc, Spjvs, sigconfig, dbg)
             ylabel('PRse');
             ssec = sprintf('%03d-%03d_', dbg.section(1), dbg.section(2));
             fn = fullfile(dbg.plotpath, [ssec 'pjvs_find_PR']);
-            if dbg.saveplotsplt printplt(fn) end
-            if dbg.saveplotspng print([fn '.png'], '-dpng') end
+            if dbg.saveplotsfig saveas(gcf(), [fn '.fig'], 'fig') end
+            if dbg.saveplotspng saveas(gcf(), [fn '.png'], 'png') end
             tmp = [nan XX(1,:); YY(:,1) metric];
             dlmwrite([fn '.txt'], tmp, '\t')
             close
