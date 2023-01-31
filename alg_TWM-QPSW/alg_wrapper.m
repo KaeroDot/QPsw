@@ -73,6 +73,18 @@ end
 dbg = [];
 if isfield(other{1}, 'plots')
     dbg = check_gen_dbg(other{1}.plots.v);
+else
+    dbg = check_gen_dbg([]);
+end
+if isfield(other{1}, 'plotpath')
+    tmp = other{1}.plotpath.v;
+    if not(exist(tmp, 'dir'))
+        [STATUS, MSG, MSGID] = mkdir(tmp);
+        if not(STATUS)
+            warning("TWM-QPSW: failed to create directory for figures!")
+        end
+    end
+    dbg.plotpath = tmp;
 end
 
 % qpsw process --------------------------- %<<<1
