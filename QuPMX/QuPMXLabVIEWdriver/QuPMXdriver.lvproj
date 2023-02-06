@@ -54,7 +54,7 @@
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{08575C21-334C-4B08-80AB-EAE6B9105576}</Property>
 				<Property Name="Bld_version.minor" Type="Int">5</Property>
-				<Property Name="Bld_version.patch" Type="Int">1</Property>
+				<Property Name="Bld_version.patch" Type="Int">2</Property>
 				<Property Name="Destination[0].destName" Type="Str">QuPMXControl.exe</Property>
 				<Property Name="Destination[0].path" Type="Path">../QuPMXControl build/QuPMXControl-[VersionNumber]/QuPMXControl.exe</Property>
 				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
@@ -62,7 +62,7 @@
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
 				<Property Name="Destination[1].path" Type="Path">../QuPMXControl build/QuPMXControl-[VersionNumber]/data</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{AFAFD7CB-4EF0-4491-861C-26470D38B270}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{F84B96D6-2F94-45BD-9ECD-048755D52DAF}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/QuPMXdriver.lvlib/Public/Example/QuP Multiplexer Control.vi</Property>
@@ -98,13 +98,13 @@
 				<Property Name="Bld_previewCacheID" Type="Str">{81536825-33FE-4DA7-9F7E-6DCCFAF686D5}</Property>
 				<Property Name="Bld_removeVIObj" Type="Int">2</Property>
 				<Property Name="Bld_version.minor" Type="Int">5</Property>
-				<Property Name="Bld_version.patch" Type="Int">1</Property>
+				<Property Name="Bld_version.patch" Type="Int">2</Property>
 				<Property Name="Destination[0].destName" Type="Str">Destination Directory</Property>
 				<Property Name="Destination[0].path" Type="Path">../QuPMXLabVIEWdriver build/QuPMXLabVIEWdriver_srcdist-[VersionNumber]</Property>
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
 				<Property Name="Destination[1].path" Type="Path">../QuPMXLabVIEWdriver build/QuPMXLabVIEWdriver_srcdist-[VersionNumber]/data</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{AFAFD7CB-4EF0-4491-861C-26470D38B270}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{F84B96D6-2F94-45BD-9ECD-048755D52DAF}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/QuPMXdriver.lvlib</Property>
