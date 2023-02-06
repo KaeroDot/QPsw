@@ -431,6 +431,7 @@
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
+			<Item Name="QuPMXdriver.lvlib" Type="Library" URL="../external libraries/QuPMXLabVIEWdriver/QuPMXdriver.lvlib"/>
 			<Item Name="TWM Client.lvlib" Type="Library" URL="../../../TWM - github/lvprog/server/TWM client/TWM Client.lvlib"/>
 			<Item Name="version.dll" Type="Document" URL="version.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
