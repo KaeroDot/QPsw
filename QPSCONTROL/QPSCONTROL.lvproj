@@ -22,7 +22,7 @@
 				<Item Name="GUI Set Error To String.vi" Type="VI" URL="../external libraries/externals needed for AWG/GUI Set Error To String.vi"/>
 			</Item>
 			<Item Name="AWG.lvlib" Type="Library" URL="../external libraries/AWG/AWG.lvlib"/>
-			<Item Name="QuPMXdriver.lvlib" Type="Library" URL="../external libraries/QuPMXLabVIEWdriver_srcdist-0.4.2.0/QuPMXdriver.lvlib"/>
+			<Item Name="QuPMXdriver.lvlib" Type="Library" URL="../external libraries/QuPMXLabVIEWdriver/QuPMXdriver.lvlib"/>
 			<Item Name="TWM client.lvlibp" Type="LVLibp" URL="../external libraries/TWM client.lvlibp">
 				<Item Name="TWM Client Processing Setup.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Processing Setup.ctl"/>
 				<Item Name="TWM Client Quantity Record.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Quantity Record.ctl"/>
@@ -431,7 +431,6 @@
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
-			<Item Name="QuPMXdriver.lvlib" Type="Library" URL="../external libraries/QuPMXLabVIEWdriver/QuPMXdriver.lvlib"/>
 			<Item Name="TWM Client.lvlib" Type="Library" URL="../../../TWM - github/lvprog/server/TWM client/TWM Client.lvlib"/>
 			<Item Name="version.dll" Type="Document" URL="version.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
