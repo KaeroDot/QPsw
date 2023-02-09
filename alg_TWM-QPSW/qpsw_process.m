@@ -4,8 +4,25 @@
 % - calls calibration interpolation
 % - calls data recalculation
 % Result are waveforms without digitizer errors.
+%
+% Inputs:
+% sigconfig - configuration data
+% y - sampled data
+% S - indexes of samples of new waveform sections start
+% M - multiplexer matrix
+% Uref1period - reference values of PJVS voltages for one PJVS period
+% Spjvs - deprecated
+% alg - algorithm used to calculate amplitudes and phases of sections with DUT signal
+% dbg - debug structure or debug level
+%
+% Outputs:
+% y - sampled data sorted by signals
+% ycal - sampled data sorted by signals, in cells for easy indexing
+% res - results of algorithm alg
+% dbg - debug structure
+% ycal - calibration data of the digitizer(s)
 
-function [y, yc, res, My, dbg] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
+function [y, yc, res, My, dbg, ycal] = qpsw_process(sigconfig, y, S, M, Uref1period, Spjvs, alg, dbg);
     % check input data %<<<1
     if nargin ~= 8
         error('qpsw_process: bad number of input arguments!')
