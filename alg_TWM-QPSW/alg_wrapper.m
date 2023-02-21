@@ -68,20 +68,33 @@ else
 end
 
 % debug setup:
-% (basic plots are always plotted (dbg=[]). If allplots set, all fields of dbg
-% are set to 1)
+%
 dbg = [];
 if isfield(other{1}, 'plots')
-    dbg = check_gen_dbg(other{1}.plots.v);
+    tmp = other{1}.plots.v;
+    if isnumeric(tmp)
+        % use user input as debug level
+        dbg = check_gen_dbg(tmp);
+    else
+        % bad user input, select debug level 1:
+        dbg = check_gen_dbg(1);
+    end
 else
-    dbg = check_gen_dbg([]);
-end
-if isfield(other{1}, 'plotpath')
-    tmp = other{1}.plotpath.v;
+    % no user input, standard value:
+    dbg = check_gen_dbg();
+end % if isfield(other{1}, 'plots')
+% Set proper folder for plots. if data_folder parameter is missing, default
+% value from check_gen_dbg is used.
+if isfield(other{1}, 'data_folder')
+    tmp = other{1}.data_folder.v;
+    % data_folder should lead to a folder with data, add sub directory for
+    % figures:
+    tmp = fullfile(tmp, 'QPSW_plots');
+    % ensure new folder exists:
     if not(exist(tmp, 'dir'))
         [STATUS, MSG, MSGID] = mkdir(tmp);
         if not(STATUS)
-            warning("TWM-QPSW: failed to create directory for figures!")
+            warning(["TWM-QPSW: failed to create directory `" tmp "` for figures!"])
         end
     end
     dbg.plotpath = tmp;

@@ -100,13 +100,13 @@ function alginfo = alg_info() %<<<1
     pid = pid + 1;
 
     alginfo.inputs(pid).name = 'plots';
-    alginfo.inputs(pid).desc = 'Algorithm will plot if nonzero, plotting levels 1 (only basic) to 4 (plot all).';
+    alginfo.inputs(pid).desc = 'Algorithm will plot figures if nonzero. Values are 1 (only basic figures) to 4 (plot all).';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 1;
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
-    alginfo.inputs(pid).name = 'plotpath';
+    alginfo.inputs(pid).name = 'data_folder';
     alginfo.inputs(pid).desc = 'Path where the plots will be saved.';
     alginfo.inputs(pid).alternative = 0;
     alginfo.inputs(pid).optional = 1;
