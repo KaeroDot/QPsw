@@ -63,7 +63,7 @@ function [y, yc, res, My, dbg, ycal] = qpsw_process(sigconfig, y, S, M, Uref1per
                     if M(i, j) > 0
                             % only non-quantum data
                             % XXX 2DO should be general polynomial, in case someone would like to calculate polynomials of higher order
-                            yc{i, j} = ycal(i, j).coefs.v(1) + yc{i, j}.*ycal(i, j).coefs.v(2);
+                            yc{i, j} = (yc{i, j} - ycal(i, j).coefs.v(1))./ycal(i, j).coefs.v(2);
                     end % if M(i, j) > 0
             end % for j = 1:columns(yc)
     end % for i = 1:rows(yc)
