@@ -72,6 +72,9 @@ function ycal = calibrate_sections(yc, M, S, Uref1period, Spjvs, sigconfig, dbg)
                                     sigconfig.PRe = newPRe;
                                 end
                             end
+                            if any(diff(tmpSpjvs) == 0)
+                                error('Error in calculation of PJVS step changes in function "pjvs_ident_segments".')
+                            end
                             % Split the pjvs section into segments, remove PRs,PRe,MRs,MRe, calculate means, std, uA:
                             [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(yc{i,j}, tmpSpjvs, sigconfig.MRs, sigconfig.MRe, sigconfig.PRs, sigconfig.PRe, dbg);
                             % Now Spjvs can be incorrect, because trailing

@@ -168,6 +168,9 @@ function Spjvs = split_and_highest_peak(y, segmentlen); %<<<1
     % and in this run first point appeared also. Such points are removed:
     idx = find(diff(Spjvs) == 1);
     Spjvs(idx) = [];
+    % Sometimes also happens there is difference of 0, also to be removed:
+    idx = find(diff(Spjvs) == 0);
+    Spjvs(idx) = [];
     % remove all Spjvs for index bigger than unpadded data:
     Spjvs(Spjvs > size(y,2)) = [];
 end % function Spjvs = split_and_highest_peak(y, segmentlen);
