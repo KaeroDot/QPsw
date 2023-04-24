@@ -99,6 +99,14 @@ function alginfo = alg_info() %<<<1
     alginfo.inputs(pid).parameter = 1;
     pid = pid + 1;
 
+    % synchronous power - if set, calculate power only from simultaneously measured voltage and current signals
+    alginfo.inputs(pid).name = 'synch_power';
+    alginfo.inputs(pid).desc = 'If set, calculate power only for synchronous U and I sections (usefull only for multiple digitizers).';
+    alginfo.inputs(pid).alternative = 0;
+    alginfo.inputs(pid).optional = 1;
+    alginfo.inputs(pid).parameter = 1;
+    pid = pid + 1;
+
     alginfo.inputs(pid).name = 'plots';
     alginfo.inputs(pid).desc = 'Algorithm will plot figures if nonzero. Values are 1 (only basic figures) to 4 (plot all).';
     alginfo.inputs(pid).alternative = 0;

@@ -100,6 +100,16 @@ if isfield(other{1}, 'data_folder')
     dbg.plotpath = tmp;
 end
 
+% get settings for this TWM algorithm %<<<2
+% synchronous power - if set, calculate power only from simultaneously measured
+% voltage and current signals
+if ~isfield(other{1}, 'synch_power')
+    synch_power = 0;
+else
+    synch_power = not(not(other{1}.synch_power.v)); % convert to boolean
+end
+
+
 % qpsw process --------------------------- %<<<1
 % always use PSFE to calculate amplitudes and phases of particular sections:
 [y, yc, res, My, dbg] = qpsw_process(sigconfig, y, S, M, Uref1period, [], 'PSFE', dbg);
@@ -201,6 +211,7 @@ else % if size(yc, 1) == 1)
     for j = 1:2:size(yc,1) % for all signals (non PJVS signals)
         % every second index because the signals are (must be) sorted in following
         % manner: voltage, current, voltage, current etc.
+        % hopefully voltage j and current j+1 is from the same phase
         [idMur{end+1}, idMuc{end+1}] = find(M == j);    % finds voltage signal rows and collumns
         [idMir{end+1}, idMic{end+1}] = find(M == j+1);  % finds current signal rows and collumns
         % ensure pairs in time
@@ -215,6 +226,25 @@ else % if size(yc, 1) == 1)
         idMir{end} = idMir{end}(1:tmp); % id of matrix M, i-current, r-row
         idMic{end} = idMic{end}(1:tmp); % id of matrix M, i-current, c-column
     end % for j = 1:2:size(yc,1)
+
+    if synch_power
+        % only simultaneously measured voltage and current should be used for
+        % power calculation
+        % search for same indexes of u and i collumns
+        for j = 1:size(idMuc,1) % for all u and i pairs
+            % hopefully voltage j and current j+1 is from the same phase
+            % Find collumns with same indexes of sections for u and i:
+            tmp = find(idMuc{j} == idMic{j});
+            if isempty(tmp)
+                error(sprintf('User requests power from only synchronous voltage and current sections but no synchronous data found for signals %d and %d.', j, j+1));
+            end
+            % get indexes of only synchronous measurement sections:
+            idMur{j} = idMur{j}(tmp);
+            idMuc{j} = idMuc{j}(tmp);
+            idMir{j} = idMir{j}(tmp);
+            idMic{j} = idMic{j}(tmp);
+        end % for j = 1:size(idMuc,1) % for all u and i pairs
+    end % if synch_power
 
     % construct voltage-current pairs:
     DI_section = cell();                     % indexes: (phase, time)
