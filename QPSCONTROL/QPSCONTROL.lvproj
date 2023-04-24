@@ -112,6 +112,7 @@
 		</Item>
 		<Item Name="Measurement" Type="Folder">
 			<Item Name="Type definitions" Type="Folder">
+				<Item Name="Calculation mode.ctl" Type="VI" URL="../Measurement/Type definitions/Calculation mode.ctl"/>
 				<Item Name="Measuement properties.ctl" Type="VI" URL="../Measurement/Type definitions/Measuement properties.ctl"/>
 				<Item Name="Measurement ID.ctl" Type="VI" URL="../Measurement/Type definitions/Measurement ID.ctl"/>
 				<Item Name="QPSsettings.ctl" Type="VI" URL="../General PJVS driver/QPSsettings.ctl"/>
