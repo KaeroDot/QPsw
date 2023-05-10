@@ -39,13 +39,14 @@ sw | update GOLPI to new Matlab and Octave versions | ✔
 sw | update GOLPI to LabVIEW 2020 | ✔
 sw | update infostrings | ✔
 sw | update TWM to LabVIEW 2020 | ✔
-sw | improve TWM to handle QPsw | almost finished, postponed for TWM to LV2020 conversion and mutliplexer driver integration
+sw | improve TWM to handle QPsw | ✔
 sw | design control QPsw | ✔
 sw | make control QPsw | ✔
 sw | check control QPsw | working on…
 alg | make demultiplexing QPsw algorithm | ✔
 alg | test demultiplexing QPsw algorithm | ✔
 alg | make ADC calibration algorithm | ✔
-alg | test ADC calibration algorithm | ❌
-alg | speed up ADC calibration fitting | ❌
+alg | test ADC calibration algorithm | ✔
+alg | speed up ADC calibration fitting | ✔
 alg | make signal simulator | ✔
+sw | inlude modified TWM into main branch| ❌
