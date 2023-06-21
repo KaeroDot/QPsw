@@ -28,55 +28,7 @@
 			</Item>
 			<Item Name="AWG.lvlib" Type="Library" URL="../external libraries/AWG/AWG.lvlib"/>
 			<Item Name="QuPMXdriver.lvlib" Type="Library" URL="../external libraries/QuPMXLabVIEWdriver/QuPMXdriver.lvlib"/>
-			<Item Name="TWM client.lvlibp" Type="LVLibp" URL="../external libraries/TWM client.lvlibp">
-				<Item Name="TWM Client Processing Setup.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Processing Setup.ctl"/>
-				<Item Name="TWM Client Quantity Record.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Quantity Record.ctl"/>
-				<Item Name="TWM Client Meas Setup.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Meas Setup.ctl"/>
-				<Item Name="TWM Client Meas Setup Trig.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Meas Setup Trig.ctl"/>
-				<Item Name="TWM Client Result Max Dim.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Result Max Dim.ctl"/>
-				<Item Name="TWM Client Transducer Correction Item.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Transducer Correction Item.ctl"/>
-				<Item Name="TWM Client Algorithm Info.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Algorithm Info.ctl"/>
-				<Item Name="TWM Client Result Info.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Result Info.ctl"/>
-				<Item Name="TWM Client Mux Path.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Mux Path.ctl"/>
-				<Item Name="TWM Client Cmd Get Result.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Result.vi"/>
-				<Item Name="TWM Client Cmd Get Status.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Status.vi"/>
-				<Item Name="TWM Client Cmd Get Algorithm Info.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Algorithm Info.vi"/>
-				<Item Name="TWM Client Cmd Identify.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Identify.vi"/>
-				<Item Name="TWM Client Cmd Restart.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Restart.vi"/>
-				<Item Name="TWM Client Cmd Set Corrections.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Set Corrections.vi"/>
-				<Item Name="TWM Client Cmd Set Measurement.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Set Measurement.vi"/>
-				<Item Name="TWM Client Cmd Start.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Start.vi"/>
-				<Item Name="TWM Client Cmd Stop.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Stop.vi"/>
-				<Item Name="TWM Client Cmd Exec ADC Selfcalibration.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Exec ADC Selfcalibration.vi"/>
-				<Item Name="TWM Client Cmd Get Versions.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Get Versions.vi"/>
-				<Item Name="TWM Client Measure and Get Result.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Measure and Get Result.vi"/>
-				<Item Name="TWM Client Recieve Packet.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Recieve Packet.vi"/>
-				<Item Name="TWM Client Send Packet.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Send Packet.vi"/>
-				<Item Name="TWM Client Wait ACK.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Wait ACK.vi"/>
-				<Item Name="TWM Client Test.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Test.vi"/>
-				<Item Name="TWM Client Open.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Open.vi"/>
-				<Item Name="TWM Client Close.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Close.vi"/>
-				<Item Name="TWM Client Version.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Version.vi"/>
-				<Item Name="TWM Client Compare Version Strings.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Compare Version Strings.vi"/>
-				<Item Name="TWM Client Cmd Define Multiplexer Paths.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define Multiplexer Paths.vi"/>
-				<Item Name="TWM Client Cmd Define Multiplexer Sequence.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define Multiplexer Sequence.vi"/>
-				<Item Name="TWM Client Cmd Define QPMX.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/TWM client/TWM Client Cmd Define QPMX.vi"/>
-				<Item Name="infolib.lvlib" Type="Library" URL="../external libraries/TWM client.lvlibp/octave/infolib/infolib.lvlib"/>
-				<Item Name="Trim Whitespace.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Trim Whitespace.vi"/>
-				<Item Name="whitespace.ctl" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/whitespace.ctl"/>
-				<Item Name="Clear Errors.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Clear Errors.vi"/>
-				<Item Name="Error Cluster From Error Code.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Error Cluster From Error Code.vi"/>
-				<Item Name="Normalize End Of Line.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/AdvancedString/Normalize End Of Line.vi"/>
-				<Item Name="wa32 ReadFile.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 ReadFile.vi"/>
-				<Item Name="wa32 PeekNamedPipe.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 PeekNamedPipe.vi"/>
-				<Item Name="wa32 Read Till Key.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/high level/wa32 Read Till Key.vi"/>
-				<Item Name="wa32 WriteFile.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 WriteFile.vi"/>
-				<Item Name="Space Constant.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/1abvi3w/vi.lib/dlg_ctls.llb/Space Constant.vi"/>
-				<Item Name="wa32 Flush Read.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/high level/wa32 Flush Read.vi"/>
-				<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 CloseHandle.vi"/>
-				<Item Name="wa32 CreateFileA.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 CreateFileA.vi"/>
-				<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../external libraries/TWM client.lvlibp/server/WinAPI32/wa32 WaitNamedPipeA.vi"/>
-			</Item>
+			<Item Name="TWM Client.lvlib" Type="Library" URL="../external libraries/TWM client/TWM Client.lvlib"/>
 			<Item Name="varilib.lvlib" Type="Library" URL="../external libraries/varilib/varilib.lvlib"/>
 		</Item>
 		<Item Name="General AWG" Type="Folder">
@@ -566,7 +518,7 @@
 			</Item>
 			<Item Name="Basic NPL DS Write-Read.vi" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/Basic NPL DS Write-Read.vi"/>
 			<Item Name="DataSocketCluster.ctl" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/DataSocketCluster.ctl"/>
-			<Item Name="infolib.lvlib" Type="Library" URL="../../../TWM - github/lvprog/octave/infolib/infolib.lvlib"/>
+			<Item Name="infolib.lvlib" Type="Library" URL="../external libraries/TWM client/infolib.lvlib"/>
 			<Item Name="JOSY Binarray Datasocket cmd.vi" Type="VI" URL="../PJVS drivers/JOSY Binarray Datasocket cmd.vi"/>
 			<Item Name="kernel32.dll" Type="Document" URL="kernel32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
@@ -581,19 +533,18 @@
 			<Item Name="niScope_32.dll" Type="Document" URL="niScope_32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
-			<Item Name="TWM Client.lvlib" Type="Library" URL="../../../TWM - github/lvprog/server/TWM client/TWM Client.lvlib"/>
 			<Item Name="version.dll" Type="Document" URL="version.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
 			<Item Name="vi Mode.ctl" Type="VI" URL="../PJVS drivers/Binary Array Server DAQmx 4 Apr 2016.llb/vi Mode.ctl"/>
-			<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 CloseHandle.vi"/>
-			<Item Name="wa32 CreateFileA.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 CreateFileA.vi"/>
-			<Item Name="wa32 Flush Read.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/high level/wa32 Flush Read.vi"/>
-			<Item Name="wa32 PeekNamedPipe.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 PeekNamedPipe.vi"/>
-			<Item Name="wa32 Read Till Key.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/high level/wa32 Read Till Key.vi"/>
-			<Item Name="wa32 ReadFile.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 ReadFile.vi"/>
-			<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WaitNamedPipeA.vi"/>
-			<Item Name="wa32 WriteFile.vi" Type="VI" URL="../../../TWM - github/lvprog/server/WinAPI32/wa32 WriteFile.vi"/>
+			<Item Name="wa32 CloseHandle.vi" Type="VI" URL="../external libraries/TWM client/wa32 CloseHandle.vi"/>
+			<Item Name="wa32 CreateFileA.vi" Type="VI" URL="../external libraries/TWM client/wa32 CreateFileA.vi"/>
+			<Item Name="wa32 Flush Read.vi" Type="VI" URL="../external libraries/TWM client/wa32 Flush Read.vi"/>
+			<Item Name="wa32 PeekNamedPipe.vi" Type="VI" URL="../external libraries/TWM client/wa32 PeekNamedPipe.vi"/>
+			<Item Name="wa32 Read Till Key.vi" Type="VI" URL="../external libraries/TWM client/wa32 Read Till Key.vi"/>
+			<Item Name="wa32 ReadFile.vi" Type="VI" URL="../external libraries/TWM client/wa32 ReadFile.vi"/>
+			<Item Name="wa32 WaitNamedPipeA.vi" Type="VI" URL="../external libraries/TWM client/wa32 WaitNamedPipeA.vi"/>
+			<Item Name="wa32 WriteFile.vi" Type="VI" URL="../external libraries/TWM client/wa32 WriteFile.vi"/>
 		</Item>
 		<Item Name="Build Specifications" Type="Build">
 			<Item Name="QPSCONTROL" Type="EXE">
@@ -611,7 +562,7 @@
 				<Property Name="Bld_localDestDirType" Type="Str">relativeToCommon</Property>
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{D07E181F-3DCC-42DD-8E6A-23A4BE7CBC67}</Property>
-				<Property Name="Bld_version.minor" Type="Int">5</Property>
+				<Property Name="Bld_version.minor" Type="Int">6</Property>
 				<Property Name="Destination[0].destName" Type="Str">QPSCONTROL.exe</Property>
 				<Property Name="Destination[0].path" Type="Path">../QPSCONTROL builds/QPSCONTROL [VersionNumber]/NI_AB_PROJECTNAME.exe</Property>
 				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
@@ -619,7 +570,7 @@
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
 				<Property Name="Destination[1].path" Type="Path">../QPSCONTROL builds/QPSCONTROL [VersionNumber]/data</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{EA2D502C-82A5-4A16-8A9F-13B5B56393C4}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{B5BD03E1-E656-46E1-B32D-A6FC192D4CF4}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/GUI/GUI main.vi</Property>
