@@ -63,7 +63,7 @@ function [s_y, s_mean, s_std, s_uA] = pjvs_split_segments(y, Spjvs, MRs, MRe, PR
         tmp = s_y;
         tmp(isnan(tmp)) = [];
         s_mean = mean(tmp);
-        s_mean = std(tmp);
+        s_std = std(tmp);
     end % if exist('nanmean')
     s_uA = s_std./sqrt(sum(~isnan(s_y),1));
 
